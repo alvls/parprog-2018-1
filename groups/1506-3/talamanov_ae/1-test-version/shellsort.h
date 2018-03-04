@@ -3,6 +3,7 @@
 
 #include <iterator>
 #include <vector>
+#include <algorithm>
 
 template<typename Iterator>
 void InsertSortWithGap(Iterator first, Iterator last, int gap)
@@ -38,4 +39,20 @@ std::vector<int> createSedgwickSequence(int size_array)
 	sequence.pop_back();
 	return sequence;
 }
+
+template<typename Iterator>
+void ShellSort(Iterator first, Iterator last)
+{
+	if (!(first < last))
+		return;
+
+	int  size_array = std::distance(first, last);
+	auto sequence   = createSedgwickSequence(size_array);
+
+	std::for_each(sequence.rbegin(), sequence.rend(),
+				[&first, &last](const auto& gap){
+					InsertSortWithGap(first, last, gap);
+				});
+}
+
 #endif //TALAMANOV_AE_TEST_VERSION_SHELLSORT_H
