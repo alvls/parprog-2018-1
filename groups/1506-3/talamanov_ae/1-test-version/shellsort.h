@@ -20,4 +20,9 @@ void InsertSortWithGap(Iterator first, Iterator last, int gap)
 	}
 }
 
+int getSedgwickElement(int s)
+{
+    return (s % 1 == 0) ? (9 * (1 << s) - 9 * (1 <<  (s / 2)     ) + 1)
+                        : (8 * (1 << s) - 6 * (1 << ((s + 1) / 2)) + 1);
+}
 #endif //TALAMANOV_AE_TEST_VERSION_SHELLSORT_H
