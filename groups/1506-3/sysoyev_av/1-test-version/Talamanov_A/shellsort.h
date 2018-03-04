@@ -40,4 +40,19 @@ std::vector<int> getSedgwickDistances(int size_array)
     return distances;
 }
 
+template<typename Iterator>
+void ShellSort(Iterator first, Iterator last)
+{
+	if (!(first < last))
+		return;
+
+	int  size_array     = std::distance(first, last);
+	auto distances      = getSedgwickDistances(size_array);
+
+	std::for_each(distances.rbegin(), distances.rend(),
+				[&first, &last](const auto& gap){
+					InsertSortWithGap(first, last, gap);
+				});
+}
+
 #endif //TEST_VERSION_TALAMANOV_A_SHELLSORT_H
