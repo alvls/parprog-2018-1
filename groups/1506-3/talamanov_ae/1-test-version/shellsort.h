@@ -2,6 +2,7 @@
 #define TALAMANOV_AE_TEST_VERSION_SHELLSORT_H
 
 #include <iterator>
+#include <vector>
 
 template<typename Iterator>
 void InsertSortWithGap(Iterator first, Iterator last, int gap)
@@ -24,5 +25,17 @@ int getSedgwickElement(int s)
 {
     return (s % 1 == 0) ? (9 * (1 << s) - 9 * (1 <<  (s / 2)     ) + 1)
                         : (8 * (1 << s) - 6 * (1 << ((s + 1) / 2)) + 1);
+}
+
+std::vector<int> createSedgwickSequence(int size_array)
+{
+	std::vector<int> sequence;
+	int s = 0;
+	do{
+		sequence.emplace_back(getSedgwickElement(s));
+		++s;
+	} while(3 * sequence.back() < size_array);
+	sequence.pop_back();
+	return sequence;
 }
 #endif //TALAMANOV_AE_TEST_VERSION_SHELLSORT_H
