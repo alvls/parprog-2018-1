@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <cstdio> 
 #include <random>
 
@@ -12,8 +13,8 @@ int main(int argc, char * argv[])
 	int size;
 	int* arr;
 
-	freopen("array.in", "rb", stdin);
-	freopen("array.out", "wb", stdout);
+	freopen(argv[2], "rb", stdin);
+	freopen(argv[3], "wb", stdout);
 
 	fread(&size, sizeof(size), 1, stdin);
 	
@@ -26,7 +27,8 @@ int main(int argc, char * argv[])
 	QuickSort(arr, size);
 	//time = omp_get_wtime() - time;
 
-	//fwrite(&time, sizeof(time), 1, stdout); 
+	//fwrite(&time, sizeof(time), 1, stdout);
+	fwrite(&size, sizeof(size), 1, stdout);
 	fwrite(arr, sizeof(*arr), size, stdout);
 
 	return 0;
