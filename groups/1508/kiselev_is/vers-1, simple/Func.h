@@ -4,9 +4,9 @@
 
 class Func {
 private:
-	double* _coeff;
-	int* _index;
-	int _size;
+	double* _coeff;		// коэффициент при степени x
+	int* _index;		// степень x
+	int _size;			// размерность функции ( по факту - старшая степень )
 public:
 	Func(int size) {
 		_coeff = new double[size];
@@ -53,11 +53,16 @@ public:
 	// вернуть размерность полинома
 
 	void PrintFunc() {
+		int k = 0;
 		for (int i = 0; i < _size; i++) {
-			if (_coeff[i] >= 0) std::cout << "+ ";
-			if (_index[i] != 0) std::cout << _coeff[i] << " * x ^ " << _index[i] << " ";
-			else std::cout << _coeff[i];
+			if (_coeff[i] != 0) {
+				if (_coeff[i] >= 0) std::cout << "+ " << _coeff[i];
+				else std::cout << "- " << _coeff[i] * (-1) ;
+				if (_index[i] != 0) std::cout << " * x ^ " << _index[i] << " ";
+				k = 1;
+			}
 		}
+		if (k == 0) std::cout << "0";
 		std::cout << std::endl;
 	}
 	// Вывод массива

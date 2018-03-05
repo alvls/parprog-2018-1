@@ -25,16 +25,26 @@ public:
 	}	
 
 	// Интеграл трапециями
-	static double TIntegral(Func* fun, double start, double finish, int parts = 1) {
-		double partValue = (finish - start) / parts;	// размер шага
-		double result = 0.0;
-		double point = start;
-		while (parts > 0) {
-			result = result + ( ( valueIn(fun, point) + valueIn(fun, point + partValue) ) / 2 * partValue );
-				// (F0 + F1) / 2 * h
-			point = point + partValue;	
-			parts--;
-		}
+	static double TIntegral(Func* fun, double start, double finish, double accuracy = 0.1) {
+		int parts = 1;					// количество шагов
+		double last_result = 0.0;		// последний вычисленный результат
+		double result = 0.0;			// текущий результат
+		double partValue = 0.0;			// размер шага
+		double point = 0.0;
+		do {
+			point = start;
+			if ((last_result != 0) && (result - last_result > accuracy * 5)) parts += 9;
+			last_result = result;
+			result = 0.0;
+			parts++;
+			partValue = (finish - start) / parts;
+			for (int i = 0; i < parts; i++) {
+				result = result + ((valueIn(fun, point) + valueIn(fun, point + partValue)) / 2 * partValue);
+				// (F0 + F1) / 2 * H  // значение высоты в средней точке трапеции * ширину основания
+				point = point + partValue;
+			}
+		} 
+		while (result - last_result > accuracy);		// пока погрешность в вычислениях больше
 		return result;
 	}
 };
