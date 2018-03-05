@@ -28,9 +28,8 @@ public:
 		return result;
 	}	
 
-	// Интеграл трапециями
-	static double TIntegral(Func* fun, double start, double finish, double accuracy) {
-		int parts = 10;					// количество шагов
+	// Интеграл трапециями, функция, начало отрезка, конец, точность, количество частей( понадобиться для проверки )
+	static double TIntegral(Func* fun, double start, double finish, double accuracy, int parts = 1) {
 		double last_result = 0.0;		// последний вычисленный результат
 		double result = 0.0;			// текущий результат
 		double partValue = 0.0;			// размер шага
