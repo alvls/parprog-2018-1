@@ -36,10 +36,10 @@ public:
 		double point = 0.0;
 		do {
 			point = start;
-			if ((last_result != 0) && (module(result - last_result) >= accuracy * 5)) parts += 9;
+			if ((last_result != 0) && (module(result - last_result) >= accuracy * 5)) parts += 50;
 			last_result = result;
 			result = 0.0;
-			parts++;
+			parts+=10;
 			partValue = (finish - start) / parts;
 			for (int i = 0; i < parts; i++) {
 				result = result + ((valueIn(fun, point) + valueIn(fun, point + partValue)) / 2 * partValue);

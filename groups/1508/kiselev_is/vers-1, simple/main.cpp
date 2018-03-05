@@ -2,7 +2,7 @@
 
 #include "Func.h"
 #include "Math.h"
-#include <fstream>
+#include "Generate.h"
 
 int main(int argc, char** argv) {
 	// открытие файлов
@@ -26,13 +26,38 @@ int main(int argc, char** argv) {
 		fun.SetCoeffs(coef);
 		fin >> interval[0] >> interval[1];			// считываем промежуток
 		fin >> accuracy;							// точность
-		fin >> result;
 		// запуск програамы и вывод результатов в файл
 		res = Math::TIntegral(&fun, interval[0], interval[1], accuracy);
-		fout << res << " Expected: " << result << std::endl;
+		fout << res << " Expected: " << Math::TIntegral(&fun, interval[0], interval[1], 0.000001 , 1000) << std::endl;
 	}
 	
 	fin.close();
 	fout.close();
+
+	// Генератор
+	Generate();
+	// выполнение генерируемых тестов
+	std::ifstream gin("generate.txt");
+	std::ofstream gout("generate_out.txt");
+
+	for (int i = 0; i < test_numb; i++) {						// 5 тестов
+		gin >> size;										// считываем размер функции
+
+		Func fun(size);										// создаем функцию
+		double* coef = new double(size);					// считываем коэфы
+		for (int i = 0; i < size; i++) {
+			gin >> coef[i];
+		}
+		fun.SetCoeffs(coef);
+		gin >> interval[0] >> interval[1];			// считываем промежуток
+		gin >> accuracy;							// точность
+													// запуск програамы и вывод результатов в файл
+		res = Math::TIntegral(&fun, interval[0], interval[1], accuracy);
+		gout << res << " Expected: " << Math::TIntegral(&fun, interval[0], interval[1], 0.0000001, 1000) << std::endl;
+	}
+
+	gin.close();
+	gout.close();
+
 	return 0;
 }
