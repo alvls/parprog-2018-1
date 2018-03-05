@@ -14,6 +14,10 @@ public:
 		return result;
 	}
 	
+	static double module(double a) {
+		return (a > 0) ? a : -a;
+	}
+
 	// Значение числа в степени
 	static double exponent(double value, int exp) {
 		double result = 1.0;
@@ -25,15 +29,15 @@ public:
 	}	
 
 	// Интеграл трапециями
-	static double TIntegral(Func* fun, double start, double finish, double accuracy = 0.1) {
-		int parts = 1;					// количество шагов
+	static double TIntegral(Func* fun, double start, double finish, double accuracy) {
+		int parts = 10;					// количество шагов
 		double last_result = 0.0;		// последний вычисленный результат
 		double result = 0.0;			// текущий результат
 		double partValue = 0.0;			// размер шага
 		double point = 0.0;
 		do {
 			point = start;
-			if ((last_result != 0) && (result - last_result > accuracy * 5)) parts += 9;
+			if ((last_result != 0) && (module(result - last_result) >= accuracy * 5)) parts += 9;
 			last_result = result;
 			result = 0.0;
 			parts++;
@@ -44,7 +48,7 @@ public:
 				point = point + partValue;
 			}
 		} 
-		while (result - last_result > accuracy);		// пока погрешность в вычислениях больше
+		while (module(result - last_result) > accuracy);		// пока погрешность в вычислениях больше
 		return result;
 	}
 };
