@@ -1,7 +1,9 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <vector>
+#include "Sole.h"
 
+//Текстовый файл преобразует в бинарный
 //argv[1] - имя входного файла, argv[2] - имя выходного файла
 int typer(int argc, char * argv[]) {
 	if (argc != 3) {
@@ -10,7 +12,9 @@ int typer(int argc, char * argv[]) {
 	}
 
 	FILE *in, *out;
-	char* number = new char[15];
+	//char* number = new char[15];
+	char* ptrEnd;
+	Sole*S = new Sole();
 	int N = 0;
 	std::vector<int> array_data;
 	in = fopen(argv[1], "rt");
@@ -24,8 +28,9 @@ int typer(int argc, char * argv[]) {
 		for (int i = 0; i < N; i++)
 			fwrite(&array_data[i], sizeof(int), 1, out);
 	}
+
 	fclose(in);
 	fclose(out);
-	delete[] number;
+
 	return 0;
 }

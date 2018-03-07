@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <omp.h>
 #include <random>
+#include "Sole.h"
 
 void NonlinearConjugateGradient(double ** A, double * b, double * x, int N);
 
