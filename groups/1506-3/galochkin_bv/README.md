@@ -5,3 +5,7 @@
 - 1-test-version - каталог для размещения файлов тестовой версии
 - 2-openmp - каталог для размещения файлов OpenMP-версии
 - 3-tbb - каталог для размещения файлов TBB-версии
+
+### Зависимости
+ - [python 2.7](https://www.google.com)
+ - [OpenCV](https://opencv.org/releases.html) 
