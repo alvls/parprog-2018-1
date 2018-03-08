@@ -18,7 +18,7 @@ int main(int argc, char * argv[]) {
 	int N;//Размер системы
 	double time;//Время работы
 
-	fread(&time, sizeof(time), 1, stdout);
+	fread(&time, sizeof(time), 1, stdin);
 	fread(&N, sizeof(N), 1, stdin);
 
 	Sole * S = new Sole(N);//Создаём СЛАУ

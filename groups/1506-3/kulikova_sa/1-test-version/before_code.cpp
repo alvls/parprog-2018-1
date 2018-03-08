@@ -37,10 +37,14 @@ int main(int argc, char * argv[]) {
 
 	fwrite(&time, sizeof(time), 1, stdout);
 	fwrite(&N, sizeof(N), 1, stdout);
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++)
+			fwrite(&S->A[i][j], sizeof(S->A[i][j]), 1, stdout);
+	}
 	for (int i = 0; i < N; i++)
-		fwrite(S->A[i], sizeof(**S->A), N, stdin);
-	fwrite(S->b, sizeof(*S->b), N, stdin);
-	fwrite(S->x, sizeof(*S->x), N, stdout);
+		fwrite(&S->b[i], sizeof(S->b[i]), 1, stdout);
+	for (int i = 0; i < N; i++)
+		fwrite(&S->x[i], sizeof(S->x[i]), 1, stdout);
 
 	return 0;
 }
