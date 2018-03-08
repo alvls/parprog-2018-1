@@ -4,10 +4,10 @@
 //СЛАУ
 class Sole {
 public:
-	double ** A;
-	double * b;
-	double * x;
-	int N;
+	double ** A;//Матрица системы
+	double * b;//Столбец свободных членов
+	double * x;//Столбец решения
+	int N;//Размер системы
 
 	Sole(int n) {
 		N = n;
@@ -27,6 +27,7 @@ public:
 	}
 
 	void Print() {
+		std::cout << "Размер системы " << N << std::endl;
 		std::cout << "Матрица системы" << std::endl;
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++)

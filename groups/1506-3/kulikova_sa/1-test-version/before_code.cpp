@@ -4,47 +4,43 @@
 #include <random>
 #include "Sole.h"
 
-void NonlinearConjugateGradient(double ** A, double * b, double * x, int N);
+void NonlinearConjugateGradient(Sole * S);
 
 //argv[1] - количество потоков, argv[2] - имя входного файла, argv[3] - имя выходного файла
 int main(int argc, char * argv[]) {
-	int num_threads = 1;
-	if (argc > 1)
-		num_threads = atoi(argv[1]);
+	setlocale(LC_ALL, "Russian");//Корректное отображение Кириллицы
 
-	int N;
-	double **A, *b, *x;
+	if (argc != 4) {
+		std::cout << "Некорректные данные" << std::endl;
+		return 1;
+	}
+
+	int num_threads = atoi(argv[1]);//Количество потоков
+	int N;//Размер системы
 
 	freopen(argv[2], "rb", stdin);
 	freopen(argv[3], "wb", stdout);
 
 	fread(&N, sizeof(N), 1, stdin);
 
-	A = new double*[N];
-	for (int i = 0; i < N; i++)
-		A[i] = new double[N];
-	b = new double[N];
-	x = new double[N];
+	Sole * S = new Sole(N);//Создаём СЛАУ
 
-	fread(A, sizeof(**A), N * N, stdin);
-	fread(b, sizeof(*b), N, stdin);
+	for (int i = 0; i < N; i++)
+		fread(S->A[i], sizeof(**S->A), N, stdin);
+	fread(S->b, sizeof(*S->b), N, stdin);
 
 	omp_set_num_threads(num_threads);
 
 	double time = omp_get_wtime();
-	NonlinearConjugateGradient(A, b, x, N);
+	NonlinearConjugateGradient(S);
 	time = omp_get_wtime() - time;
 
 	fwrite(&time, sizeof(time), 1, stdout);
-	fwrite(x, sizeof(*x), N, stdout);
-
-	/*
+	fwrite(&N, sizeof(N), 1, stdout);
 	for (int i = 0; i < N; i++)
-		delete[] A[i];
-	delete[] A;
-	delete[] b;
-	delete[] x;
-	*/
+		fwrite(S->A[i], sizeof(**S->A), N, stdin);
+	fwrite(S->b, sizeof(*S->b), N, stdin);
+	fwrite(S->x, sizeof(*S->x), N, stdout);
 
 	return 0;
 }
