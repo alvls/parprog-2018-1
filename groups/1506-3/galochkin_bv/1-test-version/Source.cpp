@@ -32,7 +32,7 @@ double* read_binary_image_file(int&w, int&h, const std::string& dir = "image.in"
 
 void save_image_to_binary(int&w, int&h, double *data, double& t, const std::string& dir = "image.out")
 {
-	freopen("image.out", "wb", stdout);
+	freopen(dir.c_str(), "wb", stdout);
 	fwrite(&w, sizeof(w), 1, stdout);
 	fwrite(&h, sizeof(h), 1, stdout);
 	fwrite(&t, sizeof(t), 1, stdout);
@@ -46,6 +46,7 @@ int main(int argc, const char** argv)
 	int threads_num = argc > 1 ? std::stoi(argv[1]) : 4; //count of threads
 	int radius = argc > 2 ? std::stoi(argv[2]) : 1; //filter radius 1 by default (3x3)
 	std::string input_file = argc > 3 ? std::string(argv[3]) : "image.in"; //file dir
+	std::string output_file = argc > 4 ? std::string(argv[4]) : "image.out"; //file dir
 	omp_set_num_threads(threads_num);
 
 	data = read_binary_image_file(w, h, input_file);
@@ -57,7 +58,7 @@ int main(int argc, const char** argv)
 	linear_time = omp_get_wtime() - linear_time; //end time
 	printf("linear time: %lfs\n", linear_time);
 
-	save_image_to_binary(w, h, blured, linear_time);
+	save_image_to_binary(w, h, blured, linear_time, output_file);
 
 	//future OpenMP version mb in another project
 	//double time2 = omp_get_wtime();
