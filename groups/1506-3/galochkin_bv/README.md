@@ -7,5 +7,5 @@
 - 3-tbb - каталог для размещения файлов TBB-версии
 
 ### Зависимости
- - [python 2.7](https://www.google.com)
+ - [python 2.7](https://www.python.org/downloads/)
  - [OpenCV](https://opencv.org/releases.html) 
