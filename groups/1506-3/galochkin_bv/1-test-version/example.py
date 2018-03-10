@@ -1,10 +1,7 @@
 import subprocess
 
 # run writer
-subprocess.check_call(["py", # execution path
-                       "-2.7", # count of threads
-                       "writer.py", # filter radius
-                     ])
+subprocess.check_call(["py", "-2.7", "writer.py"])
 
 # run gaussian filter program
 subprocess.check_call(["./GaussianOpenMP.exe", # execution path
@@ -13,7 +10,4 @@ subprocess.check_call(["./GaussianOpenMP.exe", # execution path
                      ])
 
 # show result
-subprocess.check_call(["py", # execution path
-                       "-2.7", # count of threads
-                       "reader.py", # filter radius
-                     ])
+subprocess.check_call(["py", "-2.7", "reader.py"])
