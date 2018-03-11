@@ -2,9 +2,12 @@
 #include <cmath> 
 #include <string>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
+void StringName_to_CharName(string str, char* ch);
+int Order(int num);
 /* 
 // Checker устанавливает два вердикта 
 AC = Accepted(результат корректен)
@@ -32,12 +35,21 @@ public:
 	// Д-р
 	~Result() { fclose(res); }
 	// Запись типа сообщения
-	void write_type(type t) { fwrite(&t, sizeof(t), 1, res); }
+	void write_type(type t) 
+	{ 
+		//char ch = static_cast<int>(t) + '0';
+		//fwrite(&ch, sizeof(char), 1, res);
+
+		fwrite(&t, sizeof(t), 1, res);
+	}
 
 	// Сообщить тестирующей системе, что установлен один из вердиктов
 	void write_verdict(verdict v) 
 	{
-		write_type(type::VERDICT); 
+		write_type(type::VERDICT);
+		//char ch = static_cast<int>(v) + '0';
+		//fwrite(&ch, sizeof(char), 1, res);
+
 		fwrite(&v, sizeof (v), 1, res); 
 	}
 	
@@ -45,30 +57,66 @@ public:
 	void write_message(string str)
 	{ 
 		write_type(type::MESSAGE); 
-		int l = str.size (); 
-		fwrite(&l, sizeof (l), 1, res);
+		int l = str.size ();
+		//int order = Order(l);
+		//char* ch = new char[order];
+		//_itoa_s(l, ch, str.size(), 10);
+		//fwrite(ch, sizeof (char), order, res);
+
+		fwrite(&l, sizeof(l), 1, res);
 		fwrite (&str[0], sizeof (str[0]), l, res); 
 	}
 
 	// Сообщить тестирующей системе время работы программы участника,  
 	// x имеет размерность 100 нс = 10 ^ (-7) сек 
-	void write_time(long long x)
-	{ write_type(type::TIME); fwrite(&x, sizeof (x), 1, res); }
+	void write_time(double x)
+	{ 
+		write_type(type::TIME);
+
+		int order = Order(x);
+		char* ch = new char[order];
+		_itoa_s(x, ch, 100, 10);
+		fwrite(ch, sizeof (char), order + 1, res);
+
+		//fwrite(&x, sizeof (x), 1, res); 
+	}
 
 } checker_result; 
 
 
-int main() 
+int main(int argc, char * argv[])
 { 
+	// Имена файлов
+	char* fileIN = "matr.in";
+	char* fileOUT = "matr.out";
+	char* answer = "answer.ans";
+
+	if (argc > 1)
+	{
+		// Формируем новое имя файла с матрицами
+		fileIN = argv[1];
+		// Формируем новое имя выходного файла
+		string str = string(argv[1]) + string(".out");
+		fileOUT = new char[str.length()];
+		StringName_to_CharName(str, fileOUT);
+		str = string(argv[1]) + string(".ans");
+		answer = new char[str.length()];
+		StringName_to_CharName(str, answer);
+	}
+
+
 	// Открываем файл входных данных,  ответ участника 
 	FILE * bui;
-	fopen_s(&bui, "matr.in", "rb");
+	fopen_s(&bui, fileIN, "rb");
 	FILE * buo;
-	fopen_s(&buo, "matr.out", "rb");
+	fopen_s(&buo, fileOUT, "rb");
 	// Открываем эталон
 	FILE * perfect;
-	fopen_s(&perfect, "answer.out", "rb");
+	fopen_s(&perfect, answer, "rb");
 	
+
+
+
 	int N; 
 	// Считываем размерность матриц 
 	fread(&N, sizeof (N), 1, bui);
@@ -90,18 +138,18 @@ int main()
 	double ans_time, res_time;
 	
 	// Считываем время работы программы участника и матрицу участника 
-	fread(&ans_time, sizeof (int), 1, buo); 
 	for (int i = 0; i < N; i++)
 	{
 		fread(ans[i], sizeof(double), N, buo);
 	}
+	fread(&ans_time, sizeof(double), 1, buo);
   
 	// Считываем время работы программы и матрицу жюри 
-	fread(&res_time, sizeof (int), 1, perfect); 
 	for (int i = 0; i < N; i++)
 	{
 		fread(res[i], sizeof(double), N, perfect);
 	}
+	fread(&res_time, sizeof(double), 1, perfect);
 
 	bool flag = true;
 	for (int i = 0; i < N; i++)
@@ -129,12 +177,31 @@ int main()
 		checker_result.write_verdict (verdict::WA); 
 	}
 		   
-	// Записываем время в правильной размерности (интервалы по 100 нс = 10 ^ (-7) сек). 
-	checker_result.write_time (res_time * 1e7);
+	// Записывем время, сек 
+	checker_result.write_time (res_time);
 
 	fclose(buo);
 	fclose(bui);
 	fclose(perfect);
 
 	return 0;
+}
+
+void StringName_to_CharName(string str, char* ch)
+{
+	for (int i = 0; i < str.length(); i++)
+		ch[i] = str[i];
+}
+
+int Order(int num)
+{
+	int order = 0;
+
+	while (num) 
+	{
+		num /= 10;
+		order++;
+	}
+
+	return order;
 }
