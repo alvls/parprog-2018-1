@@ -1,7 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
-//#include <cstdio>
 #include <omp.h>
-//#include <random>
 #include "Sole.h"
 
 void NonlinearConjugateGradient(Sole * S);
@@ -25,9 +23,28 @@ int main(int argc, char * argv[]) {
 
 	Sole * S = new Sole(N);//Создаём СЛАУ
 
-	for (int i = 0; i < N; i++)//Читаем из бинарника
+	//Читаем из бинарника
+	for (int i = 0; i < N; i++)
 		fread(S->A[i], sizeof(**S->A), N, stdin);
 	fread(S->b, sizeof(*S->b), N, stdin);
+
+	//Размерность системы должна быть положительной, т.е N > 0
+	if (S->N < 1) {
+		std::cout << "Не положительный размер системы" << std::endl;
+		return 2;
+	}
+	//Матрица А должна быть симетричной, т.е А=Ат
+	for (int i = 0; i < S->N - 1; i++)
+		for (int j = i + 1; j < S->N; j++)
+			if (S->A[i][j] != S->A[j][i]) {
+				std::cout << "Матрица не симметрична" << std::endl;
+				return 3;
+			}
+	//Матрица А должна быть положительно определена, т.е xт*А*x > 0
+	if (false) {//КАК??? Критерий Сильвестра???
+		std::cout << "Матрица не положительно определена" << std::endl;
+		return 4;
+	}
 
 	omp_set_num_threads(num_threads);
 
