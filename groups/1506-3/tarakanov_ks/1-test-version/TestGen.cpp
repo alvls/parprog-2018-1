@@ -4,34 +4,32 @@
 #include <chrono>
 #include <iostream>
 #include <Windows.h>
-
+#include <string>
 using namespace std;
 
 int n_tests[] = { 1, 4, 6, 8, 9, 100, 600, 700, 1000, 1500, 2000 };
 int n_sizeBlocks[] = { 1, 2, 3, 2, 3, 20, 100, 350, 200, 2, 500 };
 
 void MatrMulti(double* A[], double* B[], double* C[], int N);
+void StringName_to_CharName(string str, char* ch);
 
 int main(int argc, char * argv[])
 {
-	//cout << argc << endl;
-	/*if (argc > 1)
-	{
-		cout << argv[1] << endl;
-	}*/
-	FILE* matr_in, *perfect;
+	FILE* matr_in;
+	FILE *perfect; // Эталон
 
+	// Имена файлов
+	char* fileName = "matr.in";
+	char* answerName = "answer.ans";
 
 	// Создаём генератор случайных чисел
 	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
 	// Cоздаём равномерное распределение случайной величины
-	uniform_int_distribution<int> distribution(1, 9);
+	uniform_real_distribution<double> distribution(-100.00, 100.00);
 
 	// Задаём размеры матриц и блока
-	int n = 8;
+	int n = 100;
 	int sizeblock = 2;
-
-
 
 	// Если передали номер теста в аргументах командной строки,
 	//  то берём размер из n_tests, а размер блока из n_sizeBlocks
@@ -39,10 +37,16 @@ int main(int argc, char * argv[])
 	{
 		n = n_tests[atoi(argv[1])];
 		sizeblock = n_sizeBlocks[atoi(argv[1])];
+
+		// Формируем новое имя файла с матрицами
+		fileName = argv[1]; 
+		// Формируем новое имя файла для эталона
+		string str = string(argv[1]) + string(".ans");
+		answerName = new char[str.length()];
+		StringName_to_CharName(str, answerName);
 	}
-	cout << "here" << endl;
-	cout << n << " " << sizeblock << endl;
-	freopen_s(&matr_in, "matr.in", "wb", stdout);
+
+	freopen_s(&matr_in, fileName, "wb", stdout);
 	// Записываем в бинарном виде размерность матриц
 	fwrite(&n, sizeof(n), 1, stdout);
 	// Записываем в бинарном виде размер блока
@@ -69,7 +73,7 @@ int main(int argc, char * argv[])
 
 	// Создаём временный массив для строки матрицы
 	double * cur = new double[n];
-	int dice_roll;
+	double dice_roll;
 	// Генерируем первую матрицу
 	for (int i = 0; i < n; i++)
 	{
@@ -98,26 +102,24 @@ int main(int argc, char * argv[])
 	fclose(matr_in);
 
 
-
 	std::chrono::time_point<std::chrono::system_clock> start, end;
 	start = std::chrono::system_clock::now();
 	// Формирование эталона
 	MatrMulti(A, B, C, n);
-
 	end = std::chrono::system_clock::now();
 
 	double time = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 
-	//fopen_s(&perfect, "answer.out", "wb");
-	freopen_s(&perfect, "answer.out", "wb", stdout);
-	fwrite(&time, sizeof(time), 1, perfect);
-	//freopen_s(&perfect, "answer.out", "wb", stdout);
+
+	freopen_s(&perfect, answerName, "wb", stdout);
 
 	for (int i = 0; i < n; i++)
 	{
 		// записываем строку в бинарном виде в файл
 		fwrite(C[i], sizeof(double), n, perfect);
 	}
+
+	fwrite(&time, sizeof(time), 1, perfect);
 
 	fclose(perfect);
 
@@ -134,4 +136,10 @@ void MatrMulti(double* A[], double* B[], double* C[], int N)
 				C[i][j] += A[i][k] * B[k][j];
 			}
 		}
+}
+
+void StringName_to_CharName(string str, char* ch)
+{
+	for (int i = 0; i < str.length(); i++)
+		ch[i] = str[i];
 }
