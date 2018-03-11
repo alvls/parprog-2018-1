@@ -12,20 +12,21 @@ int main(int argc, char * argv[]) {
 		return 1;
 	}
 
-	freopen(argv[1], "rb", stdin);//Открытие файла для бинарного чтения
+	FILE * out;
+	out = fopen(argv[1], "rb");//Открытие файла для бинарного чтения
 
 	int N;//Размер системы
 	double time;//Время работы
 
-	fread(&time, sizeof(time), 1, stdin);
-	fread(&N, sizeof(N), 1, stdin);
+	fread(&time, sizeof(time), 1, out);
+	fread(&N, sizeof(N), 1, out);
 
 	Sole * S = new Sole(N);//Создаём СЛАУ
 
 	for (int i = 0; i < N; i++)
-		fread(S->A[i], sizeof(**S->A), N, stdin);
-	fread(S->b, sizeof(*S->b), N, stdin);
-	fread(S->x, sizeof(*S->x), N, stdin);
+		fread(S->A[i], sizeof(**S->A), N, out);
+	fread(S->b, sizeof(*S->b), N, out);
+	fread(S->x, sizeof(*S->x), N, out);
 
 	std::cout << "Время работы " << time << std::endl;
 	S->Print();

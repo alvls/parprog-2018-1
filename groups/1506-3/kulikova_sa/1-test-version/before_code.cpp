@@ -16,17 +16,18 @@ int main(int argc, char * argv[]) {
 	int num_threads = atoi(argv[1]);//Количество потоков
 	int N;//Размер системы
 
-	freopen(argv[2], "rb", stdin);
-	freopen(argv[3], "wb", stdout);
+	FILE * in, * out;
+	in = fopen(argv[2], "rb");
+	out = fopen(argv[3], "wb");
 
-	fread(&N, sizeof(N), 1, stdin);
+	fread(&N, sizeof(N), 1, in);
 
 	Sole * S = new Sole(N);//Создаём СЛАУ
 
 	//Читаем из бинарника
 	for (int i = 0; i < N; i++)
-		fread(S->A[i], sizeof(**S->A), N, stdin);
-	fread(S->b, sizeof(*S->b), N, stdin);
+		fread(S->A[i], sizeof(**S->A), N, in);
+	fread(S->b, sizeof(*S->b), N, in);
 
 	//Размерность системы должна быть положительной, т.е N > 0
 	if (S->N < 1) {
@@ -53,12 +54,12 @@ int main(int argc, char * argv[]) {
 	time = omp_get_wtime() - time;
 
 	//Записываем результаты в бинарник
-	fwrite(&time, sizeof(time), 1, stdout);
-	fwrite(&N, sizeof(N), 1, stdout);
+	fwrite(&time, sizeof(time), 1, out);
+	fwrite(&N, sizeof(N), 1, out);
 	for (int i = 0; i < N; i++)
-		fwrite(S->A[i], sizeof(**S->A), N, stdout);
-	fwrite(S->b, sizeof(*S->b), N, stdout);
-	fwrite(S->x, sizeof(*S->x), N, stdout);
+		fwrite(S->A[i], sizeof(**S->A), N, out);
+	fwrite(S->b, sizeof(*S->b), N, out);
+	fwrite(S->x, sizeof(*S->x), N, out);
 
 	return 0;
 }
