@@ -7,7 +7,7 @@ using namespace std;
 int main(int argc, char * argv[])
 {
 	if (argc != 3) {
-		cout << "Некорректные параметры" << endl;
+		cout << "Use 'typer [input file] [output file]'" << endl;
 		return 1;
 	}
 
@@ -23,6 +23,8 @@ int main(int argc, char * argv[])
 			array_data.push_back(atoi(number));
 
 		size = array_data.size();
+
+		fwrite(&size, sizeof(unsigned int), 1, out); // фиктивный параметр под время
 		fwrite(&size, sizeof(size), 1, out);
 		for(int i = 0; i < size; ++i) 
 			fwrite(&array_data[i], sizeof(int), 1, out);

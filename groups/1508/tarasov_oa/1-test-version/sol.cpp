@@ -27,21 +27,3 @@ void QuickSort(int* arr, int size)
 	if (i < size)
 		QuickSort(&arr[i], size - i);
 }
-
-
-int* GenerateArr(int size)
-{
-	int* arr = new int[size];
-	for (int i = 0; i < size; ++i)
-		arr[i] = rand() % 1000;
-
-	return arr;
-}
-
-void PrintArray(int* arr, int size)
-{
-	std::cout << "{ ";
-	for (int i = 0; i < size; ++i)
-		std::cout << arr[i] << " ";
-	std::cout << " }" << std::endl;
-}
