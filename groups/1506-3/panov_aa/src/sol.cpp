@@ -1,17 +1,26 @@
 #include <omp.h>
 #include <vector>
-#define index(col, row, n) (col*n+row)
-typedef double Element;
 
-using namespace std;
+typedef double Element;
+#define index(col, row, n) (col*n+row)
+#define push(arr, size, element) arr[size++] = element
+#define ConstMatrix(values, rows, pointer) const vector<Element> &values, const vector<int> &rows, const vector<int> &pointer
+#define Matrix(values, rows, pointer) vector<Element> &values, vector<int> &rows, vector<int> &pointer
+
+using std::vector;
 struct MatrixCCS
 {
     vector<Element> values;
     vector<int> rows;
     vector<int> pointer;
     int N;
-    MatrixCCS(Element *M, int n):N(n)
+    MatrixCCS() {}
+    MatrixCCS(Element *M, int notZero, int n):N(n)
     {
+        values = vector<Element>(notZero);
+        rows = vector<int> (N);
+        pointer = vector<int>(N + 1);
+
         vector<int> task;
         for (int j = 0; j < N; j++)
         {
@@ -24,7 +33,7 @@ struct MatrixCCS
                     if (isNotZero == false)
                     {
                         isNotZero = true;
-                        pointer[j] = values.size();
+                        pointer[j] = pointer.size();
                     }
                     rows.push_back(i);
                     values.push_back(el);
@@ -35,7 +44,7 @@ struct MatrixCCS
                 task.push_back(j);
             }
         }
-        pointer[N] = values.size()+1;
+        pointer[N] = pointer.size()+1;
         for (int i = task.size() - 1; i--; i >= 0)
             pointer[task[i]] = pointer[task[i] + 1];
     }
@@ -55,7 +64,17 @@ struct MatrixCCS
         }
     }
 };
-void MatrMatrMult(double * A, double * B, double * C, int N)
+
+void MatrMatrMult(Element *a, Element *b, Element *res, int N)
+{
+    MatrixCCS A(a, N*N, N), B(b, N*N, N), Res(res, N*N, N);
+}
+void MatrMatrMult(ConstMatrix(values_A, rows_A, pointer_A), ConstMatrix(values_B, rows_B, pointer_B), Matrix(values_res, rows_res, pointer_res))
+{
+
+}
+
+/*void MatrMatrMult(double * A, double * B, double * C, int N)
 {
 	int i, j, k;
 #pragma omp parallel for private(j, k)
@@ -68,9 +87,4 @@ void MatrMatrMult(double * A, double * B, double * C, int N)
 				C[i * N + j] += A[i * N + k] * B[k * N + j];
 		}
 	}
-}
-
-void MatrMult(MatrixCCS &A, MatrixCCS &B, MatrixCCS &Res)
-{
-
-}
+}*/

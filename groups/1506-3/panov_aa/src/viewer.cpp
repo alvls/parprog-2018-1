@@ -24,7 +24,7 @@ int main(int argc, char * argv[])
 	string input = "matr";
 	string output = "output";
 	string number = "";
-	string extensionIn = ".out";
+	string extensionIn = ".in";
 	string extensionOut = ".txt";
 	if (argc > 1)
 	{

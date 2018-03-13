@@ -3,13 +3,31 @@
 using std::string;
 using std::cout;
 using std::cin;
+using std::swap;
 
-void readMatrix(double *A, int N)
+typedef double Element;
+
+inline Element& index(int i, int j, int N, Element *M)
 {
+    return M[i*N + j];
+}
+void TranspositionMatrixBtoA(Element *A, Element *B, int N)
+{
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+        {
+            index(i, j, N, A) = index(j, i, N, B);
+        }
+}
+void readMatrix(Element *A, int N)
+{
+    Element *B = new Element[N*N];
 	for (int i = 0; i < N*N; i++)
 	{
-		cin >> A[i];
+		cin >> B[i];
 	}
+    TranspositionMatrixBtoA(A, B, N);
+    delete[]B;
 }
 void writeMatrixBin(double *A, int N)
 {
@@ -22,7 +40,7 @@ int main(int argc, char * argv[])
 	string output = "matr";
 	string number = "";
 	string extensionIn = ".txt";
-	string extensionOut = ".out";
+	string extensionOut = ".in";
 	if (argc > 1)
 	{
 		input = argv[1];
