@@ -3,8 +3,6 @@
 #include <random> 
 #include <chrono>
 
-bool PositiveDefinite(double ** A, int N);
-
 int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
 
 //argv[1] - размер системы, argv[2] - имя выходного файла
@@ -16,16 +14,15 @@ int main(int argc, char * argv[]) {
 		return 1;
 	}
 
-	FILE * out;
-	out = fopen(argv[2], "wb");
-
-	if (out == nullptr) {
-		std::cout << "Файл для записи не может быть открыт" << std::endl;
+	if (atoi(argv[1]) < 0 || atoi(argv[1]) > 24) {
+		std::cout << "Некорректный номер теста" << std::endl;
 		return 2;
 	}
 
-	if (atoi(argv[1]) < 0 || atoi(argv[1]) > 24) {
-		std::cout << "Некорректный номер теста" << std::endl;
+	FILE * out = fopen(argv[2], "wb");
+
+	if (out == nullptr) {
+		std::cout << "Файл для записи не может быть открыт" << std::endl;
 		return 3;
 	}
  
@@ -34,7 +31,7 @@ int main(int argc, char * argv[]) {
 	for (int i = 0; i < n; i++)
 		cur[i] = new double[n];
 	std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
-	std::uniform_real_distribution <double> distribution(-1e4, 1e4);
+	std::uniform_real_distribution <double> distribution(-100, 100);
 
 	std::cout << "Какую матрицу сгенерировать? Введите число от 1 до 7 включительно." << std::endl;
 	std::cout << 
@@ -51,11 +48,12 @@ int main(int argc, char * argv[]) {
 
 	switch (c) {//Генерируем матрицу
 	case 1: {//Симметричная положительно определенная
-		do {
-			for (int i = 0; i < n; i++)
-				for (int j = i; j < n; j++)
-					cur[i][j] = cur[j][i] = distribution(generator);
-		} while (PositiveDefinite(cur, n));
+		for (int i = 0; i < n; i++)
+			for (int j = i; j < n; j++) {
+				cur[i][j] = cur[j][i] = distribution(generator);
+				if (i == j)
+					cur[i][j] += 400;
+			}
 		break;
 	}
 	case 2: {//Симметричная
@@ -100,17 +98,15 @@ int main(int argc, char * argv[]) {
 				cur[i][j] = distribution(generator);
 		break;
 	}
-	/*
 	default: {
 		std::cout << "Неверный пункт меню" << std::endl;
-
+		fclose(out);
 		for (int i = 0; i < n; i++)
 			delete[] cur[i];
 		delete[] cur;
 
 		return 4;
 	}
-	*/
 	}
 
 	//Запись в бинарный файл

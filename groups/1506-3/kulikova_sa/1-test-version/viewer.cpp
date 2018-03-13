@@ -12,8 +12,7 @@ int main(int argc, char * argv[]) {
 		return 1;
 	}
 
-	FILE * in;
-	in = fopen(argv[1], "rb");//Открытие файла для бинарного чтения
+	FILE * in = fopen(argv[1], "rb");//Открытие файла для бинарного чтения
 
 	if (in == nullptr) {
 		std::cout << "Файл для чтения не может быть открыт" << std::endl;
@@ -25,6 +24,12 @@ int main(int argc, char * argv[]) {
 
 	fread(&time, sizeof(time), 1, in);
 	fread(&N, sizeof(N), 1, in);
+
+	if (N < 1) {
+		std::cout << "Не положительный размер системы" << std::endl;
+		fclose(in);
+		return 3;
+	}
 
 	Sole * S = new Sole(N);//Создаём СЛАУ
 

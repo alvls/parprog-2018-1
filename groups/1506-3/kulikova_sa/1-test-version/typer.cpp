@@ -14,17 +14,10 @@ int main(int argc, char * argv[]) {
 	}
 
 	std::ifstream in(argv[1], std::ios::in);//Открытие файла для чтения
-	FILE * out;
-	out = fopen(argv[2], "wb");//Открытие файла для бинарной записи
 
 	if (!in.is_open()) {
 		std::cout << "Файл для чтения не может быть открыт" << std::endl;
 		return 2;
-	}
-
-	if (out == nullptr) {
-		std::cout << "Файл для записи не может быть открыт" << std::endl;
-		return 3;
 	}
 
 	int N;//Размер системы
@@ -32,6 +25,13 @@ int main(int argc, char * argv[]) {
 
 	if (N < 1) {
 		std::cout << "Некорректный размер системы" << std::endl;
+		return 3;
+	}
+
+	FILE * out = fopen(argv[2], "wb");//Открытие файла для бинарной записи
+
+	if (out == nullptr) {
+		std::cout << "Файл для записи не может быть открыт" << std::endl;
 		return 4;
 	}
 
@@ -49,7 +49,8 @@ int main(int argc, char * argv[]) {
 		fwrite(&S->b[i], sizeof(S->b[i]), 1, out);
 	}
 
-	in.close();//Закрытие файлов
+	//Закрытие файлов
+	in.close();
 	fclose(out);
 
 	return 0;
