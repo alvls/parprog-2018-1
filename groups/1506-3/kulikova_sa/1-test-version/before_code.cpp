@@ -95,11 +95,20 @@ int main(int argc, char * argv[]) {
 
 	int num_threads = atoi(argv[1]);//Количество потоков
 	int N;//Размер системы
+
 	FILE * in, * out;
 	in = fopen(argv[2], "rb");
+	out = fopen(argv[3], "wb");
+	if (in == nullptr) {
+		std::cout << "Файл для чтения не может быть открыт" << std::endl;
+		return 2;
+	}
+	if (out == nullptr) {
+		std::cout << "Файл для записи не может быть открыт" << std::endl;
+		return 3;
+	}
 
 	fread(&N, sizeof(N), 1, in);
-
 	Sole * S = new Sole(N);//Создаём СЛАУ
 
 	//Читаем из бинарника
@@ -110,13 +119,12 @@ int main(int argc, char * argv[]) {
 	fclose(in);
 
 	if (dimension(S->N))
-		return 2;
-	if (symmetry(S->A, S->N))
-		return 3;
-	if (PositiveDefinite(S->A, S->N))
 		return 4;
+	if (symmetry(S->A, S->N))
+		return 5;
+	if (PositiveDefinite(S->A, S->N))
+		return 6;
 
-	out = fopen(argv[3], "wb");
 	omp_set_num_threads(num_threads);
 
 	double time = omp_get_wtime();
