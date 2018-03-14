@@ -1,38 +1,23 @@
 #include <iostream>
 #include <string>
+#include "matrix.h"
 using std::string;
 using std::cout;
 using std::cin;
 using std::swap;
 
-typedef double Element;
-
-inline Element& index(int i, int j, int N, Element *M)
+void readMatrix(Matrix &A, int N)
 {
-    return M[i*N + j];
-}
-void TranspositionMatrixBtoA(Element *A, Element *B, int N)
-{
-    for (int i = 0; i < N; i++)
-        for (int j = 0; j < N; j++)
-        {
-            index(i, j, N, A) = index(j, i, N, B);
-        }
-}
-void readMatrix(Element *A, int N)
-{
-    Element *B = new Element[N*N];
-	for (int i = 0; i < N*N; i++)
+	for (int i = 0; i < N * N; i++)
 	{
-		cin >> B[i];
+		cin >> A.vv[i];
 	}
-    TranspositionMatrixBtoA(A, B, N);
-    delete[]B;
+    A.transpositionMatrix();
 }
-void writeMatrixBin(double *A, int N)
+void writeMatrixBin(Matrix &A, int N)
 {
     fwrite(&N, sizeof(N), 1, stdout);
-	fwrite(A, sizeof(*A), N * N, stdout);
+	fwrite(A.getP(), sizeof(Element), N*N, stdout);
 }
 int main(int argc, char * argv[])
 {
@@ -55,13 +40,12 @@ int main(int argc, char * argv[])
 	}
 
 	int N;
-	double *A;
 
 	freopen((input + number + extensionIn).c_str(), "r", stdin);
 	freopen((output + number + extensionOut).c_str(), "wb", stdout);
 	
     cin >> N;
-    A = new double[N * N];
+    Matrix A(N, N);
 
 	readMatrix(A, N);
 	writeMatrixBin(A, N);

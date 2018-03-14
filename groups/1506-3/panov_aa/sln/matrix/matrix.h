@@ -1,32 +1,29 @@
 #pragma once
 #include <vector>
-#include <iostream>
-using std::ostream;
 using std::vector;
 typedef double Element;
 
-class Matrix
+struct Matrix
 {
 private:
+    std::vector<Element> vv;
     int row;
     int col;
 public:
-    std::vector<Element> vv;
     Matrix()
     {
         vv = vector<double>();
     }
-    Matrix(int col, int row)
+    Matrix(int row, int col)
     {
         this->row = row;
         this->col = col;
         vv = vector<Element>(row*col);
     }
-    Matrix(int col, int row, Element val)
+    Matrix(int row, int col, Element val) : Matrix(row, col)
     {
-        this->row = row;
-        this->col = col;
-        vv = vector<Element>(row*col, val);
+        for (int i = 0; i < row*col; i++)
+            vv[i] = val;
     }
 
     int gRow() const
@@ -36,14 +33,6 @@ public:
     int gCol() const
     {
         return col;
-    }
-    int gSize() const
-    {
-        return row*col;
-    }
-    Element *getP()
-    {
-        return &vv[0];
     }
     Element* operator [] (int i)
     {
@@ -59,17 +48,6 @@ public:
                     newMatr[z][i] += (*this)[z][j] * m[j][i];
         return newMatr;
     }
-    void transpositionMatrix()
-    {
-        Matrix A(row, col);
-        for (int i = 0; i < col; i++)
-            for (int j = 0; j < row; j++)
-            {
-                A[i][j] = (*this)[j][i];
-            }
-        std::swap(row, col);
-        vv = A.vv;
-    }
     friend std::ostream& operator<<(std::ostream& os, Matrix& m)
     {
         if (m.gRow() == 0) os << 0;
@@ -83,17 +61,17 @@ public:
         return os;
     }
 };
-class MatrixCCS
+struct MatrixCCS
 {
-private:
     vector<Element> values;
     vector<int> rows;
     vector<int> pointer;
     int N;
-public:
     MatrixCCS() {}
-    MatrixCCS(Matrix &M) :N(M.gSize())
+    MatrixCCS(Matrix &M, int notZero, int n) :N(n)
     {
+        values = vector<Element>(notZero);
+        rows = vector<int>(N);
         pointer = vector<int>(N + 1);
 
         vector<int> task;
@@ -108,7 +86,7 @@ public:
                     if (isNotZero == false)
                     {
                         isNotZero = true;
-                        pointer[j] = (int)values.size();
+                        pointer[j] = pointer.size();
                     }
                     rows.push_back(i);
                     values.push_back(el);
@@ -119,12 +97,13 @@ public:
                 task.push_back(j);
             }
         }
-        pointer[N] = (int)values.size();
-        for (int i = (int)task.size() - 1; i >= 0; i--)
+        pointer[N] = pointer.size() + 1;
+        for (int i = task.size() - 1; i--; i >= 0)
             pointer[task[i]] = pointer[task[i] + 1];
     }
-    void convertToMatrix(Matrix &A)
+    Matrix convertToMatrix()
     {
+        Matrix A(N, N, 0.0);
         for (int i = 0; i < N; i++)
         {
             int numElementsInCol = pointer[i + 1] - pointer[i];
