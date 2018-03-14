@@ -1,8 +1,12 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include <list>
 using std::ostream;
 using std::vector;
+using std::list;
+using std::pair;
+using std::make_pair;
 typedef double Element;
 
 class Matrix
@@ -95,33 +99,27 @@ public:
     MatrixCCS(Matrix &M) :N(M.gRow())
     {
         pointer = vector<int>(N + 1);
-
-        vector<int> task;
+        int lastCount = 0;
         for (int j = 0; j < N; j++)
         {
-            bool isNotZero = false;
+            int curCount = 0;
             for (int i = 0; i < N; i++)
-            {
+            {       
                 Element el = M[j][i];
                 if (el != 0.0)
                 {
-                    if (isNotZero == false)
-                    {
-                        isNotZero = true;
-                        pointer[j] = (int)values.size();
-                    }
+                    curCount++;
                     rows.push_back(i);
                     values.push_back(el);
                 }
             }
-            if (isNotZero == false)
+            if (j != 0)
             {
-                task.push_back(j);
+                pointer[j] = pointer[j-1] + lastCount;
             }
+            lastCount = curCount;
         }
         pointer[N] = (int)values.size();
-        for (int i = (int)task.size() - 1; i >= 0; i--)
-            pointer[task[i]] = pointer[task[i] + 1];
     }
     void convertToMatrix(Matrix &A)
     {
@@ -134,6 +132,45 @@ public:
                 Element el = values[pos];
                 A[i][rows[pos]] = el;
             }
+        }
+    }
+    void transpositionMatrix()
+    {
+        vector<vector<pair<Element, int>>> tmp(N, vector<pair<Element, int>>());
+        int count = 0;
+        int numElementsInCol = 0;
+        for (int i = 0; i < values.size(); i+= numElementsInCol)
+        {   
+            numElementsInCol = pointer[count + 1] - pointer[count];
+            for (int z = i; z < i + numElementsInCol; z++)
+            {
+                int row = rows[z];
+                int col = count;
+                Element el = values[z];
+                tmp[row].push_back(make_pair(el, col));
+            }
+            count++;
+        }
+        count = 0;
+        vector<int> *cols = &rows;
+        int lastCount = 0;
+        for (int i = 0; i < N; i++)
+        {
+            int curCount = (int)tmp[i].size();
+            if (curCount > 0)
+            {
+                for (int j = 0; j < curCount; j++)
+                {
+                    values[count] = tmp[i][j].first;
+                    (*cols)[count] = tmp[i][j].second;
+                }
+                if (count != 0)
+                {
+                    pointer[count] = pointer[count - 1] + lastCount;
+                }
+                count++;
+            }
+            lastCount = curCount;
         }
     }
 };

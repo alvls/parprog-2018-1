@@ -12,7 +12,6 @@ void readMatrixBin(Matrix &A, int N)
 }
 void writeMatrix(Matrix &A, int N)
 {
-    cout << N << '\n';
 	for (int i = 0; i < N; i++)
 	{
         for (int j = 0; j < N; j++)
@@ -46,8 +45,12 @@ int main(int argc, char * argv[])
 	freopen((output + number + extensionOut).c_str(), "w", stdout);
 	
     fread(&N, sizeof(N), 1, stdin);
-    Matrix A(N,N);
+    Matrix A(N,N), B(N,N);
 	
     readMatrixBin(A, N);
+    readMatrixBin(B, N);
+    cout << N << '\n';
 	writeMatrix(A, N);
+    cout << '\n';
+    writeMatrix(B, N);
 }

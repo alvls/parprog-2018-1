@@ -16,7 +16,6 @@ void readMatrix(Matrix &A, int N)
 }
 void writeMatrixBin(Matrix &A, int N)
 {
-    fwrite(&N, sizeof(N), 1, stdout);
 	fwrite(A.getP(), sizeof(Element), N*N, stdout);
 }
 int main(int argc, char * argv[])
@@ -45,8 +44,11 @@ int main(int argc, char * argv[])
 	freopen((output + number + extensionOut).c_str(), "wb", stdout);
 	
     cin >> N;
-    Matrix A(N, N);
+    Matrix A(N, N), B(N, N);
 
 	readMatrix(A, N);
+    readMatrix(B, N);
+    fwrite(&N, sizeof(N), 1, stdout);
 	writeMatrixBin(A, N);
+    writeMatrixBin(B, N);
 }
