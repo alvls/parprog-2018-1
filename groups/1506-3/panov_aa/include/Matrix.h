@@ -8,8 +8,8 @@ typedef double Element;
 class Matrix
 {
 private:
-    int row;
-    int col;
+    int row = 0;
+    int col = 0;
 public:
     std::vector<Element> vv;
     Matrix()
@@ -92,7 +92,7 @@ private:
     int N;
 public:
     MatrixCCS() {}
-    MatrixCCS(Matrix &M) :N(M.gSize())
+    MatrixCCS(Matrix &M) :N(M.gRow())
     {
         pointer = vector<int>(N + 1);
 

@@ -29,12 +29,12 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
 	freopen((name + number + extensionIn).c_str(), "rb", stdin);
 	freopen((name + number + extensionOut).c_str(), "wb", stdout);
 	fread(&N, sizeof(N), 1, stdin);
-
     Matrix A(N, N), B(N, N), C(N,N);
-    MatrixCCS Acol(A), Bcol(B), Ccol(C);
+   
+    fread(A.getP(), sizeof(Element), N * N, stdin);
+    fread(B.getP(), sizeof(Element), N * N, stdin);
 
-	fread(A.getP(), sizeof(Element), N * N, stdin);
-	//fread(B.getP(), sizeof(Element), N * N, stdin);
+    MatrixCCS Acol(A), Bcol(B), Ccol(C);
     
     omp_set_num_threads(num_threads);
 	
