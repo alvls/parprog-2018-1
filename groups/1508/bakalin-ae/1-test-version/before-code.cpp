@@ -63,6 +63,4 @@ int main(int argc, char* argv[]) {
 	for (int i = 0; i < out_size; i++) {
 		std::cout << "(" << result[i].x << ", " << result[i].y << ")" << std::endl;
 	}*/
-
-	return 0;
 }
