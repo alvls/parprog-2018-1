@@ -39,6 +39,7 @@ void NonlinearConjugateGradient(Sole * S) {
 
 		//2. Вычисление вектора направления
 		coef = vec(g, g) / vec(g_prev, g_prev);
+		if (isnan(coef)) coef = 0;
 		for (int j = 0; j < size; j++)
 			d[j] = coef * d_prev[j] - g[j];
 
@@ -46,6 +47,7 @@ void NonlinearConjugateGradient(Sole * S) {
 		for (int j = 0; j < size; j++)
 			s_prev[j] = vec(S->A[j], d);
 		s = vec(d, g) / vec(s_prev, d);
+		if (isnan(s)) s = 0;
 
 		//4. Вычисление нового приближения
 		for (int j = 0; j < size; j++)
