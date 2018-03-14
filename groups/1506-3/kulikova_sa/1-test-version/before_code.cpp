@@ -3,6 +3,7 @@
 #include "Sole.h"
 
 void NonlinearConjugateGradient(Sole * S);
+double vec(double * x, double * y);
 
 //Получение матрицы без i-й строки и j-го столбца
 void GetMatr(double ** mas, double ** p, int i, int m) {
@@ -74,15 +75,31 @@ bool symmetry(double ** A, int N) {
 	return false;
 }
 
-//Матрица А должна быть положительно определена, т.е xт*А*x > 0
-bool PositiveDefinite(double ** A, int N) {
+//Матрица А должна быть положительно определена, Критерий Сильвестра
+bool Sylvester(double ** A, int N) {
 	for (int i = 1; i <= N; i++)
-		if (Determinant(A, i) <= 0) {//Критерий Сильвестра
+		if (Determinant(A, i) <= 0) {
 			std::cout << "Матрица не положительно определена" << std::endl;
 			return true;
 		}
 	return false;
 }
+
+//Матрица А должна быть положительно определена, xт*А*x > 0
+bool PositiveDefinite(double ** A, double * x, int N) {
+	double * r = new double[N];
+	for (int i = 0; i < N; i++)
+		r[i] = vec(A[i], x);
+	double res = vec(r, x);
+
+	delete[] r;
+
+	if (res > 0)
+		return false;
+	std::cout << "Матрица не положительно определена" << std::endl;
+	return true;
+}
+
 
 //argv[1] - количество потоков, argv[2] - имя входного файла, argv[3] - имя выходного файла
 int main(int argc, char * argv[]) {
@@ -116,8 +133,8 @@ int main(int argc, char * argv[]) {
 		return 3;
 	if (symmetry(S->A, S->N))
 		return 4;
-	if (S->N < 21)
-	if (PositiveDefinite(S->A, S->N))
+	if (S->N < 11)
+	if (Sylvester(S->A, S->N))
 		return 5;
 
 	omp_set_num_threads(num_threads);
@@ -125,6 +142,10 @@ int main(int argc, char * argv[]) {
 	double time = omp_get_wtime();
 	NonlinearConjugateGradient(S);
 	time = omp_get_wtime() - time;
+
+	if (S->N > 10)
+	if (PositiveDefinite(S->A, S->x, S->N))
+		return 5;
 
 	FILE * out = fopen(argv[3], "wb");
 	if (out == nullptr) {

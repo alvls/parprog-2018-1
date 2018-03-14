@@ -3,7 +3,7 @@
 #include <random> 
 #include <chrono>
 
-int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
+int n_tests[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
 
 //argv[1] - размер системы, argv[2] - имя выходного файла
 int main(int argc, char * argv[]) {
@@ -52,7 +52,7 @@ int main(int argc, char * argv[]) {
 			for (int j = i; j < n; j++) {
 				cur[i][j] = cur[j][i] = distribution(generator);
 				if (i == j)
-					cur[i][j] += 400;
+					cur[i][j] += 400 + n;
 			}
 		break;
 	}
