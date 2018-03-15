@@ -1,0 +1,7 @@
+﻿  Grehem.cpp
+  Main.cpp
+Main.obj : error LNK2005: "void __cdecl copy(struct dot *,struct dot *,int)" (?copy@@YAXPEAUdot@@0H@Z) уже определен в Grehem.obj
+Main.obj : error LNK2005: "struct dot __cdecl operator-(struct dot const &,struct dot const &)" (??G@YA?AUdot@@AEBU0@0@Z) уже определен в Grehem.obj
+Main.obj : error LNK2005: "struct dot __cdecl operator+(struct dot const &,struct dot const &)" (??H@YA?AUdot@@AEBU0@0@Z) уже определен в Grehem.obj
+Main.obj : error LNK2005: "bool const __cdecl operator<(struct dot const &,struct dot const &)" (??M@YA?B_NAEBUdot@@0@Z) уже определен в Grehem.obj
+C:\Users\Alex\Documents\GitHub\parprog-2018-1\groups\1506-3\Sergeev_AP\1-test-version\Grehem\x64\Release\Base.exe : fatal error LNK1169: обнаружен многократно определенный символ - один или более

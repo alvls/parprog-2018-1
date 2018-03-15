@@ -1,0 +1,22 @@
+﻿  tests_grehem.cpp
+c:\users\alex\documents\github\parprog-2018-1\groups\1506-3\sergeev_ap\1-test-version\grehem\gtest\gtest.h(18863): warning C4805: ==: небезопасное смешение типа "const int" и типа "const bool" в операции
+  c:\users\alex\documents\github\parprog-2018-1\groups\1506-3\sergeev_ap\1-test-version\grehem\gtest\gtest.h(18900): note: см. ссылку на создание экземпляров функции шаблон при компиляции "testing::AssertionResult testing::internal::CmpHelperEQ<T1,T2>(const char *,const char *,const T1 &,const T2 &)"
+          with
+          [
+              T1=int,
+              T2=bool
+          ]
+  c:\users\alex\documents\github\parprog-2018-1\groups\1506-3\sergeev_ap\1-test-version\grehem\tests\tests_grehem.cpp(52): note: см. ссылку на создание экземпляров функции шаблон при компиляции "testing::AssertionResult testing::internal::EqHelper<false>::Compare<int,bool>(const char *,const char *,const T1 &,const T2 &)"
+          with
+          [
+              T1=int,
+              T2=bool
+          ]
+  c:\users\alex\documents\github\parprog-2018-1\groups\1506-3\sergeev_ap\1-test-version\grehem\tests\tests_grehem.cpp(52): note: см. ссылку на создание экземпляров функции шаблон при компиляции "testing::AssertionResult testing::internal::EqHelper<false>::Compare<int,bool>(const char *,const char *,const T1 &,const T2 &)"
+          with
+          [
+              T1=int,
+              T2=bool
+          ]
+  Tests.vcxproj -> C:\Users\Alex\Documents\GitHub\parprog-2018-1\groups\1506-3\Sergeev_AP\1-test-version\Grehem\Debug\Tests.exe
+  Tests.vcxproj -> C:\Users\Alex\Documents\GitHub\parprog-2018-1\groups\1506-3\Sergeev_AP\1-test-version\Grehem\Debug\Tests.pdb (Full PDB)
