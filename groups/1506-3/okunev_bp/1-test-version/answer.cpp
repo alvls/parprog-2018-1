@@ -98,32 +98,5 @@ int main(int argc, char* argv[])
 	for (int i = 0; i < standartMatrC.size(); ++i)
 		fwrite(standartMatrC[i].data(), sizeof(standartMatrC[i][0]), standartMatrC.size(), stdout);
 
-	//std::cout.precision(10);
-
-	//for (int i = 0; i < matrixSize; ++i)
-	//{ 
-	//	for (int j = 0; j < matrixSize; ++j)
-	//		std::cout << standartMatrA[i][j] << ' ';
-	//	std::cout << std::endl;
-	//}
-
-	//std::cout << "B----------------------" << std::endl;
-
-	//for (int i = 0; i < matrixSize; ++i)
-	//{
-	//	for (int j = 0; j < matrixSize; ++j)
-	//		std::cout << standartMatrB[i][j] << ' ';
-	//	std::cout << std::endl;
-	//}
-
-	//std::cout << "C----------------------" << std::endl;
-
-	//for (int i = 0; i < matrixSize; ++i)
-	//{
-	//	for (int j = 0; j < matrixSize; ++j)
-	//		std::cout << standartMatrC[i][j] << ' ';
-	//	std::cout << std::endl;
-	//}
-
 	return 0;
 }
