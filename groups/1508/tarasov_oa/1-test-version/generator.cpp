@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int n_tests[] = { 1, 2, 3, 5, 7, 8, 9, 10, 10, 1000, 5000, 10000, 10000, 500000, 100000, 1000000, 10000000, 25000000, 50000000, 100000000 };
+int n_tests[] = { 1, 2, 3, 5, 7, 8, 10, 100, 100, 1000, 5000, 10000, 10000, 500000, 100000, 1000000, 10000000, 25000000, 50000000, 100000000 };
 
 int main(int argc, char * argv[])
 {
@@ -22,15 +22,15 @@ int main(int argc, char * argv[])
 	default_random_engine generator(static_cast<unsigned int>(chrono::system_clock::now().time_since_epoch().count()));
 	uniform_int_distribution <int> distribution(0, 1000);
 	
-	fwrite(&N, sizeof(unsigned int), 1, stdout);
+	fwrite(&N, sizeof(double), 1, stdout); // фиктивная запись (чтобы размеры входного и исходного файлов совпадали)
 	fwrite(&N, sizeof(N), 1, stdout);
 
 	int *arr = new int[N];
-	if (atoi(argv[1]) == 10) { // одинаковые числа в массиве
+	if (atoi(argv[1]) == 10) {		// одинаковые числа в массиве
 		int val = distribution(generator);
 		for (int i = 0; i < N; i++)	arr[i] = val;
 	}
-	else // случайные числа в массиве
+	else							// случайные числа в массиве
 		for (int i = 0; i < N; i++) arr[i] = distribution(generator);
 	
 	fwrite(arr, sizeof(*arr), N, stdout);

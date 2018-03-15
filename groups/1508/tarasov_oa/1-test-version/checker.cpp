@@ -65,18 +65,15 @@ int main(int argc, char * argv[])
 	FILE * bua = fopen(argv[2], "rb");
 
 	int ans_n = 0, res_n = 0;
-	//int *ans = new int[ans_n], *res = new int[res_n];
-	unsigned int ans_time, res_time;
+	double ans_time, res_time;
 
 	// выходной файл
 	fread(&res_time, sizeof(res_time), 1, buo);
 	fread(&res_n, sizeof(res_n), 1, buo);
-	//fread(res, sizeof(*res), res_n, buo);
 
 	// файл с верным результатом
 	fread(&ans_time, sizeof(ans_time), 1, bua);
 	fread(&ans_n, sizeof(ans_n), 1, bua);
-	//fread(ans, sizeof(*ans), ans_n, bua);
 
 	if (ans_n != res_n) {
 		checker_result.write_message("PE. Number of elements in the array is different.");
@@ -103,7 +100,7 @@ int main(int argc, char * argv[])
 			checker_result.write_message("WA. Array sorting has an error.");
 			checker_result.write_verdict (verdict::WA);
 		}
-		checker_result.write_time(res_time * static_cast<long long>(1e7));
+		checker_result.write_time(static_cast<long long>(res_time * 1e7));
 	}
 
 	fclose(bua);

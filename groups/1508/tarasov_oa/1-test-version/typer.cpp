@@ -24,7 +24,7 @@ int main(int argc, char * argv[])
 
 		size = array_data.size();
 
-		fwrite(&size, sizeof(unsigned int), 1, out); // фиктивный параметр под время
+		fwrite(&size, sizeof(double), 1, out); // фиктивный параметр под время (чтобы размеры входного и исходного файлов совпадали)
 		fwrite(&size, sizeof(size), 1, out);
 		for(int i = 0; i < size; ++i) 
 			fwrite(&array_data[i], sizeof(int), 1, out);

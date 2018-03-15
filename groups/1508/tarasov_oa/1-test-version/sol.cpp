@@ -1,7 +1,3 @@
-#include <random>
-#include <iostream>
-using namespace std;
-
 void QuickSort(int* arr, int size)
 {
 	int i = 0, j = size - 1;

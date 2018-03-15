@@ -12,7 +12,7 @@ int main(int argc, char * argv[])
 
 	int size;
 	int* arr;
-	unsigned int time;
+	double time;
 
 	freopen(argv[1], "rb", stdin);
 	freopen(argv[2], "wt", stdout);
