@@ -9,33 +9,28 @@
 using std::vector;
 
 const int DEFAULT_MATRIX_SIZE = 1000;
-const double DENSITY = 0.1;
+const double DENSITY = 0.1; //10%
 
 int main(int argc, char* argv[])
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<double> distribution(- 1000, 1000);
-	std::uniform_int_distribution<int> distributionInt(0, 1000);
 
 	char* PATHout = "matr.out";
 	int matrixSize = DEFAULT_MATRIX_SIZE;
 	int notZero = 0;
-	int elemToRow = DEFAULT_MATRIX_SIZE * DENSITY;
 	int testType = 0;
 
 	vector<double> value;
 	vector<int> col;
 	vector<int> row(matrixSize + 1);
-	value.reserve(matrixSize * elemToRow);
-	col.reserve(matrixSize * elemToRow);
+
 
 	int notZeroB = 0;
 	vector<double> valueB;
 	vector<int> colB;
 	vector<int> rowB(matrixSize + 1);
-	valueB.reserve(matrixSize * elemToRow);
-	colB.reserve(matrixSize * elemToRow);
 
 	if (argc > 1)
 	{
@@ -43,16 +38,26 @@ int main(int argc, char* argv[])
 		if (argc > 3)
 		{
 			matrixSize = atoi(argv[2]);
-			if (argc == 4)
+			if (argc > 4)
 				testType = atoi(argv[3]);
 		}
 	}
+
+	int elemToRow = matrixSize * DENSITY;
+
+	value.reserve(matrixSize * elemToRow);
+	col.reserve(matrixSize * elemToRow);
+
+	valueB.reserve(matrixSize * elemToRow);
+	colB.reserve(matrixSize * elemToRow);
 
 	freopen(PATHout, "wb", stdout);
 
 	switch (testType)
 	{
 	case 0:
+		int interval = matrixSize / elemToRow;
+		std::uniform_int_distribution<int> distributionInt(0, interval - 1);
 		for (int i = 0; i < matrixSize; ++i)
 		{
 			vector<int> tmp;
@@ -60,7 +65,7 @@ int main(int argc, char* argv[])
 			for (int j = 0; j < elemToRow; ++j)
 			{
 				value.emplace_back(distribution(gen));
-				tmp.emplace_back(distributionInt(gen));
+				tmp.emplace_back(interval * j + distributionInt(gen));
 			}
 			std::sort(tmp.begin(), tmp.end());
 			col.insert(col.end(), tmp.begin(), tmp.end());
@@ -76,7 +81,7 @@ int main(int argc, char* argv[])
 			for (int j = 0; j < elemToRow; ++j)
 			{
 				valueB.emplace_back(distribution(gen));
-				tmp.emplace_back(distributionInt(gen));
+				tmp.emplace_back(interval * j + distributionInt(gen));
 			}
 			std::sort(tmp.begin(), tmp.end());
 			colB.insert(colB.end(), tmp.begin(), tmp.end());
@@ -84,8 +89,6 @@ int main(int argc, char* argv[])
 		}
 		rowB[matrixSize] = rowB[matrixSize - 1] + 1;
 		notZeroB = valueB.size();
-		break;
-	default:
 		break;
 	}
 	
