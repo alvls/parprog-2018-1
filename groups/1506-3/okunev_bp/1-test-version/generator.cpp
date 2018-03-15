@@ -19,18 +19,17 @@ int main(int argc, char* argv[])
 
 	char* PATHin = "matr.in";
 	int matrixSize = DEFAULT_MATRIX_SIZE;
+	double density = DENSITY;
 	int notZero = 0;
 	int testType = 0;
 
 	vector<double> value;
 	vector<int> col;
-	vector<int> row(matrixSize + 1);
 
 
 	int notZeroB = 0;
 	vector<double> valueB;
 	vector<int> colB;
-	vector<int> rowB(matrixSize + 1);
 
 	if (argc > 1)
 	{
@@ -39,11 +38,14 @@ int main(int argc, char* argv[])
 		{
 			matrixSize = atoi(argv[2]);
 			if (argc > 3)
-				testType = atoi(argv[3]);
+				density = atof(argv[3]);
 		}
 	}
 
-	int elemToRow = matrixSize * DENSITY;
+	vector<int> row(matrixSize + 1);
+	vector<int> rowB(matrixSize + 1);
+
+	int elemToRow = matrixSize * density;
 
 	value.reserve(matrixSize * elemToRow);
 	col.reserve(matrixSize * elemToRow);
