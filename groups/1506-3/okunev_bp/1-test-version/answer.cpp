@@ -3,6 +3,9 @@
 #include <cstdio>
 #include <vector>
 #include <iostream>
+#include <chrono>
+
+using std::chrono::steady_clock;
 using std::vector;
 
 int main(int argc, char* argv[])
@@ -85,6 +88,7 @@ int main(int argc, char* argv[])
 	}
 
 	//multiplication
+	steady_clock::time_point start = steady_clock::now();
 	for (int i = 0; i < matrixSize; ++i)
 	{
 		for (int j = 0; j < matrixSize; ++j)
@@ -93,7 +97,12 @@ int main(int argc, char* argv[])
 				standartMatrC[i][j] += standartMatrA[i][k] * standartMatrB[k][j];
 		}
 	}
+	steady_clock::time_point end = steady_clock::now();
 
+	double time = std::chrono::duration_cast<std::chrono::microseconds>
+		(end - start).count();
+
+	fwrite(&time, sizeof(time), 1, stdout);
 	fwrite(&matrixSize, sizeof(matrixSize), 1, stdout);
 	for (int i = 0; i < standartMatrC.size(); ++i)
 		fwrite(standartMatrC[i].data(), sizeof(standartMatrC[i][0]), standartMatrC.size(), stdout);
