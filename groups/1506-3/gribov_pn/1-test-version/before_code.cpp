@@ -1,4 +1,4 @@
-// Чтение данных и точка входа в программу
+// Р§С‚РµРЅРёРµ РґР°РЅРЅС‹С… Рё С‚РѕС‡РєР° РІС…РѕРґР° РІ РїСЂРѕРіСЂР°РјРјСѓ
 #include <cstdio>
 #include <string>
 #include <omp.h>
@@ -21,7 +21,7 @@ int main(int argc, char * argv[])
 		freopen((".\\tests\\" + std::string(argv[1]) + ".ans").c_str(), "wb", stdout);
 	}
 
-	fseek(stdin, sizeof(double), SEEK_SET); // пропуск фиктивного времени
+	fseek(stdin, sizeof(double), SEEK_SET); // РїСЂРѕРїСѓСЃРє С„РёРєС‚РёРІРЅРѕРіРѕ РІСЂРµРјРµРЅРё
 	fread(&N, sizeof(N), 1, stdin);
 
 	vec.resize(N);
