@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<double> distribution(- 1000, 1000);
 
-	char* PATHout = "matr.out";
+	char* PATHin = "matr.in";
 	int matrixSize = DEFAULT_MATRIX_SIZE;
 	int notZero = 0;
 	int testType = 0;
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 
 	if (argc > 1)
 	{
-		PATHout = argv[1];
+		PATHin = argv[1];
 		if (argc > 3)
 		{
 			matrixSize = atoi(argv[2]);
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 	valueB.reserve(matrixSize * elemToRow);
 	colB.reserve(matrixSize * elemToRow);
 
-	freopen(PATHout, "wb", stdout);
+	freopen(PATHin, "wb", stdout);
 
 	switch (testType)
 	{

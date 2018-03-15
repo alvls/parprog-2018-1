@@ -78,10 +78,11 @@ int main(int argc, char * argv[]) {
 
 	//output C matrix
 	fwrite(&time, sizeof(time), 1, stdout);
+	fwrite(&sizeA, sizeof(sizeA), 1, stdout);
 	fwrite(&NotZeroC, sizeof(NotZeroC), 1, stdout);
 	fwrite(valueC, sizeof(*valueC), NotZeroC, stdout);
 	fwrite(colC, sizeof(*colC), NotZeroC, stdout);
-	fwrite(rowC, sizeof(*rowC), sizeC, stdout);
+	fwrite(rowC, sizeof(*rowC), sizeA + 1, stdout);
 
 	return 0;
 }
