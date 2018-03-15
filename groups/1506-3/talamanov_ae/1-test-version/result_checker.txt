@@ -1,0 +1,162 @@
+3
+AC. Array is sorted
+2
+2
+4
+271228
+5
+4000
+
+3
+AC. Array is sorted
+2
+2
+4
+3734
+5
+40
+
+3
+AC. Array is sorted
+2
+2
+4
+550907
+5
+4000
+
+3
+AC. Array is sorted
+2
+2
+4
+2308
+5
+40
+
+3
+AC. Array is sorted
+2
+2
+4
+842100
+5
+4000
+
+3
+AC. Array is sorted
+2
+2
+4
+54682
+5
+400
+
+3
+AC. Array is sorted
+2
+2
+4
+53824
+5
+400
+
+3
+AC. Array is sorted
+2
+2
+4
+5320
+5
+40
+
+3
+AC. Array is sorted
+2
+2
+4
+37940
+5
+400
+
+3
+AC. Array is sorted
+2
+2
+4
+249949
+5
+4000
+
+3
+AC. Array is sorted
+2
+2
+4
+2304
+5
+40
+
+3
+AC. Array is sorted
+2
+2
+4
+14476
+5
+400
+
+3
+AC. Array is sorted
+2
+2
+4
+14574
+5
+400
+
+3
+AC. Array is sorted
+2
+2
+4
+51009
+5
+400
+
+3
+AC. Array is sorted
+2
+2
+4
+820135
+5
+4000
+
+3
+AC. Array is sorted
+2
+2
+4
+3552
+5
+40
+
+3
+AC. Array is sorted
+2
+2
+4
+4165
+5
+40
+
+3
+AC. Array is sorted
+2
+2
+4
+990799
+5
+4000
+
