@@ -76,58 +76,90 @@ public:
 } checker_result;
 
 
-//argv[1] - имя выходного файла, argv[2] - имя файла ответа
+//argv[1] - имя файла участника, argv[2] - имя файла жюри
 int main(int argc, char * argv[]) {
+	setlocale(LC_ALL, "Russian");//Корректное отображение Кириллицы
+
+	if (argc != 3) {
+		std::cout << "Некорректные данные" << std::endl;
+		return 1;
+	}
+
 	// Открываем файл выходных данных и ответ участника  
 	FILE * buo = fopen(argv[1], "rb"); 
 	FILE * bua = fopen(argv[2], "rb");
 
-	// Время работы участника и время работы жюри
-	double ans_time, res_time;
+	if (buo == nullptr) {
+		std::cout << "Файл участника не может быть открыт" << std::endl;
+		return 2;
+	}
 
-	// Считываем время работы программы участника и жюри
+	if (bua == nullptr) {
+		std::cout << "Файл жюри не может быть открыт" << std::endl;
+		return 3;
+	}
+
+	// Время работы участника
+	double res_time;
+
+	// Считываем время работы программы участника
 	fread(&res_time, sizeof(res_time), 1, buo);
-	fread(&ans_time, sizeof(ans_time), 1, bua);
 
 	int n; 
 	// Считываем размерность матриц 
 	fread(&n, sizeof (n), 1, buo);
 
+	if (n < 1) {
+		std::cout << "Не положительный размер системы" << std::endl;
+		fclose(buo);
+		fclose(bua);
+		return 3;
+	}
+
 	// Выделяем память для СЛАУ, ответа жюри и ответа участника 
 	Sole * S = new Sole(n);// Участника
-	double * ans = new double[n], * res = new double[n]; 
+	double * ans = new double[n];
 
 	// Считываем СЛАУ
 	for (int i = 0; i < n; i++)
 		fread(S->A[i], sizeof(**S->A), n, buo);
 	fread(S->b, sizeof(*S->b), n, buo);
 
-	// Считываем ответ участника 
-	fread(res, sizeof (*res), n, buo);
+	// Считываем ответ участника и жюри
+	fread(S->x, sizeof (*S->x), n, buo);
+	fread(ans, sizeof(*ans), n, bua);
 
-	// Считываем ответ жюри 
-	fread(ans, sizeof (*ans), n, bua);
+	double res1 = 0, res2 = 0;
+	for (int i = 0; i < n; i++) {
+		res1 += S->A[0][i] * S->x[i];
+		res2 += S->A[0][i] * ans[i];
+	}
+	std::cout << res1 << " - " << res2 << " = " << S->b[0] << std::endl;
+
+	fclose(bua);
+	fclose(buo);
 
 	// Вычисляем ошибку, как квадрат нормы разности решений 
 	double diff = 0.0; 
 	for (int i = 0; i < n; i++) 
-		diff += (ans[i] - res[i]) * (ans[i] - res[i]);
+		diff += (ans[i] - S->x[i]) * (ans[i] - S->x[i]);
 
 	// Проверяем, что ошибка мала, тогда сообщаем, что решение корректно, иначе - некорректно. 
 	if (diff < 1e-6) { 
+		std::cout << "Совпадает" << std::endl;
 		checker_result.write_message ("AC. Numbers are equal."); 
 		checker_result.write_verdict (verdict::AC); 
 	} 
 	else { 
+		std::cout << "Не совпадает" << std::endl;
 		checker_result.write_message ("WA. Output is not correct."); 
 		checker_result.write_verdict (verdict::WA); 
 	}
 
+	delete[] ans;
+
 	// Записываем время в правильной размерности (интервалы по 100 нс = 10 ^ (-7) сек). 
 	checker_result.write_time (res_time * 1e7);
-
-	fclose(bua); 
-	fclose(buo);
 
 	return 0;
 }
