@@ -61,7 +61,7 @@ void qSort(vector<double>::iterator begin, vector<double>::iterator end)
 			// Шаги 2, 3. Отправляем большую часть в стек и двигаем lb,ub
 			if (i < ppos) { // правая часть больше
 				if (i < ub) { // если в ней больше 1 элемента - нужно
-					stackpos++; // сортировать, запрос в стек ?????????????????????????????????????????????
+					stackpos++; // сортировать, запрос в стек
 					lbstack[stackpos] = i;
 					ubstack[stackpos] = ub;
 				}
