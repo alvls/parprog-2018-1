@@ -72,7 +72,7 @@ int main(int argc, char * argv[])
 	bool error = false;
 	int prev_elem = 0, cur_elem = 0;
 	fread(&prev_elem, sizeof(prev_elem), 1, buo);
-	for (int i = 0; i < res_n; ++i) {
+	for (int i = 1; i < res_n; ++i) {
 		fread(&cur_elem, sizeof(cur_elem), 1, buo);
 		if (cur_elem < prev_elem) {
 			error = true;
