@@ -13,5 +13,3 @@
 
 * true_solution - доверительная реализация алгоритма сортировки для сранения checker'ом (std::sort) 
  (на выходе файл вида 1_true.ans, ложится в папку \tests)
- 
-* сгенерированные тесты лежат по пути groups\1506-3\gribov_pn\1-test-version\Omp_Lab1_GribovPN\x64\Release\tests
