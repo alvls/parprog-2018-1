@@ -9,9 +9,6 @@
 #define MAXSTACK 2048
 using namespace std;
 
-//vector <double> vec = { 6,4,1,9,3 };
-
-
 void qSort(vector<double>::iterator begin, vector<double>::iterator end)
 {
 	long i, j; // указатели, участвующие в разделении
@@ -49,24 +46,9 @@ void qSort(vector<double>::iterator begin, vector<double>::iterator end)
 				while (pivot < /*a[j]*/ *(begin+j)) 
 					j--;
 				if (i <= j) {
-
-					//temp = *(begin + i); // a[i];
-					//*(begin + i) = *(begin + j); //a[i] = a[j]; 
-					//*(begin + j) = temp; //a[j] = temp;
-
 					temp = *(begin + i); // a[i];
 					*(begin + i) = *(begin + j); //a[i] = a[j]; 
 					*(begin + j) = temp; //a[j] = temp;
-
-					/*int tmp;
-					tmp = *ptra;
-					ptra = &(*ptrb);
-					ptrb = &tmp;*/
-
-					//temp = *(begin + i);
-					//begin + i = &(*(begin + j));
-					//begin + j = &temp;
-
 					i++; 
 					j--;
 				}
@@ -96,12 +78,6 @@ void qSort(vector<double>::iterator begin, vector<double>::iterator end)
 			}
 		} while (lb < ub); // пока в меньшей части более 1 элемента
 	} while (stackpos != 0); // пока есть запросы в стеке
-
-	//for (int i = 0; i < distance(begin, end);i++) {
-	//	//vec[i] = *(begin + i);
-	//	cout << *(begin + i) << " ";
-	//	//cout << vec[i] <<" ";
-	//}
 }
 
 void qSort(vector <double>* vec) {
@@ -146,64 +122,34 @@ void printArray(double* arr, int size) {
 	cout << endl;
 }
 
-void main()
-{
-	//int a = 0;
-	//int* ptra = &a;
-	//int b = 1;
-	//int* ptrb = &b;
-	//int* ptrtmp;
-	//cout << a << " " << b << endl;
-	//cout << ptra << " " << ptrb << endl;
-
-	//int tmp;
-	//tmp = *ptra;
-	//ptra = &(*ptrb);
-	//ptrb = &tmp;
-
-	//cout << a << " " << b << endl;
-	//cout << ptra << " " << ptrb << endl;
-
-	//ptrtmp = ptra;
-	//ptra = ptrb;
-	//ptrb = ptrtmp;
-	//cout << a << " " << b << endl;
-	//cout << ptra << " " << ptrb << endl;
-
-	////int tmp;
-	//tmp = *ptra;
-	//*ptra = *ptrb;
-	//*ptrb = tmp;
-	//cout << a << " " << b << endl;
-	//cout << ptra << " " << ptrb << endl;
-
-
-	cout << "  array" << endl;
-
-	double* arr = new double[5];
-	arr[0] = 6;
-	arr[1] = 4;
-	arr[2] = 1;
-	arr[3] = 9;
-	arr[4] = 3;
-	printArray(arr, 5);
-	qSort(arr, 5);
-	printArray(arr, 5);
-	delete[] arr;
-
-	cout << "  vector" <<endl;
-
-	vector <double> vec = { 6,4,1,9,3 };
-	vector <double>* ptr = &vec;
-	for (int i = 0; i < vec.size(); i++) {
-		cout << vec[i] << " ";
-	}
-	cout << endl;
-	qSort(ptr);
-	for (int i = 0; i < vec.size(); i++) {
-		cout << vec[i] << " ";
-	}
-
-	//delete[]vec;
-	system("pause>>void");
-}
+//void main()
+//{
+//	cout << "  array" << endl;
+//
+//	double* arr = new double[5];
+//	arr[0] = 6;
+//	arr[1] = 4;
+//	arr[2] = 1;
+//	arr[3] = 9;
+//	arr[4] = 3;
+//	printArray(arr, 5);
+//	qSort(arr, 5);
+//	printArray(arr, 5);
+//	delete[] arr;
+//
+//	cout << "  vector" <<endl;
+//
+//	vector <double> vec = { 6,4,1,9,3 };
+//	vector <double>* ptr = &vec;
+//	for (int i = 0; i < vec.size(); i++) {
+//		cout << vec[i] << " ";
+//	}
+//	cout << endl;
+//	qSort(&vec);
+//	for (int i = 0; i < vec.size(); i++) {
+//		cout << vec[i] << " ";
+//	}
+//
+//	//delete[]vec;
+//	system("pause>>void");
+//}

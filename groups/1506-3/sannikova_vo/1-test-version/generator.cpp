@@ -1,34 +1,85 @@
-#include <cstdio>
-#include <random>
-#include <ctime>
+п»ї//#define _CRT_SECURE_NO_WARNINGS
+//#include <cstdio>
+//#include <random>
+//#include <ctime>
+//#include <chrono>
+//#include <iostream>
+//using namespace std;
+//
+//int  n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
+//int main(int argc, char * argv[])
+//{
+//	if (argc != 2 || atoi(argv[1]) < 1 || atoi(argv[1]) > 20)
+//	{
+//		cout << "Use 'generator [test number (1 - 20)]'" << endl;
+//		return 1;
+//	}
+//	int n = n_tests[atoi(argv[1] - 1)]; //РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃРіРµРЅРµСЂРёСЂРѕРІР°РЅРЅРѕРј РјР°СЃСЃРёРІРµ
+//	
+//	// РїРµСЂРµРЅР°РїСЂР°РІР»СЏРµРј РїРѕС‚РѕРє stdout РІ С„Р°Р№Р» arr.in РєРѕС‚РѕСЂС‹Р№ СЃС‚РѕРёС‚ РїРµСЂРІС‹Рј РІ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРµ
+//	freopen(argv[1], "wb", stdout);
+//	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
+//	uniform_real_distribution <double> distribution(-1e4, 1e4);
+//	
+//	//fwrite
+//	double tmp;	
+//	fwrite(&tmp, sizeof(tmp), 1, stdout); //РІРІРѕРґ РІСЂРµРјРµРЅРё РїСЂРѕР·Р°РїР°СЃ 
+//	fwrite(&n, sizeof(n), 1, stdout);
+//	double * cur = new double[n];
+//	vector <double> cur_vec(n);
+//	
+//	// РіРµРЅРµСЂРёСЂСѓРµРј РјР°СЃСЃРёРІ/РІРµРєС‚РѕСЂ 
+//	for (int i = 0; i < n; i++){
+//		// Р·Р°РїРѕР»РЅСЏРµРј СЃР»СѓС‡Р°Р№РЅС‹РјРё С‡РёСЃР»Р°РјРё РёР· СЂР°РІРЅРѕРјРµСЂРЅРѕРіРѕ СЂР°СЃРїСЂРµРґРµР»РµРЅРёСЏ РјР°СЃСЃРёРІ
+//		cur[i] = distribution(generator);
+//		//cur[i] = tmp;
+//
+//		//cur_vec.push_back(tmp);
+//		//fwrite(&cur_vec[i], sizeof(double), 1, stdout);
+//	}
+//	// Р·Р°РїРёСЃС‹РІР°РµРј СЃС‚СЂРѕРєСѓ РІ Р±РёРЅР°СЂРЅРѕРј РІРёРґРµ РІ С„Р°Р№Р»
+//	fwrite(cur, sizeof(*cur), n, stdout);
+//	// Р°РЅР°Р»РѕРіРёС‡РЅРѕ РіРµРЅРµСЂРёСЂСѓРµРј РІС‚РѕСЂСѓСЋ РјР°С‚СЂРёС†Сѓ
+//
+//	return 0;
+//}
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdio> 
+#include <random> 
+#include <ctime> 
 #include <chrono>
+#include <iostream>
+
 using namespace std;
-int  n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
+
+int n_tests[] = { 1, 2, 3, 5, 7, 8, 10, 100, 500, 1000, 5000, 10000, 10000, 500000, 100000, 1000000, 10000000, 25000000, 50000000, 100000000 };
+
 int main(int argc, char * argv[])
 {
-	// перенаправляем поток stdout в файл arr.in
-	freopen("arr.in", "wb", stdout);
-	// создаём генератор случайных чисел с seed равным количеству времени с начала эпохи
-	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
-	// создаём равномерное распределение случайной величины типа double в диапазоне 
-	//  [-10000, 10000]
-	uniform_real_distribution <double> distribution(-1e4, 1e4);
-	// задаём размер массивов
-	int n = 1000;
-	// если передали номер теста в аргументах командной строки, то берём размер из  n_tests
-	if (argc > 1)
-		n = n_tests[atoi(argv[1])];
-	// записываем в бинарном виде размерность матриц
-	fwrite(&n, sizeof(n), 1, stdout);
-	// создаём временный массив для строки матрицы
-	double * cur = new double[n];
-	// генерируем первую матрицу
-	for (int i = 0; i < n; i++){
-		// заполняем случайными числами из равномерного распределения массив
-		cur[i] = distribution(generator);
+	if ( atoi(argv[1]) < 1 || atoi(argv[1]) > 20 || argc != 2)
+	{
+		cout << "You input incorrect number. Try again. ONLY 1-20" << endl;
+		return 1;
 	}
-	// записываем строку в бинарном виде в файл
-	fwrite(cur, sizeof(*cur), n, stdout);
-	// аналогично генерируем вторую матрицу
+	int n = n_tests[atoi(argv[1]) - 1]; //count of elements in vector/array
+
+	string name = argv[1]; 
+	string type = ".bin";
+	name += type;
+	freopen(name.c_str(), "wb", stdout);
+
+	default_random_engine generator(static_cast<unsigned int>(chrono::system_clock::now().time_since_epoch().count()));
+	uniform_real_distribution <double> distribution(0, 1000);
+
+	fwrite(&n, sizeof(double), 1, stdout); 
+	fwrite(&n, sizeof(n), 1, stdout);
+
+	double x;
+	for (int i = 0; i < n; i++) {
+		//arr[i] = distribution(generator);
+		x = distribution(generator);
+		fwrite(&x, sizeof(x), 1, stdout);
+		//cout << (double)distribution(generator) << endl;
+	}
 	return 0;
 }
