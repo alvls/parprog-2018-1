@@ -56,54 +56,40 @@ public:
 
 int main(int argc, char * argv[])
 {
-	if (argc != 3) {
-		std::cout << "Use 'checker [output file] [answer file]'" << std::endl;
+	if (argc != 2) {
+		std::cout << "Use 'checker [output file]'" << std::endl;
 		return 1;
 	}
 
 	FILE * buo = fopen(argv[1], "rb"); 
-	FILE * bua = fopen(argv[2], "rb");
 
-	int ans_n = 0, res_n = 0;
-	double ans_time, res_time;
+	int res_n = 0;
+	double res_time;
 
-	// выходной файл
 	fread(&res_time, sizeof(res_time), 1, buo);
 	fread(&res_n, sizeof(res_n), 1, buo);
 
-	// файл с верным результатом
-	fread(&ans_time, sizeof(ans_time), 1, bua);
-	fread(&ans_n, sizeof(ans_n), 1, bua);
-
-	if (ans_n != res_n) {
-		checker_result.write_message("PE. Number of elements in the array is different.");
-		checker_result.write_verdict(verdict::PE);
+	bool error = false;
+	int prev_elem = 0, cur_elem = 0;
+	fread(&prev_elem, sizeof(prev_elem), 1, buo);
+	for (int i = 0; i < res_n; ++i) {
+		fread(&cur_elem, sizeof(cur_elem), 1, buo);
+		if (cur_elem < prev_elem) {
+			error = true;
+			break;
+		}
+		prev_elem = cur_elem;
+	}
+	if (error == false) {
+		checker_result.write_message("AC. Array is sorted correctly.");
+		checker_result.write_verdict(verdict::AC);
 	}
 	else {
-		bool error = false;
-		int ans_part = 0, res_part = 0;
-
-		for (int i = 0; i < res_n; ++i) {
-			fread(&res_part, sizeof(res_part), 1, buo);
-			fread(&ans_part, sizeof(ans_part), 1, bua);
-			if (res_part != ans_part) {
-				error = true;
-				break;
-			}
-		}
-
-		if (error == false) {
-			checker_result.write_message("AC. Array is sorted correctly.");
-			checker_result.write_verdict(verdict::AC);
-		}
-		else {
-			checker_result.write_message("WA. Array sorting has an error.");
-			checker_result.write_verdict (verdict::WA);
-		}
-		checker_result.write_time(static_cast<long long>(res_time * 1e7));
+		checker_result.write_message("WA. Array sorting has an error.");
+		checker_result.write_verdict (verdict::WA);
 	}
+	checker_result.write_time(static_cast<long long>(res_time * 1e7));
 
-	fclose(bua);
 	fclose(buo);
 	return 0;
 }
