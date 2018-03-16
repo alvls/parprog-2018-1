@@ -56,7 +56,7 @@ int main(int argc, const char** argv)
 	double* blured = gaussian_blur(data, h, w, radius);
 
 	linear_time = omp_get_wtime() - linear_time; //end time
-	printf("linear time: %lfs\n", linear_time);
+	//printf("linear time: %lfs\n", linear_time);
 
 	save_image_to_binary(w, h, blured, linear_time, output_file);
 

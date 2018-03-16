@@ -18,9 +18,9 @@ def read_binary(time = False, name = binary_output_default):
     blank_image = np.zeros((h,w,3), np.uint8)
     for y in range(0, h):
         for x in range(0, w):
-            blank_image[y, x, 0] = values[y * w * 3 + x * 3] # save R
-            blank_image[y, x, 1] = values[y * w * 3 + x * 3 + 1] # save G
-            blank_image[y, x, 2] = values[y * w * 3 + x * 3 + 2] # save B
+            blank_image[y, x, 0] = values[y * w * 3 + x * 3] # read R
+            blank_image[y, x, 1] = values[y * w * 3 + x * 3 + 1] # read G
+            blank_image[y, x, 2] = values[y * w * 3 + x * 3 + 2] # read B
     return blank_image, t
 
 def main():
