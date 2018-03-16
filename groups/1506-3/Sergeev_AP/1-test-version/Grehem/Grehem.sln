@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Base", "Base\Base.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gtest", "gtest\gtest.vcxproj", "{60932AFC-7808-48B7-B3BF-F2BC151C0065}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "Tests\Tests.vcxproj", "{EAFAD4CD-A47D-4F6F-8EF5-4681DEF59295}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "google_Tests", "google_Tests\Tests.vcxproj", "{EAFAD4CD-A47D-4F6F-8EF5-4681DEF59295}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
