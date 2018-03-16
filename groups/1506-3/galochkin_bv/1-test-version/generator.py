@@ -12,7 +12,7 @@ from os.path import isfile, join
 
 # get all file names in folder
 onlyfiles = [f for f in listdir(config.test_imgs_dir) if isfile(join(config.test_imgs_dir, f)) and f != "README.md"]
-for i in range(1, len(onlyfiles)):
+for i in range(0, len(onlyfiles)):
     print str(i) + "/" +str(len(onlyfiles) - 1)
     f = onlyfiles[i]
     # read image using OpenCV
@@ -25,6 +25,5 @@ for i in range(1, len(onlyfiles)):
     # processing by cv
     blur = cv.GaussianBlur(img,(3,3),1,1)
 
-    writer.save_to_binary(img, config.checker_binares_dir + str(i) + "")
-    writer.save_to_binary(blur, config.checker_answers_dir + str(i) + ".ans")
-    
+    writer.save_to_binary(img, config.checker_binares_dir + str(i + 1) + "")
+    writer.save_to_binary(blur, config.checker_answers_dir + str(i + 1) + ".ans")
