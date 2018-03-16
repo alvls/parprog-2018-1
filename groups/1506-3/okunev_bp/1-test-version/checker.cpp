@@ -78,14 +78,22 @@ public:
 	} 
 } checker_result; 
 
-int main() {
+int main(int argc, char* argv[]) {
 
-	char* PATHin = "matr.in";	//default input file name
+//	char* PATHin = "matr.in";	//default input file name
 	char* PATHout = "matr.out";	//default output file name
 	char* PATHans = "matr.ans";	//default answer file name
 
+
+	if (argc > 1)
+	{
+		PATHout = argv[1];
+		if (argc > 2)
+			PATHans = argv[2];
+	}
+
 	// Открываем файл входных данных, файл выходных данных и ответ участника
-	FILE * bui = fopen(PATHin, "rb"); //is it necessary?
+//	FILE * bui = fopen(PATHin, "rb"); //is it necessary?
 	FILE * buo = fopen(PATHout, "rb");
 	FILE * bua = fopen(PATHans, "rb");
 
@@ -108,7 +116,7 @@ int main() {
 		checker_result.write_message("WA. Output is not correct.");
 		checker_result.write_verdict(verdict::WA);
 
-		fclose(bui);
+//		fclose(bui);
 		fclose(bua);
 		fclose(buo);
 

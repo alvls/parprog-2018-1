@@ -13,6 +13,13 @@ int main(int argc, char* argv[])
 	char* PATHin = "matr.in";	//default input file name
 	char* PATHout = "matr.ans";	//default output file name
 
+	if (argc > 1)
+	{
+		PATHin = argv[1];
+		if (argc > 2)
+			PATHout = argv[2];
+	}
+
 	freopen(PATHin, "rb", stdin);
 	freopen(PATHout, "wb", stdout);
 

@@ -16,11 +16,15 @@ int main(int argc, char * argv[]) {
 	char* PATHin = "matr.in";
 	char* PATHout = "matr.out";
 
-	if (argc == 4)
+	if (argc > 1)
 	{
 		//argv[1] - num_threads(?)
-		PATHin = argv[2];
-		PATHout = argv[3];
+		if (argc > 2) 
+		{
+			PATHin = argv[2];
+			if (argc > 3)
+			PATHout = argv[3];
+		}
 	}
 
 	freopen(PATHin, "rb", stdin);
