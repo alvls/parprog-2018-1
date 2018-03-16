@@ -1,63 +1,84 @@
 //  Вычисление многомерных интегралов с использованием многошаговой схемы (метод трапеций).
 
+
 #include "Func.h"
 #include "Math.h"
 #include "Generate.h"
 
+#include <cstdio>
+
 int main(int argc, char** argv) {
 	// открытие файлов
-	std::ifstream fin("test_for_program_in.txt");
-	std::ofstream fout("test_for_program_out.txt");
-	
+	//FILE* fin;
+	//freopen("new_test.txt","r", stdin);
 	// считывание условий
 	double result = 0.0;
-	int size = 0;
-	double res = 0.0;
-	double interval[2];
-	double accuracy = 0.1;
-	for (int i = 0; i < 5; i++) {						// 5 тестов
+	int size = 1; 
+	Func* fun = new Func(size);
+
+	double parameters[7];
+	parameters[0] = 1;
+	parameters[1] = 1;
+	parameters[2] = 0;
+	parameters[3] = 0;
+	parameters[4] = 0;
+	parameters[5] = 0;
+	parameters[6] = 0;
+
+	fun->SetCoeffs(&parameters[0]);
+	fun->SetXindexs(&parameters[1]);
+	fun->SetYindexs(&parameters[2]);
+	fun->SetXcos(&parameters[3]);
+	fun->SetYcos(&parameters[4]);
+	fun->SetXsin(&parameters[5]);
+	fun->SetYsin(&parameters[6]);
+	/*double* parametr;
+	fread(&size, sizeof(int), 1, stdin);
+	parametr = new double(size);
+	Func* fun = new Func(size);
+	for (int i = 0; i < 7; i++) {
+			fread(parametr, sizeof(double), size, stdin);
+			switch (i) {
+				case 0: fun->SetCoeffs(parametr);
+				case 1: fun->SetXindexs(parametr);
+				case 2: fun->SetYindexs(parametr);
+				case 3: fun->SetXcos(parametr);
+				case 4: fun->SetYcos(parametr);
+				case 5: fun->SetXsin(parametr);
+				case 6: fun->SetYsin(parametr);
+			}
+	}*/
+	fun->PrintFunc();
+
+	std::cout << TIntegral(fun, 0.0, 4.0, 0.01) << std::endl;
+
+	//fclose(stdin);
+	system("pause");
+/*
+	// Генератор
+	// Generate();
+
+	// выполнение генерируемых тестов
+	fin.open("generate.txt", std::fstream::in);
+	fout.open("generate_out.txt", std::fstream::out);
+
+	for (int i = 0; i < test_numb; i++) {					
 		fin >> size;										// считываем размер функции
 
 		Func fun(size);										// создаем функцию
 		double* coef = new double(size);					// считываем коэфы
 		for (int i = 0; i < size; i++) {
 			fin >> coef[i];
-		}			
+		}
 		fun.SetCoeffs(coef);
-		fin >> interval[0] >> interval[1];			// считываем промежуток
-		fin >> accuracy;							// точность
-		// запуск програамы и вывод результатов в файл
-		res = Math::TIntegral(&fun, interval[0], interval[1], accuracy);
-		fout << res << " Expected: " << Math::TIntegral(&fun, interval[0], interval[1], 0.000001 , 1000) << std::endl;
+		fin >> other_par[0] >> other_par[1];			// считываем промежуток
+		fin >> other_par[2];							// точность
+													// запуск програамы и вывод результатов в файл
+		res = TIntegral(&fun, other_par[0], other_par[1], other_par[2]);
+		fout << res << std::endl;
 	}
 	
 	fin.close();
-	fout.close();
-
-	// Генератор
-	Generate();
-	// выполнение генерируемых тестов
-	std::ifstream gin("generate.txt");
-	std::ofstream gout("generate_out.txt");
-
-	for (int i = 0; i < test_numb; i++) {						// 5 тестов
-		gin >> size;										// считываем размер функции
-
-		Func fun(size);										// создаем функцию
-		double* coef = new double(size);					// считываем коэфы
-		for (int i = 0; i < size; i++) {
-			gin >> coef[i];
-		}
-		fun.SetCoeffs(coef);
-		gin >> interval[0] >> interval[1];			// считываем промежуток
-		gin >> accuracy;							// точность
-													// запуск програамы и вывод результатов в файл
-		res = Math::TIntegral(&fun, interval[0], interval[1], accuracy);
-		gout << res << " Expected: " << Math::TIntegral(&fun, interval[0], interval[1], 0.0000001, 1000) << std::endl;
-	}
-
-	gin.close();
-	gout.close();
-
+	fout.close();*/
 	return 0;
 }
