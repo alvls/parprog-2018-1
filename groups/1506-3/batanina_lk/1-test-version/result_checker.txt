@@ -1,0 +1,11 @@
+[ TEST 0] images are equal.
+[ TEST 1] images are equal.
+[ TEST 2] images are equal.
+[ TEST 3] images are equal.
+[ TEST 4] images are equal.
+[ TEST 5] images are equal.
+[ TEST 6] images are equal.
+[ TEST 7] images are equal.
+[ TEST 8] images are equal.
+[ TEST 9] images are equal.
+[ TEST 10] images are equal.
