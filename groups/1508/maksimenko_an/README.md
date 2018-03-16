@@ -1,6 +1,6 @@
 ﻿# Каталог студента Максименко Алексея Николаевич
 
 ## Структура каталога
-- consistent_version
-- open_mp_version
-- tbb_version
+- consistent_version - каталог с файлами последовательной версии
+- open_mp_version - каталог с файлами OpenMP - версии
+- tbb_version - каталог с файлами TBB - версии
