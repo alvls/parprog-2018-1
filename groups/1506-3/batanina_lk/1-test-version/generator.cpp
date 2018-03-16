@@ -5,7 +5,7 @@
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv/cv.hpp>
-#include "linear_correction.h"
+#include "linearcorection.h"
 
 using namespace std;
 using namespace cv;

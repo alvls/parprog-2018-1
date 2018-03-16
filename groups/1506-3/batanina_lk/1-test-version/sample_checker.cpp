@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include "linear_correction.h"
+#include "linearcorection.h"
 #include "checker.h"
 
 using namespace std;

@@ -1,6 +1,6 @@
 #include <vector>
 #include <algorithm>
-#include "linear_correction.h"
+#include "linearcorection.h"
 
 using namespace std;
 using namespace cv;
