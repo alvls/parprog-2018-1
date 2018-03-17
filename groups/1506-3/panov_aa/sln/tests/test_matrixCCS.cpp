@@ -30,6 +30,38 @@ Matrix getMatrix3()
     m[2][0] = 10;
     return m;
 }
+Matrix getMatrix4()
+{
+    Matrix m(3, 3);
+    m[0][0] = 5;
+    m[0][1] = -1;
+    m[0][2] = 2;
+
+    m[1][0] = 3;
+    m[1][1] = 6;
+    m[1][2] = -4;
+
+    m[2][0] = -7;
+    m[2][1] = -3;
+    m[2][2] = 1;
+    return m;
+}
+Matrix getMatrix5()
+{
+    Matrix m(3, 3);
+    m[0][0] = 4;
+    m[0][1] = 4;
+    m[0][2] = 2;
+
+    m[1][0] = -1;
+    m[1][1] = -2;
+    m[1][2] = 0;
+
+    m[2][0] = 3;
+    m[2][1] = -6;
+    m[2][2] = 3;
+    return m;
+}
 class TestMatrixCCS : public MatrixCCS
 {
 public:
@@ -132,6 +164,51 @@ TEST(matrixCCS, can_mult2)
     MatrixCCS resCCS = mccs1*mccs2;
     Matrix res = m1*m2;
     Matrix tmp(3,3);
+    resCCS.convertToMatrix(tmp);
+    EXPECT_TRUE(res == tmp);
+    std::cout << res << tmp;
+}
+
+TEST(matrixCCS, can_mult3)
+{
+    Matrix m1 = getMatrix4();
+    Matrix m2 = getMatrix5();
+
+    MatrixCCS mccs1(m1);
+    MatrixCCS mccs2(m2);
+    MatrixCCS resCCS = mccs1*mccs2;
+    Matrix res = m1*m2;
+    Matrix tmp(3, 3);
+    resCCS.convertToMatrix(tmp);
+    EXPECT_TRUE(res == tmp);
+    std::cout << res << tmp;
+}
+
+TEST(matrixCCS, can_mult4)
+{
+    Matrix m1 = getMatrix5();
+    Matrix m2 = getMatrix4();
+
+    MatrixCCS mccs1(m1);
+    MatrixCCS mccs2(m2);
+    MatrixCCS resCCS = mccs1*mccs2;
+    Matrix res = m1*m2;
+    Matrix tmp(3, 3);
+    resCCS.convertToMatrix(tmp);
+    EXPECT_TRUE(res == tmp);
+    std::cout << res << tmp;
+}
+
+TEST(matrixCCS, can_mult5)
+{
+    Matrix m1 = getMatrix3();
+    Matrix m2 = getMatrix4();
+
+    MatrixCCS mccs1(m1);
+    MatrixCCS mccs2(m2);
+    MatrixCCS resCCS = mccs1*mccs2;
+    Matrix res = m1*m2;
+    Matrix tmp(3, 3);
     resCCS.convertToMatrix(tmp);
     EXPECT_TRUE(res == tmp);
     std::cout << res << tmp;

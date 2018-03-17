@@ -204,15 +204,15 @@ public:
                 int size = res.pointer.size();
                 res.pointer.push_back(res.pointer[size - 1]);
                 continue;
-            }           
+            }
+            int elCountThis = 0;
             for (int i = 0; i < N; i++)
             {                   
                 const int numElementInRow = pointer[i + 1] - pointer[i];
                 if (numElementInRow == 0)
                 {                 
                     continue;
-                }
-                int elCountThis = 0;
+                }               
                 int tmpNumElCol = numElementInCol;
                 int tmpNumElRow = numElementInRow;
 
@@ -240,7 +240,10 @@ public:
                         tmpNumElCol--;
                         tmpElCountM++;
                     }                    
-                }     
+                }  
+                for (int z = 0; z < tmpNumElRow; z++)
+                    elCountThis++;
+
                 if (sum != 0)
                 {
                     res.values.push_back(sum);
