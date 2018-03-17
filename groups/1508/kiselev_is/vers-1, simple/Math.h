@@ -62,24 +62,40 @@
 		double Ypoint = start;
 
 		double variable = 0.0;
+		double LastResult = valueIn(fun, (finish - start) / 2, (finish - start) / 2);
+		while (module(result - LastResult) > accuracy) {
 
-		// добавить точность
-		for (int i = 0; i < parts; i++) {
-			XHigh = ((valueIn(fun, Xpoint, Ypoint) + valueIn(fun, Xpoint + Xpart, Ypoint)) / 2);
-			
-			variable = XHigh;
-			// (F0 + F1) / 2  // определение среднего значения трапеции
-			for (int j = 0; j < parts; j++) {
-				YHigh = ((valueIn(fun, Xpoint, Ypoint + Ypart) + valueIn(fun, Xpoint ,Ypoint + Ypart)) / 2);
-				
-				// (F0 + F1) / 2  // определение среднего значения трапеции через шаг по оси Y
-				result = result + ((YHigh + variable) / 2 * Xpart * Ypart); // среднее между этими значениями
-				variable = YHigh;
-				Ypoint = Ypoint + Ypart;
+			for (int i = 0; i < parts; i++) {
+				XHigh = ((valueIn(fun, Xpoint, Ypoint) + valueIn(fun, Xpoint + Xpart, Ypoint)) / 2);
 
+				variable = XHigh;
+				// (F0 + F1) / 2  // определение среднего значения трапеции
+				for (int j = 0; j < parts; j++) {
+					YHigh = ((valueIn(fun, Xpoint, Ypoint + Ypart) + valueIn(fun, Xpoint, Ypoint + Ypart)) / 2);
+
+					// (F0 + F1) / 2  // определение среднего значения трапеции через шаг по оси Y
+					result = result + ((YHigh + variable) / 2 * Xpart * Ypart); // среднее между этими значениями
+					variable = YHigh;
+					Ypoint = Ypoint + Ypart;
+
+				}				
+				Ypoint = start;
+				Xpoint = Xpoint + Xpart;
 			}
-			Ypoint = start;
-			Xpoint = Xpoint + Xpart;
+			if (module(LastResult - result) > (accuracy / 20)) {				
+				if (module(LastResult - result) > accuracy * 100) parts += 1000;
+				else if (module(LastResult - result) > accuracy * 10) parts += 200;
+				else if (module(LastResult - result) > accuracy / 10) parts += 50;
+				LastResult = result;
+				result = 0;
+				Xpart = (finish - start) / parts;
+				Ypart = Xpart;
+				Xpoint = start;
+				Ypoint = start;
+
+				std::cout << parts << std::endl;
+			}
+
 		}
 		return result;
 	}

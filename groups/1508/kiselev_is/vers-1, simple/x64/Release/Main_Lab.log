@@ -1,8 +1,0 @@
-﻿  main.cpp
-d:\programs\parprog-2018-1\groups\1508\kiselev_is\vers-1, simple\Math.h(53): warning C4091: static : пропускается слева от "Math", когда ни одна переменная не объявлена
-d:\programs\parprog-2018-1\groups\1508\kiselev_is\vers-1, simple\Generate.h(14): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-  Создание кода
-  Создание кода завершено
-  All 155 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Main_Lab.vcxproj -> D:\PROGRAMS\parprog-2018-1\groups\1508\kiselev_is\vers-1, simple\x64\Release\Main_Lab.exe
-  Main_Lab.vcxproj -> D:\PROGRAMS\parprog-2018-1\groups\1508\kiselev_is\vers-1, simple\x64\Release\Main_Lab.pdb (Full PDB)

@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
 	}*/
 	fun->PrintFunc();
 
-	std::cout << TIntegral(fun, 0.0, 4.0, 0.01) << std::endl;
+	std::cout << TIntegral(fun, 0.0, 4.0, 0.001) << std::endl;
 
 	//fclose(stdin);
 	system("pause");
