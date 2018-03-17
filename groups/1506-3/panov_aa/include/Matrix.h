@@ -11,7 +11,7 @@ typedef double Element;
 
 class Matrix
 {
-private:
+protected:
     int row = 0;
     int col = 0;
 public:
@@ -74,6 +74,16 @@ public:
         std::swap(row, col);
         vv = A.vv;
     }
+
+    bool operator == (const Matrix &m)
+    {
+        bool res = (row == m.row & col == m.col);
+        if (res == false) return false;
+        for (int i = 0; i < vv.size(); i++)
+            if (vv[i] != m.vv[i]) return false;
+        return true;
+    }
+
     friend std::ostream& operator<<(std::ostream& os, Matrix& m)
     {
         if (m.gRow() == 0) os << 0;
@@ -89,7 +99,7 @@ public:
 };
 class MatrixCCS
 {
-private:
+protected:
     vector<Element> values;
     vector<int> rows;
     vector<int> pointer;
@@ -137,40 +147,43 @@ public:
     void transpositionMatrix()
     {
         vector<vector<pair<Element, int>>> tmp(N, vector<pair<Element, int>>());
-        int count = 0;
+        int pCount = 0;
         int numElementsInCol = 0;
         for (int i = 0; i < values.size(); i+= numElementsInCol)
         {   
-            numElementsInCol = pointer[count + 1] - pointer[count];
+            numElementsInCol = pointer[pCount + 1] - pointer[pCount];
             for (int z = i; z < i + numElementsInCol; z++)
             {
                 int row = rows[z];
-                int col = count;
+                int col = pCount;
                 Element el = values[z];
                 tmp[row].push_back(make_pair(el, col));
             }
-            count++;
+            pCount++;
         }
-        count = 0;
+        pCount = 0;
         vector<int> *cols = &rows;
         int lastCount = 0;
+        int vCount = 0;
         for (int i = 0; i < N; i++)
         {
-            int curCount = (int)tmp[i].size();
-            if (curCount > 0)
+            int numElementInRow = (int)tmp[i].size();
+            if (numElementInRow > 0)
             {
-                for (int j = 0; j < curCount; j++)
+                for (int j = 0; j < numElementInRow; j++)
                 {
-                    values[count] = tmp[i][j].first;
-                    (*cols)[count] = tmp[i][j].second;
+                    values[vCount] = tmp[i][j].first;
+                    (*cols)[vCount] = tmp[i][j].second;
+                    vCount++;
                 }
-                if (count != 0)
-                {
-                    pointer[count] = pointer[count - 1] + lastCount;
-                }
-                count++;
             }
-            lastCount = curCount;
+            if (pCount != 0)
+            {
+                pointer[pCount] = pointer[pCount - 1] + lastCount;
+            }
+            lastCount = numElementInRow;
+            pCount++;
+
         }
     }
 };
