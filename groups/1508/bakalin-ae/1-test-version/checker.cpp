@@ -61,6 +61,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	int res_size, ans_size;
+	bool correct = true;
 	double res_time, ans_time;
 	Point *res, *ans;
 
@@ -74,8 +75,6 @@ int main(int argc, char *argv[]) {
 	fread(&ans_size, sizeof(ans_size), 1, bua);
 
 	if (ans_size == res_size) {
-		bool correct = true;
-
 		res = new Point[res_size];
 		ans = new Point[res_size];
 
@@ -88,19 +87,19 @@ int main(int argc, char *argv[]) {
 				break;
 			}
 		}
+	}
+	else {
+		correct = false;
+	}
 
-		if (!correct) {
-			checker_result.write_message("WA. Output is not correct.");
-			checker_result.write_verdict(verdict::WA);
-		}
+	if (correct) {
+		checker_result.write_message("AC. Points are equal.");
+		checker_result.write_verdict(verdict::AC);
 	}
 	else {
 		checker_result.write_message("WA. Output is not correct.");
 		checker_result.write_verdict(verdict::WA);
 	}
-
-	checker_result.write_message("AC. Points are equal.");
-	checker_result.write_verdict(verdict::AC);
 	checker_result.write_time(res_time * 1e7);
 
 	fclose(bua);
