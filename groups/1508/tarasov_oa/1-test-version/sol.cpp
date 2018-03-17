@@ -17,7 +17,6 @@ void QuickSort(int* arr, int size)
 		}
 	} while (i <= j);
 
-
 	if (j > 0)
 		QuickSort(arr, j + 1);
 	if (i < size)
