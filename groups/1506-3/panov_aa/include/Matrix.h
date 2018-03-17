@@ -58,10 +58,10 @@ public:
     {
         if (gCol() != m.gRow()) return Matrix();
         Matrix newMatr(gRow(), m.gCol());
-        for (int z = 0; z < gRow(); z++)
-            for (int i = 0; i < m.gCol(); i++)
-                for (int j = 0; j < m.gRow(); j++)
-                    newMatr[z][i] += (*this)[z][j] * m[j][i];
+        for (int j = 0; j < m.gRow(); j++)
+            for (int i = 0; i < gCol(); i++)
+                for (int z = 0; z < gCol(); z++)
+                    newMatr[j][i] += (*this)[z][i] * m[j][z];
         return newMatr;
     }
     void transpositionMatrix()
@@ -190,42 +190,43 @@ public:
     MatrixCCS operator * (const MatrixCCS &m)
     {
         MatrixCCS res;
+        res.pointer.push_back(0);
         transpositionMatrix();
         vector<int> *cols = &rows;
-
+        int elCountM = 0;
         for (int j = 0; j < m.N; j++)
-        {
-            int pCountM = 0;
-            int elCountThis = 0;
-            int elCountM = 0;
-            const int numElementInCol = m.pointer[pCountM + 1] - m.pointer[pCountM];
+        {            
+            int numElInResCol = 0;
+            const int numElementInCol = m.pointer[j + 1] - m.pointer[j];
             if (numElementInCol == 0)
             {
-                pCountM++;
+                int size = res.pointer.size();
+                res.pointer.push_back(res.pointer[size - 1]);
                 continue;
-            }
-            for (int i = 0; i < N; j++)
-            {   
-                int pCountThis = 0;
-                const int numElementInRow = pointer[pCountThis + 1] - pointer[pCountThis];
+            }           
+            for (int i = 0; i < N; i++)
+            {                   
+                const int numElementInRow = pointer[i + 1] - pointer[i];
                 if (numElementInRow == 0) 
                     continue;
+                int elCountThis = 0;
                 int tmpNumElCol = numElementInCol;
                 int tmpNumElRow = numElementInRow;
 
                 Element sum = 0;
-                int tmpElCountM = elCountM;
+                int tmpElCountM = elCountM;               
                 for (int z = 0; z < std::min(tmpNumElCol, tmpNumElRow);)
                 {                  
-                    const int colThis = (*cols)[tmpElCountM];
-                    const int rowM = m.rows[elCountM];
+                    const int colThis = (*cols)[elCountThis];
+                    const int rowM = m.rows[tmpElCountM];
                     if (colThis == rowM)
                     {
-                        sum += values[tmpElCountM] * m.values[elCountM];
+                        sum += values[elCountThis] * m.values[tmpElCountM];
                         tmpNumElCol--;
                         tmpNumElRow--;
                         tmpElCountM++;
-                        elCountM++;
+                        elCountThis++;
+                        numElInResCol++;
                     }
                     else if (colThis < rowM)
                     {
@@ -235,7 +236,7 @@ public:
                     else
                     {
                         tmpNumElRow--;
-                        elCountM++;
+                        tmpElCountM++;
                     }                    
                 }     
                 if (sum != 0)
@@ -243,10 +244,10 @@ public:
                     res.values.push_back(sum);
                     res.rows.push_back(i);
                 }
-
+                int size = res.pointer.size();
+                res.pointer.push_back(res.pointer[size - 1] + numElInResCol);
             }
-            elCountThis += numElementInCol;
-            pCountM++;
+            elCountM += numElementInCol;
         }
         transpositionMatrix();
         return res;
