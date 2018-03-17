@@ -1,10 +1,9 @@
 #include <omp.h>
 
-template <typename elemtype>
-void HoaraQuickSort(elemtype* array, int first, int last)
+void HoaraQuickSort(int* array, int first, int last)
 {
 	int i = first, j = last;
-	elemtype temp, mid = array[(first + last) / 2];
+	int temp, mid = array[(first + last) / 2];
 
 	do {
 		while (array[i] < mid)
@@ -29,7 +28,6 @@ void HoaraQuickSort(elemtype* array, int first, int last)
 		
 	} while (i <= j);
 
-	Print(array, 4);
 
 	if (i < last)
 		HoaraQuickSort(array, i, last);
