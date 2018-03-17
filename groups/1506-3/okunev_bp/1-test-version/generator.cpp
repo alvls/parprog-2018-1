@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 			col.insert(col.end(), tmp.begin(), tmp.end());
 			row[i] = i * elemToRow;
 		}
-		row[matrixSize] = row[matrixSize - 1] + 1;
+		row[matrixSize] = col.size();
 		notZero = value.size();
 
 		for (int i = 0; i < matrixSize; ++i)
@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
 			colB.insert(colB.end(), tmp.begin(), tmp.end());
 			rowB[i] = i * elemToRow;
 		}
-		rowB[matrixSize] = rowB[matrixSize - 1] + 1;
+		rowB[matrixSize] = colB.size();
 		notZeroB = valueB.size();
 		break;
 	}

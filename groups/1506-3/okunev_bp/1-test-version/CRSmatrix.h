@@ -105,7 +105,7 @@ public:
 		{
 			vector<int> tmp_col(Size, -1);
 
-			for (int j = SparseRow[i]; j < SparseRow[i + 1]; ++i)
+			for (int j = SparseRow[i]; j < SparseRow[i + 1]; ++j)
 				tmp_col[Col[j]] = j;
 
 			for (int j = 0; j < Size; ++j)
