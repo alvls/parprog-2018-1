@@ -56,5 +56,7 @@ int main (int argc, char* argv[])
 
    fclose(bua);
    fclose(buo);
+   delete[] ans;
+   delete[] res;
    return 0;
 }
