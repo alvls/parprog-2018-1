@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <algorithm>
 #include <iostream>
 #include <list>
 using std::ostream;
@@ -167,10 +168,10 @@ public:
         int vCount = 0;
         for (int i = 0; i < N; i++)
         {
-            int numElementInRow = (int)tmp[i].size();
-            if (numElementInRow > 0)
+            int numElementInCol = (int)tmp[i].size();
+            if (numElementInCol > 0)
             {
-                for (int j = 0; j < numElementInRow; j++)
+                for (int j = 0; j < numElementInCol; j++)
                 {
                     values[vCount] = tmp[i][j].first;
                     (*cols)[vCount] = tmp[i][j].second;
@@ -181,9 +182,73 @@ public:
             {
                 pointer[pCount] = pointer[pCount - 1] + lastCount;
             }
-            lastCount = numElementInRow;
+            lastCount = numElementInCol;
             pCount++;
 
         }
+    }
+    MatrixCCS operator * (const MatrixCCS &m)
+    {
+        MatrixCCS res;
+        transpositionMatrix();
+        vector<int> *cols = &rows;
+
+        for (int j = 0; j < m.N; j++)
+        {
+            int pCountM = 0;
+            int elCountThis = 0;
+            int elCountM = 0;
+            const int numElementInCol = m.pointer[pCountM + 1] - m.pointer[pCountM];
+            if (numElementInCol == 0)
+            {
+                pCountM++;
+                continue;
+            }
+            for (int i = 0; i < N; j++)
+            {   
+                int pCountThis = 0;
+                const int numElementInRow = pointer[pCountThis + 1] - pointer[pCountThis];
+                if (numElementInRow == 0) 
+                    continue;
+                int tmpNumElCol = numElementInCol;
+                int tmpNumElRow = numElementInRow;
+
+                Element sum = 0;
+                int tmpElCountM = elCountM;
+                for (int z = 0; z < std::min(tmpNumElCol, tmpNumElRow);)
+                {                  
+                    const int colThis = (*cols)[tmpElCountM];
+                    const int rowM = m.rows[elCountM];
+                    if (colThis == rowM)
+                    {
+                        sum += values[tmpElCountM] * m.values[elCountM];
+                        tmpNumElCol--;
+                        tmpNumElRow--;
+                        tmpElCountM++;
+                        elCountM++;
+                    }
+                    else if (colThis < rowM)
+                    {
+                        tmpNumElCol--;
+                        tmpElCountM++;
+                    }
+                    else
+                    {
+                        tmpNumElRow--;
+                        elCountM++;
+                    }                    
+                }     
+                if (sum != 0)
+                {
+                    res.values.push_back(sum);
+                    res.rows.push_back(i);
+                }
+
+            }
+            elCountThis += numElementInCol;
+            pCountM++;
+        }
+        transpositionMatrix();
+        return res;
     }
 };

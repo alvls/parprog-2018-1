@@ -1,18 +1,25 @@
 #include "../gtest/gtest/gtest.h"
 #include "../../include/matrix.h"
+/*
+1 2 3
+0 0 0
+0 0 0
 
+rows 0 0 0
+pointer 0 1 2 3 4
+*/
 Matrix getMatrix1()
 {
     Matrix m(3, 3);
-    for (int i = 0; i < m.gRow(); i++)
-        m[i][0] = i + 1;
+    for (int j = 0; j < m.gCol(); j++)
+        m[j][0] = j + 1;
     return m;
 }
 Matrix getMatrix2()
 {
     Matrix m(3, 3);
-    for (int i = 0; i < m.gRow(); i++)
-        m[i][m.gCol()-1] = i + 1;
+    for (int j = 0; j < m.gCol(); j++)
+        m[j][m.gRow()-1] = j + 1;
     return m;
 }
 class TestMatrixCCS : public MatrixCCS
@@ -51,7 +58,7 @@ TEST(matrixCCS, can_convert2)
     EXPECT_TRUE(m == test);
 }
 
-TEST(matrixCCS, can_transposition)
+TEST(matrixCCS, can_transposition1)
 {
     Matrix m = getMatrix1();
     TestMatrixCCS mccs(m);
@@ -61,4 +68,36 @@ TEST(matrixCCS, can_transposition)
     Matrix test(m.gRow(), m.gCol());
     mccs.convertToMatrix(test);
     EXPECT_TRUE(m == test);
+}
+
+TEST(matrixCCS, can_transposition2)
+{
+    Matrix m = getMatrix2();
+    TestMatrixCCS mccs(m);
+    mccs.transpositionMatrix();
+    mccs.transpositionMatrix();
+
+    Matrix test(m.gRow(), m.gCol());
+    mccs.convertToMatrix(test);
+    EXPECT_TRUE(m == test);
+}
+
+TEST(matrixCCS, can_transposition3)
+{
+    Matrix m = getMatrix1();
+    TestMatrixCCS mccs(m);
+    mccs.transpositionMatrix();
+
+    Matrix test(m.gRow(), m.gCol());
+    mccs.convertToMatrix(test);
+    test.transpositionMatrix();
+    EXPECT_TRUE(m == test);
+}
+
+TEST(matrixCCS, can_mult)
+{
+    Matrix m1 = getMatrix1();
+    MatrixCCS mccs1(m1);
+    MatrixCCS mccs2(m1);
+    MatrixCCS res = mccs1*mccs2;
 }
