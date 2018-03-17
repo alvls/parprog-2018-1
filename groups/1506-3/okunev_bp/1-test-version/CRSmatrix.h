@@ -17,8 +17,11 @@ public:
 	CRSmatrix(int size, int nzelem, double * value, int * col, int * sparseRow) : Size(size), NotZero(nzelem)
 	{
 		Value.assign(value, value + nzelem);
+		delete[] value;
 		Col.assign(col, col + nzelem);
+		delete[] col;
 		SparseRow.assign(sparseRow, sparseRow + size + 1);
+		delete[] sparseRow;
 	}
 
 	int getSize()
