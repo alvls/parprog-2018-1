@@ -1,14 +1,14 @@
 #include <omp.h>
 
-void HoaraQuickSort(int* array, int first, int last)
+void HoaraQuickSort(int* arr, int first, int last)
 {
 	int i = first, j = last;
-	int temp, mid = array[(first + last) / 2];
+	int temp, mid = arr[(first + last) / 2];
 
 	do {
-		while (array[i] < mid)
+		while (arr[i] < mid)
 			i++;
-		while (array[j] > mid)
+		while (arr[j] > mid)
 			j--;
 
 		if (i == j)
@@ -17,11 +17,11 @@ void HoaraQuickSort(int* array, int first, int last)
 			j--;
 		}
 
-			if (i < j)
+			if (i < j)x
 			{
-				temp = array[i];
-				array[i] = array[j];
-				array[j] = temp;
+				temp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = temp;
 			}
 			i++;
 			j--;
@@ -30,7 +30,7 @@ void HoaraQuickSort(int* array, int first, int last)
 
 
 	if (i < last)
-		HoaraQuickSort(array, i, last);
+		HoaraQuickSort(arr, i, last);
 	if (first < j)
-		HoaraQuickSort(array, first, j);
+		HoaraQuickSort(arr, first, j);
 }
