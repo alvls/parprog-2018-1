@@ -27,5 +27,6 @@ int main(int argc, char * argv[])
 	fwrite(&time, sizeof(time), 1, stdout);
 	fwrite(&count, sizeof(count), 1, stdout);
 	fwrite(values, sizeof(*values), count, stdout);
+
 	return 0;
 }

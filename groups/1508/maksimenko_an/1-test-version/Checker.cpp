@@ -54,47 +54,36 @@ public:
 } checker_result;
 
 int main(int argc, char * argv[]) {
-	if (argc != 3)
-		return 0;
+	if (argc != 2) return 0;
 
 	FILE * buo = fopen(argv[1], "rb");
-	FILE * bua = fopen(argv[2], "rb");
 
-	int res_n, ans_n;
-	double res_time, ans_time;
+	int res_n;
+	double res_time;
 
 	fread(&res_time, sizeof(res_time), 1, buo);
 	fread(&res_n, sizeof(res_n), 1, buo);
 
-	fread(&ans_time, sizeof(ans_time), 1, bua);
-	fread(&ans_n, sizeof(ans_n), 1, bua);
-
-	if (res_n != ans_n) {
-		checker_result.write_message("PE. Number of elements in the array is different.");
-		checker_result.write_verdict(verdict::PE);
+	bool error = false;
+	double lower_value = 0, more_value = 0;
+	fread(&lower_value, sizeof(lower_value), 1, buo);
+	for (int i = 1; i < res_n; i++) {
+		fread(&more_value, sizeof(more_value), 1, buo);
+		if (lower_value < more_value) {
+			error = true;
+			break;
+		}
+		lower_value = more_value;
+	}
+	if (error) {
+		checker_result.write_message("WA. Output is not correct.");
+		checker_result.write_verdict(verdict::WA);
 	}
 	else {
-		bool error = false;
-		double ans_value = 0, res_value = 0;
-		for (int i = 0; i < ans_n; i++) {
-			fread(&res_value, sizeof(res_value), 1, buo);
-			fread(&ans_value, sizeof(ans_value), 1, bua);
-			if (res_value != ans_value) {
-				error = true;
-				break;
-			}
-		}
-		if (error) {
-			checker_result.write_message("WA. Output is not correct.");
-			checker_result.write_verdict(verdict::WA);
-		}
-		else {
-			checker_result.write_message("AC. Numbers are equal.");
-			checker_result.write_verdict(verdict::AC);
-		}
-		checker_result.write_time(res_time * 1e7);
+		checker_result.write_message("AC. Numbers are equal.");
+		checker_result.write_verdict(verdict::AC);
 	}
-	fclose(bua);
+	checker_result.write_time(res_time * 1e7);
 	fclose(buo);
 
 	return 0;
