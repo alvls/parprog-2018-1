@@ -25,8 +25,10 @@ def pixel_checker(p1, p2):
 
 def main():
     # get all file names in folder and counts
-    input_binares = [f for f in listdir(config.checker_binares_dir) if isfile(join(config.checker_binares_dir, f)) and f != "README.md"]
-    answer_binares = [f for f in listdir(config.checker_answers_dir) if isfile(join(config.checker_answers_dir, f)) and f != "README.md"]
+    input_binares = [f for f in listdir(config.checker_binares_dir) if isfile(join(config.checker_binares_dir, f)) 
+                      and not ".ans" in f and f != "README.md"]
+    answer_binares = [f for f in listdir(config.checker_answers_dir) if isfile(join(config.checker_answers_dir, f))
+                      and ".ans" in f and f != "README.md"]
     # check files count equals
     if len(input_binares) != len(answer_binares):
         print "Inputs files and answers different quantity!"

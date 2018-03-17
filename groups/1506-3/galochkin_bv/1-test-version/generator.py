@@ -12,7 +12,7 @@ from os.path import isfile, join
 
 # get all file names in folder
 onlyfiles = [f for f in listdir(config.test_imgs_dir) if isfile(join(config.test_imgs_dir, f)) and f != "README.md"]
-for i in range(0, len(onlyfiles)):
+for i in range(0, 100):
     print str(i) + "/" +str(len(onlyfiles) - 1)
     f = onlyfiles[i]
     # read image using OpenCV
