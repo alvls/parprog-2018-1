@@ -12,13 +12,15 @@ int main(int argc, char* argv[]){
     else
         freopen("matr.in", "rb", stdin);
     freopen("matr.out", "wb", stdout);
-    fread(&n, sizeof(n), 1, stdin);
+    fread(&n, sizeof(n), 1, stdin);
+
     A = new double[n * n];
     B = new double[n * n];
     C = new double[n * n];
 
     fread(A, sizeof(*A), n * n, stdin);
-    fread(B, sizeof(*B), n * n, stdin);    for (int i = 0; i < n * n; i++)
+    fread(B, sizeof(*B), n * n, stdin);
+    for (int i = 0; i < n * n; i++)
         C[i] = 0.0;
 
     double time = omp_get_wtime();
