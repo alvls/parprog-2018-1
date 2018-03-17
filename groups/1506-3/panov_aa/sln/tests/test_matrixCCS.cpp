@@ -66,6 +66,15 @@ TEST(matrixCCS, can_convert2)
     EXPECT_TRUE(m == test);
 }
 
+TEST(matrixCCS, can_convert3)
+{
+    Matrix m = getMatrix3();
+    TestMatrixCCS mccs(m);
+    Matrix test(m.gRow(), m.gCol());
+    mccs.convertToMatrix(test);
+    EXPECT_TRUE(m == test);
+}
+
 TEST(matrixCCS, can_transposition1)
 {
     Matrix m = getMatrix1();

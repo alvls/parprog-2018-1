@@ -50,9 +50,9 @@ public:
     {
         return &vv[0];
     }
-    Element* operator [] (int i)
+    Element* operator [] (int j)
     {
-        return &vv[i*col];
+        return &vv[j*col];
     }
     Matrix operator * (Matrix& m)
     {
@@ -91,7 +91,7 @@ public:
         for (int i = 0; i < m.gRow(); i++)
         {
             for (int j = 0; j < m.gCol(); j++)
-                os << m[i][j] << ' ';
+                os << m[j][i] << ' ';
             os << '\n';
         }
         os << '\n';
@@ -107,6 +107,7 @@ protected:
     int N;
 public:
     MatrixCCS() {}
+    MatrixCCS(int n) :N(n) {}
     MatrixCCS(Matrix &M) :N(M.gRow())
     {
         pointer = vector<int>(N + 1);
@@ -189,7 +190,7 @@ public:
     }
     MatrixCCS operator * (const MatrixCCS &m)
     {
-        MatrixCCS res;
+        MatrixCCS res(N);
         res.pointer.push_back(0);
         transpositionMatrix();
         vector<int> *cols = &rows;
@@ -207,8 +208,10 @@ public:
             for (int i = 0; i < N; i++)
             {                   
                 const int numElementInRow = pointer[i + 1] - pointer[i];
-                if (numElementInRow == 0) 
+                if (numElementInRow == 0)
+                {                 
                     continue;
+                }
                 int elCountThis = 0;
                 int tmpNumElCol = numElementInCol;
                 int tmpNumElRow = numElementInRow;
@@ -217,25 +220,24 @@ public:
                 int tmpElCountM = elCountM;               
                 for (int z = 0; z < std::min(tmpNumElCol, tmpNumElRow);)
                 {                  
-                    const int colThis = (*cols)[elCountThis];
-                    const int rowM = m.rows[tmpElCountM];
+                    int colThis = (*cols)[elCountThis];
+                    int rowM = m.rows[tmpElCountM];
                     if (colThis == rowM)
                     {
                         sum += values[elCountThis] * m.values[tmpElCountM];
                         tmpNumElCol--;
                         tmpNumElRow--;
                         tmpElCountM++;
-                        elCountThis++;
-                        numElInResCol++;
+                        elCountThis++;                     
                     }
                     else if (colThis < rowM)
                     {
-                        tmpNumElCol--;
-                        tmpElCountM++;
+                        tmpNumElRow--;
+                        elCountThis++;
                     }
                     else
                     {
-                        tmpNumElRow--;
+                        tmpNumElCol--;
                         tmpElCountM++;
                     }                    
                 }     
@@ -243,13 +245,14 @@ public:
                 {
                     res.values.push_back(sum);
                     res.rows.push_back(i);
-                }
-                int size = res.pointer.size();
-                res.pointer.push_back(res.pointer[size - 1] + numElInResCol);
+                    numElInResCol++;
+                }               
             }
+            int size = res.pointer.size();
+            res.pointer.push_back(res.pointer[size - 1] + numElInResCol);
             elCountM += numElementInCol;
         }
-        transpositionMatrix();
+        transpositionMatrix();        
         return res;
     }
 };
