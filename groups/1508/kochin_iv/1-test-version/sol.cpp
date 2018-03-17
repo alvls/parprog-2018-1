@@ -25,20 +25,23 @@ double* Gauss(double* image, int width, int height, double Sigma=1,int radius=1)
 	int x, y;
 	//delete garbage
 	for (int i = 0; i < width*height * 3; i++) {
-		result[i] = 0;
+		result[i] = image[i];
 	}
 
 	for (x = radius; x < width - radius; x++)
 		for (y = radius; y < height - radius; y++)
 		{
+			result[(x*height + y)*3] = 0;
+			result[(x*height + y) * 3+1] = 0;
+			result[(x*height + y) * 3+2] = 0;
 			for (int i = -radius; i <= radius; i++)
 				for (int j = -radius; j <= radius; j++) {
 					//for RED channel
-					result[x*height + y] += image[(x + i)*height + y + j] * kernel[radius - i][radius - j];
+					result[(x*height + y)*3] += image[((x + i)*height + y + j)*3] * kernel[radius + i][radius + j];
 					//for GREEN channel
-					result[(x*height + y)*2] += image[((x + i)*height + y + j)*2] * kernel[radius - i][radius - j];
+					result[(x*height + y)*3+1] += image[((x + i)*height + y + j)*3+1] * kernel[radius + i][radius + j];
 					//for BLUE channel
-					result[(x*height + y)*3] += image[((x + i)*height + y + j) * 3] * kernel[radius - i][radius - j];
+					result[(x*height + y)*3+2] += image[((x + i)*height + y + j)*3+2] * kernel[radius + i][radius + j];
 				}
 		}
 	return result;

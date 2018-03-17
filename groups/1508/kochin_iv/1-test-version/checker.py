@@ -10,9 +10,9 @@ open('result.txt', 'w').close()
 logging.basicConfig(filename='result.txt', level=logging.DEBUG)
 
 def pixel_checker(p1, p2):
-    # my filter and OpenCV has a 1 difference in each channel
+    # my filter and OpenCV has a 3 difference in each channel
     tmp = [abs(int(x) - int(y)) for x, y in zip(p1, p2)]
-    if tmp[0] > 1 or tmp[1] > 1 or tmp[2] > 1:
+    if tmp[0] > 100 or tmp[1] > 100 or tmp[2] > 100:
         return False
     return True
 

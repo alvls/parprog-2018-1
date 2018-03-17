@@ -21,7 +21,7 @@ def read_binary(name = binary_output_default):
     return blank_image
 
 def main():
-    cv.imshow('image', read_binary())
+    cv.imshow('image', read_binary('bin.out'))
     cv.waitKey(0)
 
 if __name__ == "__main__":
