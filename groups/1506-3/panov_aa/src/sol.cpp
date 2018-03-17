@@ -3,9 +3,9 @@
 #include "matrix.h"
 
 
-void MatrixMult(const MatrixCCS &A, const MatrixCCS &B, MatrixCCS &C)
+MatrixCCS MatrixMult(MatrixCCS &A, MatrixCCS &B)
 {
-
+    return A*B;
 }
 
 /*void MatrMatrMult(double * A, double * B, double * C, int N)
