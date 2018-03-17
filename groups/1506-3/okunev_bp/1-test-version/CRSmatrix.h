@@ -6,6 +6,8 @@
 
 using std::vector;
 
+const double INF = 0.000001;
+
 class CRSmatrix {
 public:
 	CRSmatrix() : Size(0), NotZero(0) {}
@@ -96,42 +98,32 @@ public:
 		tmpMatrix.Size = Size;
 		tmpMatrix.SparseRow.resize(Size + 1);
 
-		int pos1 = 0;
-
 
 		int lastSize = 0;
 
 		for (int i = 0; i < Size; ++i)
 		{
-			int pos2 = 0;
+			vector<int> tmp_col(Size, -1);
+
+			for (int j = SparseRow[i]; j < SparseRow[i + 1]; ++i)
+				tmp_col[Col[j]] = j;
 
 			for (int j = 0; j < Size; ++j)
 			{
-				pos1 = SparseRow[i];
-				pos2 = tmp.SparseRow[j];
-
 				double sum = 0;
 
-				while (pos1 < this->SparseRow[i + 1] && pos2 < tmp.SparseRow[j + 1])
+				for (int k = tmp.SparseRow[j]; k < tmp.SparseRow[j + 1]; ++k)
 				{
-					if (this->Col[pos1] == tmp.Col[pos2])
-					{
-						sum += Value[pos1] * tmp.Value[pos2];
-						pos1++;
-						pos2++;
-					}
-					else if (this->Col[pos1] > tmp.Col[pos2])
-						pos2++;
-					else if (this->Col[pos1] < tmp.Col[pos2])
-						pos1++;
+					int col = tmp_col[tmp.Col[k]];
+					if (col != -1)
+						sum += Value[col] * tmp.Value[k];
 				}
 
-				if (sum != 0)
+				if (abs(sum) > INF)
 				{
-					tmpMatrix.Col.emplace_back(j);
-					tmpMatrix.Value.emplace_back(sum);
+					tmpMatrix.Value.push_back(sum);
+					tmpMatrix.Col.push_back(j);
 				}
-
 
 			}
 			tmpMatrix.SparseRow[i] = lastSize;
