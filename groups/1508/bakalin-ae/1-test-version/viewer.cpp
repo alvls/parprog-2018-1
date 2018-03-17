@@ -5,13 +5,18 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char *argv[]) {
 	int size;
 	double time;
 	Point *data;
-	ofstream file("../out.txt");
 
-	freopen("../points.out", "rb", stdin);
+	if (argc != 3) {
+		return 0;
+	}
+
+	ofstream file(argv[2]);
+
+	freopen(argv[1], "rb", stdin);
 	fread(&time, sizeof(time), 1, stdin);
 	fread(&size, sizeof(size), 1, stdin);
 

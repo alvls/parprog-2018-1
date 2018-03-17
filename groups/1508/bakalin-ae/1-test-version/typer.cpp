@@ -5,10 +5,10 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char *argv[]) {
 	int size;
 	Point *data;
-	ifstream file("../in.txt");
+	ifstream file(argv[1]);
 
 	file >> size;
 	data = new Point[size];
@@ -18,7 +18,7 @@ int main() {
 		file >> data[i].y;
 	}
 
-	freopen("../points.in", "wb", stdout);
+	freopen(argv[2], "wb", stdout);
 	fwrite(&size, sizeof(size), 1, stdout);
 	fwrite(data, sizeof(*data), size, stdout);
 

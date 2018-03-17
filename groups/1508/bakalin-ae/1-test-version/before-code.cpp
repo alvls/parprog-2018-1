@@ -9,7 +9,12 @@
 void JarvisAlgorithm(Point* data, Point* result, int in_size, int &out_size);
 
 int main(int argc, char* argv[]) {
-	
+	if (argc != 3) {
+		std::cout << "JARVIS ALGORITHM PROGRAM\n" << "To use this program, please stick to the following pattern:\n" <<
+			"solver [input] [output]" << std::endl;
+		return 1;
+	}
+
 	int num_threads = 1;
 	
 	if (argc > 1)
@@ -18,7 +23,7 @@ int main(int argc, char* argv[]) {
 	int size, out_size;
 	Point *in, *out;
 
-	freopen("../points.in", "rb", stdin);
+	freopen(argv[1], "rb", stdin);
 
 	fread(&size, sizeof(size), 1, stdin);
 
@@ -33,34 +38,13 @@ int main(int argc, char* argv[]) {
 	JarvisAlgorithm(in, out, size, out_size);
 	time = omp_get_wtime() - time;
 
-	freopen("../points.out", "wb", stdout);
+	freopen(argv[2], "wb", stdout);
 	fwrite(&time, sizeof(time), 1, stdout);
 	fwrite(&out_size, sizeof(out_size), 1, stdout);
-	fwrite(out, sizeof(*out), out_size, stdout);
+
+	if (out_size > 0) {
+		fwrite(out, sizeof(*out), out_size, stdout);
+	}
 
 	return 0;
-
-	/*int size = 7;
-	int out_size;
-	
-	if (argc > 1)
-		size = atoi(argv[1]);
-
-	Point* data = new Point[size];
-	Point* result = new Point[size];
-	
-	data[0].x = 2; data[0].y = 2;
-	data[1].x = 0; data[1].y = 3;
-	data[2].x = 1; data[2].y = 1;
-	data[3].x = 2; data[3].y = 1;
-	data[4].x = 3; data[4].y = 0;
-	data[5].x = 0; data[5].y = 0;
-	data[6].x = 3; data[6].y = 3;
-	
-	JarvisAlgorithm(data, result, size, out_size);
-
-	std::cout << out_size << std::endl;
-	for (int i = 0; i < out_size; i++) {
-		std::cout << "(" << result[i].x << ", " << result[i].y << ")" << std::endl;
-	}*/
 }

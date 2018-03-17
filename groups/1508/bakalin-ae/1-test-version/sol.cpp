@@ -23,6 +23,11 @@ void JarvisAlgorithm(Point* data, Point* result, int in_size, int &out_size) {
 	int k = 0;
 	double max_cos, min_cos;
 
+	if (in_size < 3) {
+		out_size = 0;
+		return;
+	}
+
 	indexes = new int[in_size];
 	is_used = new bool[in_size];
 	
