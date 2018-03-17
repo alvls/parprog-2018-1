@@ -1,4 +1,0 @@
-﻿  tests_stack.cpp
-  tests_main.cpp
-  Создание кода...
-LINK : fatal error LNK1104: не удается открыть файл "gtest.lib"
