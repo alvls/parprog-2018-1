@@ -7,10 +7,10 @@
 #include<string>
 #include <sstream>
 
-/*int main(int argc, char * argv[])
+int main(int argc, char * argv[])
 {
-	std::uniform_int_distribution<int>distribution1(0, 5);
-	std::uniform_int_distribution<int>distribution(0, 5);
+	std::uniform_int_distribution<int>distribution1(1, 1000);
+	std::uniform_int_distribution<int>distribution(-1000, 1000);
 	std::random_device rd;
 	std::mt19937 generator(rd());
 	int countTest = 1;
@@ -20,8 +20,7 @@
 	 
 	for (int i = 1; i <= countTest; i++) 
 	{
-		//n = distribution1(generator);
-		n = 20;
+		n = distribution1(generator);
 		int * cur = new int[n];
 		char index[10];
 		freopen(_itoa(i,index,10), "wb", stdout);		
@@ -43,4 +42,4 @@
 	}
 	
 	return 0;
-}*/
+}
