@@ -116,7 +116,7 @@
     <ClCompile Include="sol.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="checker.h" />
+    <ClInclude Include="Func.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
