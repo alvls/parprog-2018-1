@@ -15,8 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\simple-vers\Generator\generator.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
+    <ClInclude Include="checker.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

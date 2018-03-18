@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{343B0603-9199-42F1-92BD-929BC8B9F16D}</ProjectGuid>
-    <RootNamespace>Generator</RootNamespace>
+    <ProjectGuid>{709B2DE6-51F8-4D31-8A0A-FCD5F6DDDEFB}</ProjectGuid>
+    <RootNamespace>Checker</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -110,7 +110,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\simple-vers\Generator\generator.cpp" />
+    <ClInclude Include="checker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

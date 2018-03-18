@@ -15,6 +15,7 @@ RE = Runtime Error = Ошибка времени исполнения программы
 IL = Idle Limit Exceeded = Превышено время простоя (бездействия) программы 
 DE = Deadly Error = Ошибка тестирующей системы */ 
 enum verdict { NO = 1, AC, WA, CE, ML, TL, RE, IL, PE, DE };
+
 class result {
 private: FILE * bur; 
 public: enum ext_cls { NO = 1, VERDICT, MESSAGE, TIME, MEMORY }; 
