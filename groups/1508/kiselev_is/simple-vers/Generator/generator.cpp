@@ -10,13 +10,13 @@ int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300
 
 int main(int argc, char * argv[]) {
 	// перенаправляем поток stdout в файл matr.in 
-	freopen("matr.in", "wb", stdout);
+	freopen("../matr.in", "wb", stdout);
 	// создаём генератор случайных чисел с seed равным количеству времени с начала эпохи 
 	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
-	// создаём равномерное распределение случайной величины типа double в диапазоне // [-10000, 10000] 
-	uniform_real_distribution <double> distribution(-1e4, 1e4);
+	// создаём равномерное распределение случайной величины типа double в диапазоне // [-50, 50] 
+	uniform_real_distribution <double> distribution(-50, 50);
 	// задаём размер матриц 
-	int n = 1000;
+	int n = 10;
 	// если передали номер теста в аргументах командной строки, то берём размер из 	n_tests 
 	if (argc > 1) n = n_tests[atoi(argv[1])];
 	// записываем в бинарном виде размерность матриц 
@@ -29,11 +29,10 @@ int main(int argc, char * argv[]) {
 		for (int j = 0; j < n; j++) cur[j] = distribution(generator);
 		// записываем строку в бинарном виде в файл
 		fwrite(cur, sizeof(*cur), n, stdout);
-	} // аналогично генерируем вторую матрицу 
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++)
-			cur[j] = distribution(generator);
-		fwrite(cur, sizeof(*cur), n, stdout);
 	}
+	cur[0] = distribution(generator);
+	cur[1] = distribution(generator);
+	if (cur[0] > cur[1]) swap(cur[0], cur[1]);
+	fwrite(cur, sizeof(*cur), 2, stdout);
 	return 0;
 }

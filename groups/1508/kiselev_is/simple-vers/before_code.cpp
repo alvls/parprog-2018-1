@@ -37,6 +37,7 @@ int main(int argc, char * argv[]) {
 		}
 	}
 
+	//fun->PrintFunc();
 
 	fread(&start, sizeof(start), 1, stdin);
 	fread(&finish, sizeof(finish), 1, stdin);
