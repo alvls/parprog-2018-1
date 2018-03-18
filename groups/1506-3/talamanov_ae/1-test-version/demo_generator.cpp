@@ -6,15 +6,22 @@
 #include <iterator>
 #include <string>
 #include <stdexcept>
-#include "generator.h"
+#include "generator.hpp"
 
-using namespace std;
+using std::cerr;
+using std::runtime_error;
+using std::string;
+using std::vector;
+using std::ofstream;
+using std::copy;
+using std::ios;
+using std::endl;
+using std::ostream_iterator;
 
 void writeArrayToFile(vector<int> array, const string& file_name);
 
 int main(int argc, char* argv[]) {
-
-  if(argc != 4) {
+  if (argc != 4) {
     cerr << "You should set :" << endl;
     cerr << "number test = [0, 5]" << endl;
     cerr << "array size " << endl;

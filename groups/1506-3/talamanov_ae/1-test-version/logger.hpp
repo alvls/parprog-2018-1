@@ -1,5 +1,5 @@
-#ifndef TALAMANOV_AE_TEST_VERSION_CHECKER_LOGGER_H
-#define TALAMANOV_AE_TEST_VERSION_CHECKER_LOGGER_H
+#ifndef GROUPS_1506_3_TALAMANOV_AE_1_TEST_VERSION_LOGGER_HPP_
+#define GROUPS_1506_3_TALAMANOV_AE_1_TEST_VERSION_LOGGER_HPP_
 
 #include <iostream>
 #include <fstream>
@@ -8,7 +8,7 @@
 enum class verdict { NO = 1, AC, WA, CE, ML, TL, RE, IL, PE, DE };
 
 class Logger {
-public:
+ public:
   enum class ext_cls{
     NO      = 1,
     VERDICT = 2,
@@ -17,7 +17,7 @@ public:
     MEMORY  = 5
   };
 
-  Logger(const std::string& log_file_path) {
+  explicit Logger(const std::string& log_file_path) {
     log_file_.open(log_file_path, std::ios::app);
   }
 
@@ -26,7 +26,9 @@ public:
     log_file_.close();
   }
 
-  void writeType(ext_cls type) { log_file_ << static_cast<int>(type) << std::endl; }
+  void writeType(ext_cls type) {
+     log_file_ << static_cast<int>(type) << std::endl;
+  }
 
   void writeVerdict(verdict v) {
     writeType(ext_cls::VERDICT);
@@ -48,8 +50,8 @@ public:
     log_file_ << memory_b << std::endl;
   }
 
-private:
+ private:
   std::ofstream log_file_;
 };
 
-#endif //TALAMANOV_AE_TEST_VERSION_CHECKER_LOGGER_H
+#endif  // GROUPS_1506_3_TALAMANOV_AE_1_TEST_VERSION_LOGGER_HPP_

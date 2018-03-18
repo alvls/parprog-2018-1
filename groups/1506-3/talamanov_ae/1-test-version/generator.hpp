@@ -1,10 +1,10 @@
-#ifndef TALAMANOV_AE_TEST_VERSION_GENERATOR_GENERATOR_H
-#define TALAMANOV_AE_TEST_VERSION_GENERATOR_GENERATOR_H
+#ifndef GROUPS_1506_3_TALAMANOV_AE_1_TEST_VERSION_GENERATOR_H_
+#define GROUPS_1506_3_TALAMANOV_AE_1_TEST_VERSION_GENERATOR_H_
 
 #include <vector>
 
 class Generator {
-public:
+ public:
   enum class TestType {
     FILL_CONSTANT_VAL     = 0,
     FILL_IN_ORDER         = 1,
@@ -17,4 +17,4 @@ public:
   std::vector<int> generate(TestType type, int size_array);
 };
 
-#endif //TALAMANOV_AE_TEST_VERSION_GENERATOR_GENERATOR_H
+#endif  // GROUPS_1506_3_TALAMANOV_AE_1_TEST_VERSION_GENERATOR_H_

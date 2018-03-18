@@ -1,7 +1,7 @@
 #include <random>
 #include <algorithm>
 #include <stdexcept>
-#include "generator.h"
+#include "generator.hpp"
 
 std::vector<int> Generator::generate(TestType type, int size_array) {
   std::vector<int> array(size_array);
@@ -10,7 +10,7 @@ std::vector<int> Generator::generate(TestType type, int size_array) {
 
   const int fill_val = 5;
 
-  switch(type){
+  switch (type) {
     case TestType::FILL_CONSTANT_VAL:
       std::fill(array.begin(), array.end(), fill_val);
       break;
