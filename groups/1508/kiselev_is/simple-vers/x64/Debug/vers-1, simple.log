@@ -1,5 +1,0 @@
-﻿  before_code.cpp
-d:\programs\parprog-2018-1\groups\1508\kiselev_is\simple-vers\func.h(3): warning C4005: _CRT_SECURE_NO_WARNINGS: изменение макроопределения
-  d:\programs\parprog-2018-1\groups\1508\kiselev_is\simple-vers\func.h(3): note: аргументы командной строки:  см. предыдущее определение "_CRT_SECURE_NO_WARNINGS"
-  vers-1, simple.vcxproj -> D:\PROGRAMS\parprog-2018-1\groups\1508\kiselev_is\simple-vers\x64\Debug\vers-1, simple.exe
-  vers-1, simple.vcxproj -> D:\PROGRAMS\parprog-2018-1\groups\1508\kiselev_is\simple-vers\x64\Debug\vers-1, simple.pdb (Partial PDB)
