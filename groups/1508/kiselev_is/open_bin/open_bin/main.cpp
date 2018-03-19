@@ -4,7 +4,7 @@
 
 int main() {
 	double result = 0.0;
-	freopen("../../simple-vers/tests/1.ans", "rb", stdin);
+	freopen("../../simple-vers/tests/7.ans", "rb", stdin);
 	fread(&result, sizeof(result), 1, stdin);
 	std::cout << result;
 
