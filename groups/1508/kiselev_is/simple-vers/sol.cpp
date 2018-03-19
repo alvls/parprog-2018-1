@@ -28,27 +28,27 @@ double module(double a) {
 
 // Интеграл трапециями, функция, начало отрезка, конец, точность, начальное количество частей
 
-double TIntegral(Func* fun, double start, double finish, double accuracy, int parts = 200) {
+double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double Yfinish, double accuracy, int parts = 200) {
 
 	double result = 0.0;
 
 	double XHigh = 0.0;
 	double YHigh = 0.0;
 
-	double Xpart = (finish - start) / parts;
-	double Ypart = Xpart;
-	double Xpoint = start;
-	double Ypoint = start;
+	double Xpart = (Xfinish - Xstart) / parts;
+	double Ypart = (Yfinish - Ystart) / parts;
+	double Xpoint = Xstart;
+	double Ypoint = Ystart;
 
 	double variable = 0.0;
-	double LastResult = valueIn(fun, (finish - start) / 2, (finish - start) / 2);
+	double LastResult = valueIn(fun, (Xfinish - Xstart) / 2, (Yfinish - Ystart) / 2);
 	while (module(result - LastResult) > accuracy) {
 
 		for (int i = 0; i < parts; i++) {
 			XHigh = ((valueIn(fun, Xpoint, Ypoint) + valueIn(fun, Xpoint + Xpart, Ypoint)) / 2);
 
 			variable = XHigh;
-			// (F0 + F1) / 2  // определение среднего значения трапеции
+			// (F0 + F1) / 2  // определение среднего значения трапеции по х
 			for (int j = 0; j < parts; j++) {
 				YHigh = ((valueIn(fun, Xpoint, Ypoint + Ypart) + valueIn(fun, Xpoint, Ypoint + Ypart)) / 2);
 
@@ -58,7 +58,7 @@ double TIntegral(Func* fun, double start, double finish, double accuracy, int pa
 				Ypoint = Ypoint + Ypart;
 
 			}
-			Ypoint = start;
+			Ypoint = Ystart;
 			Xpoint = Xpoint + Xpart;
 		}
 		if (module(LastResult - result) > (accuracy / 20)) {
@@ -67,10 +67,10 @@ double TIntegral(Func* fun, double start, double finish, double accuracy, int pa
 			else if (module(LastResult - result) > accuracy / 10) parts += 50;
 			LastResult = result;
 			result = 0;
-			Xpart = (finish - start) / parts;
-			Ypart = Xpart;
-			Xpoint = start;
-			Ypoint = start;
+			Xpart = (Xfinish - Xstart) / parts;
+			Ypart = (Yfinish - Ystart) / parts;
+			Xpoint = Xstart;
+			Ypoint = Ystart;
 
 			std::cout << parts << std::endl;
 		}
