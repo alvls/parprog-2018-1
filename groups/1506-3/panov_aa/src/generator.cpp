@@ -64,6 +64,7 @@ int main(int argc, char * argv[])
     // генерируем ответ
     Matrix ans = m1*m2;
     freopen((path + output + number + extensionOutAnswer).c_str(), "wb", stdout);
+    fwrite(&n, sizeof(n), 1, stdout);
     fwrite(ans.getP(), sizeof(ans.vv[0]), n*n, stdout);
     return 0;
 }

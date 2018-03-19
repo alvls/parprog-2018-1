@@ -26,46 +26,32 @@ void writeMatrixBin(Matrix &A, int N)
 int main(int argc, char * argv[])
 {
     string path = "";
-	string input = "input";
-	string output = "matr";
-	string number = "";
-	string extensionIn = ".txt";
-	string extensionOut = ".in";
-	if (argc == 2)
-	{
-		number = argv[1];
-        input = "";
-        output = "";
-        extensionIn = "";
-        extensionOut = "";
-	}
-    else
+    string input = "matr";
+    string output = "matr";
+    string number = "";
+    string extensionIn = ".txt";
+    string extensionOut = ".out";
+    if (argc > 1)
     {
+        path = argv[1];
         if (argc > 2)
         {
-            output = argv[2];
-            if (argc > 3)
-            {
-                number = argv[3];
-            }
+            number = argv[2];
         }
     }
+
 
 	int N;
 
 	freopen((path + input + number + extensionIn).c_str(), "r", stdin);
+    freopen((path+ output + number + extensionOut).c_str(), "wb", stdout);
     cin >> N;
     Matrix A(N, N);
-	readMatrix(A, N);
-    Matrix B(N, N);
-    if (readMatrix(B, N) == false)
-    {
-        extensionOut = ".ans";
-    }
-
-    freopen((output + number + extensionOut).c_str(), "wb", stdout);
+	
+    readMatrix(A, N);  
     fwrite(&N, sizeof(N), 1, stdout);
     writeMatrixBin(A, N);
-    if (extensionOut != ".ans")
-        writeMatrixBin(B, N);
+
+    readMatrix(A, N);
+    writeMatrixBin(A, N);
 }
