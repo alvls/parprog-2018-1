@@ -6,17 +6,17 @@
 #include <chrono>
 using namespace std;
 
-int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 };
+int n_tests[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
 
 int main(int argc, char * argv[]) {
-	// перенаправляем поток stdout в файл matr.in 
-	freopen("../tests/40", "wb", stdout);
+	// перенаправляем поток stdout в файл
+	freopen(argv[1], "wb", stdout);
 	// создаём генератор случайных чисел с seed равным количеству времени с начала эпохи 
 	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
-	// создаём равномерное распределение случайной величины типа double в диапазоне // [-50, 50] 
-	uniform_real_distribution <double> distribution(-50, 50);
+	// создаём равномерное распределение случайной величины типа double в диапазоне // [-5, 5] 
+	uniform_real_distribution <double> distribution(-20, 20);
 	// задаём размер матриц 
-	int size = 25;
+	int size = 15;
 	// если передали номер теста в аргументах командной строки, то берём размер из 	n_tests 
 	if (argc > 1) size = n_tests[atoi(argv[1])];
 	// записываем в бинарном виде размерность матриц 
