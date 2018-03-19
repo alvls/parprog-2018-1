@@ -13,10 +13,10 @@ int main(int argc, char * argv[]) {
 	freopen("../tests/40", "wb", stdout);
 	// создаём генератор случайных чисел с seed равным количеству времени с начала эпохи 
 	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
-	// создаём равномерное распределение случайной величины типа double в диапазоне // [-50, 50] 
-	uniform_real_distribution <double> distribution(-50, 50);
+	// создаём равномерное распределение случайной величины типа double в диапазоне // [-10, 10] 
+	uniform_real_distribution <double> distribution(-10, 10);
 	// задаём размер матриц 
-	int size = 25;
+	int size = rand()% 5 + 1;
 	// если передали номер теста в аргументах командной строки, то берём размер из 	n_tests 
 	if (argc > 1) size = n_tests[atoi(argv[1])];
 	// записываем в бинарном виде размерность матриц 

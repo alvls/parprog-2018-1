@@ -1,4 +1,5 @@
 #include <cstdio> 
+#include <cstring>
 #include <omp.h> 
 #include <random>
 #include "Func.h"
@@ -9,10 +10,12 @@ int main(int argc, char * argv[]) {
 	if (argc > 1) num_threads = atoi(argv[1]);
 	int size = 0;
 
-	double integral = 0.0;
+	char* ans = strcat(argv[2], ".ans");
 
-	freopen("tests/40", "rb", stdin);
-	freopen("tests/40.ans", "wb", stdout);
+	double integral;
+
+	freopen(argv[2], "rb", stdin);
+	freopen(ans, "wb", stdout);
 	fread(&size, sizeof(int), 1, stdin);
 
 	double* buf = new double(size);

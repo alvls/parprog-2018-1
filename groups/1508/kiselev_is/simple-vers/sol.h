@@ -60,10 +60,10 @@ double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double
 			Ypoint = Ystart;
 			Xpoint = Xpoint + Xpart;
 		}
-		if (module(LastResult - result) > (accuracy / 20)) {
+		if (module(LastResult - result) > (accuracy)) {
 			if (module(LastResult - result) > accuracy * 100) parts += 1000;
 			else if (module(LastResult - result) > accuracy * 10) parts += 200;
-			else if (module(LastResult - result) > accuracy / 10) parts += 50;
+			else if (module(LastResult - result) > accuracy) parts += 50;
 			LastResult = result;
 			result = 0;
 			Xpart = (Xfinish - Xstart) / parts;
@@ -71,7 +71,6 @@ double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double
 			Xpoint = Xstart;
 			Ypoint = Ystart;
 
-			std::cout << parts << std::endl;
 		}
 
 	}
