@@ -10,12 +10,10 @@ int main(int argc, char * argv[]) {
 	if (argc > 1) num_threads = atoi(argv[1]);
 	int size = 0;
 
-	char* ans = strcat(argv[2], ".ans");
-
 	double integral;
 
 	freopen(argv[2], "rb", stdin);
-	freopen(ans, "wb", stdout);
+	freopen(strcat(argv[2],".ans"), "wb", stdout);
 	fread(&size, sizeof(int), 1, stdin);
 
 	double* buf = new double(size);
@@ -63,11 +61,11 @@ int main(int argc, char * argv[]) {
 
 	//omp_set_num_threads(num_threads);
 	//double time = omp_get_wtime();
-
 	integral = TIntegral(fun, confines[0], confines[1], confines[2], confines[3], 0.01);
-
 	//time = omp_get_wtime() - time;
 	//fwrite(&time, sizeof(time), 1, stdout);
-	fwrite(&integral, sizeof(integral), 1, stdout);
+	fwrite(&integral, sizeof(double), 1, stdout);
+
+	system ("pause");
 	return 0;
 }
