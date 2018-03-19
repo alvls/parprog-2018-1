@@ -5,8 +5,8 @@
 #include <iostream>
 #include "../include/matrix.h"
 using namespace std;
-int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300, 400, 500,
-600, 700, 800, 900, 1000 };
+/*int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300, 400, 500,
+600, 700, 800, 900, 1000 };*/
 int main(int argc, char * argv[])
 {
     string path = "./";
@@ -14,16 +14,24 @@ int main(int argc, char * argv[])
     string number = "";
     string extensionOut = ".in";
     string extensionOutAnswer = ".ans";
+
+    // задаём размер матриц
+    // если передали номер теста в аргументах командной строки, то берём размер из n_tests
+    int n = 10;
     if (argc > 1)
     {
         path = argv[1];
         if (argc > 2)
         {
-            number = argv[2];
-            output = "";
+            n = atoi(argv[2]);
             if (argc > 3)
             {
-                output = argv[3];
+                number = argv[3];
+                output = "";
+                if (argc > 4)
+                {
+                    output = argv[4];
+                }
             }
         }
     }
@@ -32,13 +40,9 @@ int main(int argc, char * argv[])
     // создаём генератор случайных чисел с seed равным количеству времени с начала эпохи
     default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
     // создаём равномерное распределение случайной величины типа double в диапазоне
-    // [-100, 100]
-    uniform_real_distribution <double> distribution(-1e2, 1e2);
-    // задаём размер матриц
-    int n = 10;
-    // если передали номер теста в аргументах командной строки, то берём размер из n_tests
-    if (argc > 1)
-        n = n_tests[atoi(argv[1])];
+    // [-10, 10]
+    uniform_real_distribution <double> distribution(-1e1, 1e1);
+  
     // записываем в бинарном виде размерность матриц
     fwrite(&n, sizeof(n), 1, stdout);
     Matrix m1(n, n), m2(n, n);
