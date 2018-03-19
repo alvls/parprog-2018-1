@@ -6,13 +6,18 @@ using std::cout;
 using std::cin;
 using std::swap;
 
-void readMatrix(Matrix &A, int N)
+bool readMatrix(Matrix &A, int N)
 {
-	for (int i = 0; i < N * N; i++)
-	{
+    Element x;
+    if (!(cin >> x))
+        return false;
+    A.vv[0] = x;
+	for (int i = 1; i < N * N; i++)
+	{       
 		cin >> A.vv[i];
 	}
     A.transpositionMatrix();
+    return true;
 }
 void writeMatrixBin(Matrix &A, int N)
 {
@@ -20,35 +25,47 @@ void writeMatrixBin(Matrix &A, int N)
 }
 int main(int argc, char * argv[])
 {
+    string path = "";
 	string input = "input";
 	string output = "matr";
 	string number = "";
 	string extensionIn = ".txt";
 	string extensionOut = ".in";
-	if (argc > 1)
+	if (argc == 2)
 	{
-		input = argv[1];
-		if (argc > 2)
-		{
-			output = argv[2];
-			if (argc > 3)
-			{
-				number = argv[3];
-			}
-		}
+		number = argv[1];
+        input = "";
+        output = "";
+        extensionIn = "";
+        extensionOut = "";
 	}
+    else
+    {
+        if (argc > 2)
+        {
+            output = argv[2];
+            if (argc > 3)
+            {
+                number = argv[3];
+            }
+        }
+    }
 
 	int N;
 
-	freopen((input + number + extensionIn).c_str(), "r", stdin);
-	freopen((output + number + extensionOut).c_str(), "wb", stdout);
-	
+	freopen((path + input + number + extensionIn).c_str(), "r", stdin);
     cin >> N;
-    Matrix A(N, N), B(N, N);
-
+    Matrix A(N, N);
 	readMatrix(A, N);
-    readMatrix(B, N);
+    Matrix B(N, N);
+    if (readMatrix(B, N) == false)
+    {
+        extensionOut = ".ans";
+    }
+
+    freopen((output + number + extensionOut).c_str(), "wb", stdout);
     fwrite(&N, sizeof(N), 1, stdout);
-	writeMatrixBin(A, N);
-    writeMatrixBin(B, N);
+    writeMatrixBin(A, N);
+    if (extensionOut != ".ans")
+        writeMatrixBin(B, N);
 }
