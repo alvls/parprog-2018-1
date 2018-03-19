@@ -17,15 +17,15 @@ void HoaraQuickSort(int* arr, int first, int last)
 			j--;
 		}
 
-			if (i < j)x
-			{
-				temp = arr[i];
-				arr[i] = arr[j];
-				arr[j] = temp;
-			}
-			i++;
-			j--;
-		
+		if (i < j)
+		{
+			temp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = temp;
+		}
+		i++;
+		j--;
+
 	} while (i <= j);
 
 
