@@ -2,8 +2,7 @@
 #include <omp.h> 
 #include <random>
 #include "Func.h"
-
-double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double Yfinish, double accuracy, int parts = 200);
+#include "sol.h"
 
 int main(int argc, char * argv[]) {
 	int num_threads = 1;

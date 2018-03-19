@@ -10,7 +10,7 @@ int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300
 
 int main(int argc, char * argv[]) {
 	// перенаправляем поток stdout в файл matr.in 
-	freopen("../tests/6", "wb", stdout);
+	freopen(argv[1], "wb", stdout);
 	// создаём генератор случайных чисел с seed равным количеству времени с начала эпохи 
 	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
 	// создаём равномерное распределение случайной величины типа double в диапазоне // [-50, 50] 
