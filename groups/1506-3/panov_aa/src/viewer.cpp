@@ -29,21 +29,17 @@ int main(int argc, char * argv[])
 	string extensionOut = ".txt";
 	if (argc > 1)
 	{
-		input = argv[1];
+        path = argv[1];
 		if (argc > 2)
 		{
-			output = argv[2];
-			if (argc > 3)
-			{
-				number = argv[3];
-			}
+            number = argv[2];			
 		}
 	}
 
 	int N;
 
 	freopen((path + input + number + extensionIn).c_str(), "rb", stdin);
-	freopen((output + number + extensionOut).c_str(), "w", stdout);
+	freopen((path + output + number + extensionOut).c_str(), "w", stdout);
 	
     fread(&N, sizeof(N), 1, stdin);
     Matrix A(N,N), B(N,N);
