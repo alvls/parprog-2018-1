@@ -11,8 +11,8 @@ int main(int argc, char * argv[]) {
 
 	double integral = 0.0;
 
-	freopen("tests/1", "rb", stdin);
-	freopen("tests/1.ans", "wb", stdout);
+	freopen("tests/40", "rb", stdin);
+	freopen("tests/40.ans", "wb", stdout);
 	fread(&size, sizeof(int), 1, stdin);
 
 	double* buf = new double(size);
@@ -58,13 +58,13 @@ int main(int argc, char * argv[]) {
 
 	fread(confines, sizeof(*confines), 4, stdin);
 
-	omp_set_num_threads(num_threads);
-	double time = omp_get_wtime();
-	
+	//omp_set_num_threads(num_threads);
+	//double time = omp_get_wtime();
+
 	integral = TIntegral(fun, confines[0], confines[1], confines[2], confines[3], 0.01);
 
-	time = omp_get_wtime() - time;
-	fwrite(&time, sizeof(time), 1, stdout);
+	//time = omp_get_wtime() - time;
+	//fwrite(&time, sizeof(time), 1, stdout);
 	fwrite(&integral, sizeof(integral), 1, stdout);
 	return 0;
 }

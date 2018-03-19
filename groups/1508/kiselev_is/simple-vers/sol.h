@@ -1,8 +1,5 @@
 #pragma once
 
-
-#pragma once
-
 #include <math.h>
 #include <cmath>
 #include "Func.h"

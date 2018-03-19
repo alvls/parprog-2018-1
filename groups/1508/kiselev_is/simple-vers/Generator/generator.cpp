@@ -10,13 +10,13 @@ int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300
 
 int main(int argc, char * argv[]) {
 	// перенаправляем поток stdout в файл matr.in 
-	freopen(argv[1], "wb", stdout);
+	freopen("../tests/40", "wb", stdout);
 	// создаём генератор случайных чисел с seed равным количеству времени с начала эпохи 
 	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
 	// создаём равномерное распределение случайной величины типа double в диапазоне // [-50, 50] 
 	uniform_real_distribution <double> distribution(-50, 50);
 	// задаём размер матриц 
-	int size = (rand() % 20) + 1;
+	int size = 25;
 	// если передали номер теста в аргументах командной строки, то берём размер из 	n_tests 
 	if (argc > 1) size = n_tests[atoi(argv[1])];
 	// записываем в бинарном виде размерность матриц 
