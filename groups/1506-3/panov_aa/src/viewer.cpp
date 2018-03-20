@@ -26,8 +26,7 @@ void writeMatrix(Matrix &A, int N)
 int main(int argc, char * argv[])
 {
     string path = "";
-	string input = "matr";
-	string output = "matr";
+	string name = "matr";
 	string number = "";
 	string extensionIn = ".in";
     string extensionInAns = ".ans";
@@ -36,6 +35,7 @@ int main(int argc, char * argv[])
 	if (argc > 1)
 	{
         path = argv[1];
+        path += "/";
 		if (argc > 2)
 		{
             number = argv[2];			
@@ -43,8 +43,8 @@ int main(int argc, char * argv[])
 	}
 
 	int N;
-	freopen((path + input + number + extensionIn).c_str(), "rb", stdin);
-    freopen((path + output + number + extensionOut).c_str(), "w", stdout);	
+	freopen((path + name + number + extensionIn).c_str(), "rb", stdin);
+    freopen((path + name + number + extensionOut).c_str(), "w", stdout);	
     fread(&N, sizeof(N), 1, stdin);
 
     Matrix A(N,N);
@@ -55,8 +55,8 @@ int main(int argc, char * argv[])
     writeMatrix(A, N);
 
 
-    freopen((path + input + number + extensionInAns).c_str(), "rb", stdin);
-    freopen((path + output + number + extensionOutAns).c_str(), "w", stdout);
+    freopen((path + name + number + extensionInAns).c_str(), "rb", stdin);
+    freopen((path + name + number + extensionOutAns).c_str(), "w", stdout);
     fread(&N, sizeof(N), 1, stdin);
 
     cout << N << '\n';

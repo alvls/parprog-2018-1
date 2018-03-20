@@ -5,8 +5,8 @@
 #include <iostream>
 #include "../include/matrix.h"
 using namespace std;
-/*int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300, 400, 500,
-600, 700, 800, 900, 1000 };*/
+int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300, 400, 500,
+600, 700, 800, 900, 1000 };
 Matrix getRandMatrix(int n, default_random_engine &generator, uniform_real_distribution<double> &distribution)
 {
     Matrix m1(n, n);
@@ -31,9 +31,11 @@ int main(int argc, char * argv[])
     if (argc > 1)
     {
         path = argv[1];
+        path += "/";
         if (argc > 2)
         {
-            n = atoi(argv[2]);
+            int ind = atoi(argv[2]);
+            n = n_tests[ind];
             if (argc > 3)
             {
                 number = argv[3];

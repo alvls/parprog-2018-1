@@ -12,27 +12,31 @@ MatrixCCS MatrixMult(MatrixCCS &A, MatrixCCS &B);
 int main(int argc, char * argv[])//читает из бинарного файла, запускает программу, пишет в бинарный файл
 {
 	int num_threads = 1;
-    string path = "";
+    string pathInput = "";
+    string pathOutput = "";
 	string name = "matr";
 	string number = "";
 	string extensionIn = ".in";
 	string extensionOut = ".user.ans";
 	if (argc > 1)
 	{
-        path = argv[1];
+        pathInput = argv[1];       
+        pathOutput = pathInput + "_result/";
+        pathInput += "/";
         if (argc > 2)
-        {
-            num_threads = atoi(argv[2]);
+        {           
+            number = argv[2];    
+            name = "";
             if (argc > 3)
             {
-                number = argv[3];
+                num_threads = atoi(argv[3]);
             }
         }
 	}
 
 	int N;
-	freopen((path + name + number + extensionIn).c_str(), "rb", stdin);
-	freopen((path + name + number + extensionOut).c_str(), "wb", stdout);
+	freopen((pathInput + name + number + extensionIn).c_str(), "rb", stdin);
+	freopen((pathOutput + name + number + extensionOut).c_str(), "wb", stdout);
 	fread(&N, sizeof(N), 1, stdin);
     Matrix A(N, N), B(N, N), Res(N,N);
    

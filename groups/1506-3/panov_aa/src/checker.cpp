@@ -20,17 +20,19 @@ IL = Idle Limit Exceeded = Превышено время простоя (бездействия) программы
 DE = Deadly Error = Ошибка тестирующей системы
 */
 enum verdict { NO = 1, AC, WA, CE, ML, TL, RE, IL, PE, DE };
-string path_result = "";
-string output = "result.txt";
+
 class result
 {
 private:
     FILE * bur;
 public:
     enum ext_cls { NO = 1, VERDICT, MESSAGE, TIME, MEMORY };
-    result(bool read = false)
+    result(string path, string name, string number,  bool read = false)
     {
-        if (read) bur = fopen((path_result + output).c_str(), "r"); else bur = fopen((path_result + output).c_str(), "w");
+        if (read) 
+            bur = fopen((path + name + number + ".txt").c_str(), "r");
+        else 
+            bur = fopen((path + name + number + ".txt").c_str(), "w");
     }
     ~result() { fclose(bur); }
     void write_type(ext_cls t) { fwrite(&t, sizeof(t), 1, bur); }
@@ -59,30 +61,33 @@ public:
     {
         write_type(ext_cls::MEMORY); fwrite(&x, sizeof(x), 1, bur);
     }
-} checker_result;
+};
 
 int main(int argc, char * argv[])
 {
     string path = "";
+    string path_result = "";
     string number = "";
-    string output = "result.txt";
-    string input = "matr";
+    string name = "matr";
     string extensionIn = ".in";
     string extensionOutAnswer = ".ans";
     string extensionOutUserAnswer = ".user.ans";
     if (argc > 1)
     {
         path = argv[1];
-        path_result = path;
+        path_result = path + "_result/";
+        path += "/";
         if (argc > 2)
         {
-            path_result = argv[2];
+            name = "";
+            number = argv[2];
         }
     }
+    result checker_result(path_result, number, "result");
     // Открываем файл входных данных, ответ участника, файл выходных данных c ответом жюри
-    FILE * bui = fopen((path + input + number + extensionIn).c_str(), "rb");
-    FILE * buo = fopen((path + input + number + extensionOutUserAnswer).c_str(), "rb");
-    FILE * bua = fopen((path + input + number + extensionOutAnswer).c_str(), "rb");
+    FILE * bui = fopen((path + name + number + extensionIn).c_str(), "rb");
+    FILE * buo = fopen((path_result + name + number + extensionOutUserAnswer).c_str(), "rb");
+    FILE * bua = fopen((path + name + number + extensionOutAnswer).c_str(), "rb");
     int n;
     // Считываем размерность матриц
     fread(&n, sizeof(n), 1, bui);
