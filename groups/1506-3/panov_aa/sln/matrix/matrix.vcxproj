@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\complex_numbers.h" />
     <ClInclude Include="..\..\include\matrix.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

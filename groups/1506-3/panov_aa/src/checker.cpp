@@ -20,7 +20,7 @@ IL = Idle Limit Exceeded = Превышено время простоя (бездействия) программы
 DE = Deadly Error = Ошибка тестирующей системы
 */
 enum verdict { NO = 1, AC, WA, CE, ML, TL, RE, IL, PE, DE };
-string path_result = "first_test_result/";
+string path_result = "";
 string output = "result.txt";
 class result
 {
@@ -61,15 +61,24 @@ public:
     }
 } checker_result;
 
-int main()
+int main(int argc, char * argv[])
 {
-    string path = "first_test/";
+    string path = "";
     string number = "";
     string output = "result.txt";
     string input = "matr";
     string extensionIn = ".in";
     string extensionOutAnswer = ".ans";
     string extensionOutUserAnswer = ".user.ans";
+    if (argc > 1)
+    {
+        path = argv[1];
+        path_result = path;
+        if (argc > 2)
+        {
+            path_result = argv[2];
+        }
+    }
     // Открываем файл входных данных, ответ участника, файл выходных данных c ответом жюри
     FILE * bui = fopen((path + input + number + extensionIn).c_str(), "rb");
     FILE * buo = fopen((path + input + number + extensionOutUserAnswer).c_str(), "rb");
