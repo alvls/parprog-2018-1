@@ -12,22 +12,27 @@ MatrixCCS MatrixMult(MatrixCCS &A, MatrixCCS &B);
 int main(int argc, char * argv[])//читает из бинарного файла, запускает программу, пишет в бинарный файл
 {
 	int num_threads = 1;
+    string path = "";
 	string name = "matr";
 	string number = "";
 	string extensionIn = ".in";
-	string extensionOut = ".out";
+	string extensionOut = ".user.ans";
 	if (argc > 1)
 	{
-		num_threads = atoi(argv[1]);
-		if (argc > 2)
-		{
-			number = argv[2];
-		}
+        path = argv[1];
+        if (argc > 2)
+        {
+            num_threads = atoi(argv[2]);
+            if (argc > 3)
+            {
+                number = argv[3];
+            }
+        }
 	}
 
 	int N;
-	freopen((name + number + extensionIn).c_str(), "rb", stdin);
-	freopen((name + number + extensionOut).c_str(), "wb", stdout);
+	freopen((path + name + number + extensionIn).c_str(), "rb", stdin);
+	freopen((path + name + number + extensionOut).c_str(), "wb", stdout);
 	fread(&N, sizeof(N), 1, stdin);
     Matrix A(N, N), B(N, N), Res(N,N);
    
@@ -42,12 +47,9 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
     ResCol = MatrixMult(Acol, Bcol);
 	time = omp_get_wtime() - time;
 
-    Acol.convertToMatrix(A);
-    Bcol.convertToMatrix(B);
     ResCol.convertToMatrix(Res);
 
 	fwrite(&time, sizeof(time), 1, stdout);
-	fwrite(A.getP(), sizeof(Element), N * N, stdout);
-
+	fwrite(Res.getP(), sizeof(Element), N * N, stdout);
 	return 0;
 }
