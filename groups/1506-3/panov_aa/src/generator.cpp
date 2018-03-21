@@ -3,6 +3,8 @@
 #include <ctime>
 #include <chrono>
 #include <iostream>
+#include <algorithm>
+#include <numeric>
 #include "../include/matrix.h"
 using namespace std;
 int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300, 400, 500,
@@ -14,6 +16,23 @@ Matrix getRandMatrix(int n, default_random_engine &generator, uniform_real_distr
     {
         // заполняем случайными числами из равномерного распределения матрицу
         m1.vv[i] = distribution(generator);
+    }
+    return m1;
+}
+Matrix getRandSparseMatrix(int n, default_random_engine &generator, uniform_real_distribution<double> &distribution)
+{
+    Matrix m1(n, n);
+    vector<int> index(n*n);
+    iota(index.begin(), index.end(), 0);
+    for (int i = 0; i < n / 2; i++)
+    {
+        uniform_int_distribution <int> d(0, index.size() - 1);
+        int tmp_ind = d(generator);
+        int ind = index[tmp_ind];
+        swap(index[tmp_ind], index[index.size()-1]);
+        index.pop_back();
+        m1.vv[ind] = distribution(generator);
+        if (index.size() == 0) return m1;
     }
     return m1;
 }
@@ -58,10 +77,10 @@ int main(int argc, char * argv[])
     // записываем в бинарном виде размерность матриц
     fwrite(&n, sizeof(n), 1, stdout);
     // генерируем первую матрицу
-    Matrix m1 = getRandMatrix(n, generator, distribution);
+    Matrix m1 = getRandSparseMatrix(n, generator, distribution);
     fwrite(m1.getP(), sizeof(m1.vv[0]), n*n, stdout);
     // генерируем вторую матрицу
-    Matrix m2 = getRandMatrix(n, generator, distribution);
+    Matrix m2 = getRandSparseMatrix(n, generator, distribution);
     fwrite(m2.getP(), sizeof(m2.vv[0]), n*n, stdout);
 
     // генерируем ответ
