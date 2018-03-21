@@ -21,29 +21,29 @@ DE = Deadly Error = Ошибка тестирующей системы
 */
 enum verdict { NO = 1, AC, WA, CE, ML, TL, RE, IL, PE, DE };
 
-class result
+class Result
 {
 private:
     FILE * bur;
 public:
     enum ext_cls { NO = 1, VERDICT, MESSAGE, TIME, MEMORY };
-    result(string path, string name, string number,  bool read = false)
+    Result(string path, string name, string extension,  bool read = false)
     {
         if (read) 
-            bur = fopen((path + name + number + ".txt").c_str(), "r");
+            bur = fopen((path + name + extension + ".txt").c_str(), "r");
         else 
-            bur = fopen((path + name + number + ".txt").c_str(), "w");
+            bur = fopen((path + name + extension + ".txt").c_str(), "w");
     }
-    ~result() { fclose(bur); }
-    void write_type(ext_cls t) { fwrite(&t, sizeof(t), 1, bur); }
+    ~Result() { fclose(bur); }
+    void write_type(ext_cls t) 
+    { 
+        fwrite(&t, sizeof(t), 1, bur);
+    }
     // Сообщить тестирующей системе, что решение получило один из вердиктов verdict
     void write_verdict(verdict v)
     {
         write_type(ext_cls::VERDICT); fwrite(&v, sizeof(v), 1, bur);
     }
-    // Написать сообщение от checker'a пользователю.
-    // Например, что решение верное, или неверное.
-    // Использовать только латинские буквы и знаки препинания
     void write_message(string str)
     {
         write_type(ext_cls::MESSAGE); int l = str.size(); fwrite(&l, sizeof(l), 1, bur);
@@ -72,6 +72,7 @@ int main(int argc, char * argv[])
     string extensionIn = ".in";
     string extensionOutAnswer = ".ans";
     string extensionOutUserAnswer = ".user.ans";
+    string extensionResult = ".result";
     if (argc > 1)
     {
         path = argv[1];
@@ -83,7 +84,10 @@ int main(int argc, char * argv[])
             number = argv[2];
         }
     }
-    result checker_result(path_result, number, "result");
+    if (number == "")
+        extensionResult = "result";
+
+    Result checker_result(path_result, number, extensionResult);
     // Открываем файл входных данных, ответ участника, файл выходных данных c ответом жюри
     FILE * bui = fopen((path + name + number + extensionIn).c_str(), "rb");
     FILE * buo = fopen((path_result + name + number + extensionOutUserAnswer).c_str(), "rb");

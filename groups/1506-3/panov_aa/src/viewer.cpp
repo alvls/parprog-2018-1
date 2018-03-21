@@ -26,18 +26,23 @@ void writeMatrix(Matrix &A, int N)
 int main(int argc, char * argv[])
 {
     string path = "";
+    string path_result;
 	string name = "matr";
 	string number = "";
 	string extensionIn = ".in";
     string extensionInAns = ".ans";
+    string extensionInUserAns = ".user.ans";
 	string extensionOut = ".txt";
     string extensionOutAns = ".ans.txt";
+    double time = 0.0;
 	if (argc > 1)
 	{
         path = argv[1];
+        path_result = path + "_result/";
         path += "/";
 		if (argc > 2)
 		{
+            name = "";
             number = argv[2];			
 		}
 	}
@@ -46,7 +51,6 @@ int main(int argc, char * argv[])
 	freopen((path + name + number + extensionIn).c_str(), "rb", stdin);
     freopen((path + name + number + extensionOut).c_str(), "w", stdout);	
     fread(&N, sizeof(N), 1, stdin);
-
     Matrix A(N,N);
     cout << N << '\n';
     readMatrixBin(A, N);
@@ -54,11 +58,16 @@ int main(int argc, char * argv[])
     readMatrixBin(A, N);
     writeMatrix(A, N);
 
-
     freopen((path + name + number + extensionInAns).c_str(), "rb", stdin);
     freopen((path + name + number + extensionOutAns).c_str(), "w", stdout);
     fread(&N, sizeof(N), 1, stdin);
+    readMatrixBin(A, N);
+    cout << N << '\n';
+    writeMatrix(A, N);
 
+    freopen((path_result + name + number + extensionInUserAns).c_str(), "rb", stdin);
+    freopen((path_result + name + number + extensionInUserAns + ".txt").c_str(), "w", stdout);
+    fread(&time, sizeof(time), 1, stdin);
     cout << N << '\n';
     readMatrixBin(A, N);
     writeMatrix(A, N);
