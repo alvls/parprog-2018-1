@@ -1,5 +1,5 @@
-#ifndef GROUPS_1506_3_TALAMANOV_AE_1_TEST_VERSION_SHELLSORT_H_
-#define GROUPS_1506_3_TALAMANOV_AE_1_TEST_VERSION_SHELLSORT_H_
+#ifndef GROUPS_1506_3_TALAMANOV_AE_1_TEST_VERSION_SHELLSORT_HPP_
+#define GROUPS_1506_3_TALAMANOV_AE_1_TEST_VERSION_SHELLSORT_HPP_
 
 #include <iterator>
 #include <vector>
@@ -7,18 +7,13 @@
 
 template<typename Iterator>
 void InsertSortWithGap(Iterator first, Iterator last, int gap) {
-  int tmp;
-  int j;
-  int size_array = std::distance(first, last);
-
-  for (int i = gap; i < size_array; ++i) {
-    tmp = *(first + i);
-    j = i;
-    while (j >= gap && tmp < *(first + j - gap)) {
-      *(first + j) = *(first + j - gap);
-      j -= gap;
+  for (auto i = (first + gap); i < last; ++i) {
+    auto tmp = *i;
+    auto j = i;
+    for (; j >= (first + gap) && *(j - gap) > tmp; j -= gap) {
+      *j = *(j - gap);
     }
-    *(first + j) = tmp;
+    *j = tmp;
   }
 }
 
@@ -52,4 +47,4 @@ void ShellSort(Iterator first, Iterator last) {
         });
 }
 
-#endif  // GROUPS_1506_3_TALAMANOV_AE_1_TEST_VERSION_SHELLSORT_H_
+#endif  // GROUPS_1506_3_TALAMANOV_AE_1_TEST_VERSION_SHELLSORT_HPP_

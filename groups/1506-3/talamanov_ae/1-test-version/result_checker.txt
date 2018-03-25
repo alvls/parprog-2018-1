@@ -3,7 +3,7 @@ AC. Array is sorted
 2
 2
 4
-271228
+8490
 5
 4000
 
@@ -12,7 +12,7 @@ AC. Array is sorted
 2
 2
 4
-3734
+651
 5
 40
 
@@ -21,7 +21,7 @@ AC. Array is sorted
 2
 2
 4
-550907
+18991
 5
 4000
 
@@ -30,7 +30,7 @@ AC. Array is sorted
 2
 2
 4
-2308
+499
 5
 40
 
@@ -39,7 +39,7 @@ AC. Array is sorted
 2
 2
 4
-842100
+68879
 5
 4000
 
@@ -48,7 +48,7 @@ AC. Array is sorted
 2
 2
 4
-54682
+5365
 5
 400
 
@@ -57,7 +57,7 @@ AC. Array is sorted
 2
 2
 4
-53824
+6493
 5
 400
 
@@ -66,7 +66,7 @@ AC. Array is sorted
 2
 2
 4
-5320
+1229
 5
 40
 
@@ -75,7 +75,7 @@ AC. Array is sorted
 2
 2
 4
-37940
+7744
 5
 400
 
@@ -84,7 +84,7 @@ AC. Array is sorted
 2
 2
 4
-249949
+25005
 5
 4000
 
@@ -93,7 +93,7 @@ AC. Array is sorted
 2
 2
 4
-2304
+1510
 5
 40
 
@@ -102,7 +102,7 @@ AC. Array is sorted
 2
 2
 4
-14476
+3252
 5
 400
 
@@ -111,7 +111,7 @@ AC. Array is sorted
 2
 2
 4
-14574
+3499
 5
 400
 
@@ -120,7 +120,7 @@ AC. Array is sorted
 2
 2
 4
-51009
+13465
 5
 400
 
@@ -129,7 +129,7 @@ AC. Array is sorted
 2
 2
 4
-820135
+207514
 5
 4000
 
@@ -138,7 +138,7 @@ AC. Array is sorted
 2
 2
 4
-3552
+1714
 5
 40
 
@@ -147,7 +147,7 @@ AC. Array is sorted
 2
 2
 4
-4165
+2269
 5
 40
 
@@ -156,7 +156,7 @@ AC. Array is sorted
 2
 2
 4
-990799
+254710
 5
 4000
 
