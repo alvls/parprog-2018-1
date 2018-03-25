@@ -10,7 +10,7 @@ void InsertSortWithGap(Iterator first, Iterator last, int gap) {
   for (auto i = (first + gap); i < last; ++i) {
     auto tmp = *i;
     auto j = i;
-    for (; j >= (first + gap) && *(j - gap) > tmp; j -= gap) {
+    for (; j >= (first + gap) && *(j - gap) > tmp; std::advance(j, -gap)) {
       *j = *(j - gap);
     }
     *j = tmp;
