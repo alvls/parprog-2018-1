@@ -26,7 +26,6 @@ int main(int argc, char * argv[]) {
 
   default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
 
-
   uniform_int_distribution <int> distribution(-1000000, 1000000);
 
   int length = n_tests[atoi(argv[1])];

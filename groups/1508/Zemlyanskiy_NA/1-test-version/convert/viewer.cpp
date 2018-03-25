@@ -32,10 +32,10 @@ int main(int argc,char* argv[]) {
 
   int number = 0;
   int length = 0;
-  //double time = 0;
+  double time = 0;
 
-  //fread(&time,sizeof(time),1,in_file);
-  //out_file<<time<<endl;
+  fread(&time,sizeof(time),1,in_file);
+  out_file<<time<<endl;
   fread(&length,sizeof(length),1,in_file);
   out_file<<length<<endl;
   for(int i=0;i<length;++i){

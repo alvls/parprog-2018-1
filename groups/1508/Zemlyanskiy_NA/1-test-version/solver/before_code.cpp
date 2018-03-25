@@ -38,8 +38,11 @@ int main(int argc, char *argv[]) {
 
   fread(Arr_Shell,sizeof(*Arr_Shell), length, in_file);
 
+  double time = omp_get_wtime();
   Shell_Sort(Arr_Shell, length);
+  time = omp_get_wtime() - time;
 
+  fwrite(&time, sizeof(time), 1, out_file);
   fwrite(&length, sizeof(length), 1, out_file);
   fwrite(Arr_Shell,sizeof(*Arr_Shell),length,out_file);
 
