@@ -20,9 +20,9 @@ class Matrix
 		void InitializeMatrix(int size,int notNull,Matrix &M) {
 			M._size = size;
 			M._notNull = notNull;
-			M._elements.reserve[notNull];
-			M._secondIndex.reserve[notNull];
-			M._position.reserve[notNull + 1];
+			M._elements.reserve(notNull);
+			M._secondIndex.reserve(notNull);
+			M._position.reserve(notNull + 1);
 		}
 		complex<int> operator ()(int i, int j) {
 			complex<int> result = complex<int>(0,0); 
@@ -38,11 +38,7 @@ class Matrix
 			}
 			return result;
 		}
-		Matrix operator *(const Matrix &M){
-			Matrix tmp = Matrix(M);
-			return tmp;
-		}
-		Matrix GetTransposed(const Matrix &M) 
+		Matrix GetTransposed() 
 		{
 			Matrix temp;
 
@@ -50,29 +46,29 @@ class Matrix
 			vector<vector<complex<int>>> v2(_size);
 
 			int pos = 0;
-			for (int i = 0; i < M._size; ++i)
+			for (int i = 0; i < _size; ++i)
 			{
-				while (pos != _notNull && pos < M._position[i + 1])
+				while (pos != _notNull && pos < _position[i + 1])
 				{
-					v1[M._secondIndex[pos]].emplace_back(i);
-					v2[M._secondIndex[pos]].emplace_back(M._elements[pos]);
+					v1[_secondIndex[pos]].emplace_back(i);
+					v2[_secondIndex[pos]].emplace_back(_elements[pos]);
 					++pos;
 				}
 			}
 
-			temp._size = M._size;
-			temp._notNull = M._notNull;
+			temp._size = _size;
+			temp._notNull = _notNull;
 
-			temp._elements.reserve[M._notNull];
-			temp._secondIndex.reserve[M._notNull];
-			temp._position.reserve[M._size + 1];
+			temp._elements.reserve(_notNull);
+			temp._secondIndex.reserve(_notNull);
+			temp._position.reserve(_size + 1);
 
 			temp._position[0] = 0;
 
-			for (int i = 1; i <= M._size; ++i)
+			for (int i = 1; i <= _size; ++i)
 				temp._position[i] = temp._position[i - 1] + v1[i - 1].size();
 
-			for (int i = 0; i < M._size; ++i)
+			for (int i = 0; i < _size; ++i)
 			{
 				temp._secondIndex.insert(temp._secondIndex.end(), v1[i].begin(), v1[i].end());
 				temp._elements.insert(temp._elements.end(), v2[i].begin(), v2[i].end());
@@ -83,47 +79,47 @@ class Matrix
 
 		Matrix operator*(const Matrix &M )
 		{
-			Matrix tmp = crsmatrix.getTransposed(this);
-			Matrix tmpMatrix;
-			tmpMatrix.Size = Size;
-			tmpMatrix.SparseRow.resize(Size + 1);
+			Matrix temp = GetTransposed();
+			Matrix result;
+			result._size = _size;
+			result._position.resize(_size + 1);
 
 
 			int lastSize = 0;
 
-			for (int i = 0; i < Size; ++i)
+			for (int i = 0; i < _size; ++i)
 			{
-				vector<int> tmp_col(Size, -1);
+				vector<int> tmp_col(_size, -1);
 
-				for (int j = SparseRow[i]; j < SparseRow[i + 1]; ++j)
-					tmp_col[Col[j]] = j;
+				for (int j = _position[i]; j < _position[i + 1]; ++j)
+					tmp_col[_secondIndex[j]] = j;
 
-				for (int j = 0; j < Size; ++j)
+				for (int j = 0; j < _size; ++j)
 				{
-					double sum = 0;
+					complex<int> sum = 0;
 
-					for (int k = tmp.SparseRow[j]; k < tmp.SparseRow[j + 1]; ++k)
+					for (int k = temp._position[j]; k < temp._position[j + 1]; ++k)
 					{
-						int col = tmp_col[tmp.Col[k]];
+						int col = tmp_col[temp._secondIndex[k]];
 						if (col != -1)
-							sum += Value[col] * tmp.Value[k];
+							sum += _elements[col] * temp._elements[k];
 					}
 
-					if (abs(sum) > INF)
+					if (abs(sum) > 0.0000001)
 					{
-						tmpMatrix.Value.push_back(sum);
-						tmpMatrix.Col.push_back(j);
+						result._elements.push_back(sum);
+						result._secondIndex.push_back(j);
 					}
 
 				}
-				tmpMatrix.SparseRow[i] = lastSize;
-				lastSize = tmpMatrix.Value.size();
+				result._position[i] = lastSize;
+				lastSize = result._elements.size();
 			}
 
-			tmpMatrix.SparseRow[Size] = tmpMatrix.Col.size();
+			result._position[_size] = result._secondIndex.size();
 
-			tmpMatrix.NotZero = tmpMatrix.Col.size();
+			result._notNull= result._secondIndex.size();
 
-			return tmpMatrix;
+			return result;
 		}
 };
