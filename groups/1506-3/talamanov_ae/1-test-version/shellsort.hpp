@@ -29,7 +29,11 @@ std::vector<int> CreateSedgwickSequence(int size_array) {
     sequence.emplace_back(GetSedgwickElement(s));
     ++s;
   } while (3 * sequence.back() < size_array);
-  sequence.pop_back();
+
+  if (sequence.size() > 1) {
+    sequence.pop_back();
+  }
+
   return sequence;
 }
 
