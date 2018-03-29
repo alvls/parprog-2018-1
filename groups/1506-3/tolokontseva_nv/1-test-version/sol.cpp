@@ -1,22 +1,5 @@
-#include <list>
-
-/*
-#define BITES_IN_DIGETS 4 //number of bites in one radix
-#define DIGITS_VALUES 16 // number of possible values of 1 digit. 1 digit = 4 bit => 2^4 values
-*/
-
-#define BITES_IN_DIGETS 8
-#define DIGITS_VALUES 256
-
-#define MAX_DIGITS_COUNT (64 / BITES_IN_DIGETS) //64 bites / 8 bit = 8
-#define MASK (DIGITS_VALUES - 1) //11111111
-
-typedef unsigned int un_int; /*for diget*/
-typedef unsigned long long int ulong; /* 8 bytes as well as in double */
-
-un_int get_digit(double num, size_t offset);
-void merge_lists(double *res, std::list<double> *arr_list, int size);
-void process_number(std::list<double> *arr_of_lists, double number,  int digit_num);
+#define _CRT_SECURE_NO_WARNINGS
+#include "sol.h"
 
 /* sorts given array. This function does not change initial array.
  Input:
@@ -33,24 +16,8 @@ void radix_sort(double *arr, double* res, int size) {
 		for (int cur_num = 0; cur_num < size; cur_num++) {
 			process_number(sort_help_arr, res[cur_num], i);
 		}
-		merge_lists(res, sort_help_arr, DIGITS_VALUES);
+		merge_lists(res, sort_help_arr, DIGITS_VALUES,i);
 	}
-	
-	//at this step all numbers are sorted, but first bit (with sign) is not correctly handled, so this should be fixed
-	for (int i = 0; i < size; i++) {
-		if (res[i] < 0) {
-			sort_help_arr[0].push_front(res[i]);
-		}
-		else if (res[i] > 0) {
-			sort_help_arr[1].push_back(res[i]);
-		}
-		else { 
-			//there go +0.0 and -0.0
-			// -0.0 is special case: its first bit is 1, so it's always is considered 'bigger' than any positive number
-			sort_help_arr[1].push_front(res[i]);
-		}
-	}
-	merge_lists(res, sort_help_arr, 2);
 }
 
 /* one "digit" is BITES_IN_DIGETS bits. Count from right. E.g. if BITES_IN_DIGETS is 4:
@@ -72,16 +39,38 @@ un_int get_digit(double d, size_t offset) {
 /*
   Function is used inside sort to merge lists into one array
 */
-//I can try to improve it: add check of order and if it's already OK then stop sorting
-//Not sure how much it will increase time so need to check
-void merge_lists(double *res, std::list<double> *arr_list, int size) {
+void merge_lists(double *res, std::list<double> *arr_list, int size, int digit_num) {
 	int k = 0; //index in result
-	for (int i = 0; i < size; i++) {
-		while (!arr_list[i].empty())
+	if (digit_num != MAX_DIGITS_COUNT - 1)
+	{
+		for (int i = 0; i < size; i++) {
+			while (!arr_list[i].empty())
+			{
+				res[k] = arr_list[i].front();
+				arr_list[i].pop_front();
+				k++;
+			}
+		}
+	}
+	else {
+		for (int i = size - 1; i >= size / 2; i--)
 		{
-			res[k] = arr_list[i].front();
-			arr_list[i].pop_front();
-			k++;
+			while (!arr_list[i].empty())
+			{
+				//or back?
+				res[k] = arr_list[i].back();
+				arr_list[i].pop_back();
+				k++;
+			}
+		}
+		for (int i = 0; i < size / 2; i++)
+		{
+			while (!arr_list[i].empty())
+			{
+				res[k] = arr_list[i].front();
+				arr_list[i].pop_front();
+				k++;
+			}
 		}
 	}
 	return;

@@ -6,9 +6,7 @@
 #include <algorithm>
 #include <limits>
 #include <chrono>		 /*time measurements*/
-typedef std::chrono::high_resolution_clock::time_point TimeVar;
-#define duration(a) std::chrono::duration_cast<std::chrono::nanoseconds>(a).count()
-#define timeNow() std::chrono::high_resolution_clock::now()
+#include <omp.h>
 
 using namespace std;
 
@@ -80,8 +78,8 @@ void generate_duplicated(double *arr, int n) {
 	// create random number generator, seed is set to the time since the epoch begin
 	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
 
-	// create uniform distribution of double, numbers are between -10000 and 10000
-	uniform_real_distribution <double> u_distribution(-1e4, 1e4);
+	// create uniform distribution of double, numbers are between -1000000 and 1000000
+	uniform_real_distribution <double> u_distribution(-1e6, 1e6);
 
 	//create bernoulli distribution;
 	// give "true" 1/10 of the time
@@ -162,17 +160,15 @@ int main(int argc, char * argv[]) {
 	// create "ans" file
 	if (argc > 3) {
 		FILE *f = NULL;
-		TimeVar t1;
 		double time;
 		//name of file is taken from paramets
 		f = fopen(argv[3], "wb");
 
-		t1 = timeNow();
-
+		time = omp_get_wtime();
 		//sort array with STL function
 		sort(arr, arr + n);
 
-		time = duration(timeNow() - t1);
+		time = omp_get_wtime() - time;
 
 		// write array size to binary file
 		fwrite(&n, sizeof(n), 1, f);
