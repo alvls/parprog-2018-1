@@ -233,9 +233,14 @@ Input:
 */
 void radix_sort_openmp(double *arr, double* res, int size, int threads_num) {
 	omp_set_num_threads(threads_num);
-	memcpy((void*)res, (void*)arr,sizeof(double)*size);
+	memcpy((void*)res, (void*)arr, sizeof(double)*size);
 	int chunks_num = threads_num;
-	if (threads_num == 2 || threads_num == 4) {
+	if (threads_num == 2) 
+	{
+		chunks_num = 8;
+	}
+	else if (threads_num == 4) 
+	{
 		chunks_num *= threads_num;
 	}
 	/*** for the final merges***/
@@ -279,9 +284,14 @@ void radix_sort_openmp(double *arr, double* res, int size, int threads_num) {
 			part_sizes[chunks_num - 1] += size%chunks_num;
 		}
 		while (merge_times != 0) {
+			int threads_per_arr = chunks_num / merge_times;
+			if (threads_num < threads_per_arr)
+			{
+				threads_per_arr = threads_num;
+			}
 #pragma omp master 
 			{
-				int shift = 0, i, j, threads_per_arr = chunks_num / merge_times;
+				int shift = 0, i, j;
 				merge_struct = new merge_node[merge_times];
 				for (i = 0, j = 0; j < merge_times; i += 2, j++)
 				{
@@ -298,7 +308,7 @@ void radix_sort_openmp(double *arr, double* res, int size, int threads_num) {
 			for (int j = 0; j < merge_times; j++)
 			{
 #pragma omp for schedule(dynamic) nowait
-				for (int i = 0; i < chunks_num / merge_times; i++) {
+				for (int i = 0; i < threads_per_arr; i++) {
 					merge_struct[j].merge_subarr(i);
 				}
 			}
@@ -323,7 +333,7 @@ void radix_sort_openmp(double *arr, double* res, int size, int threads_num) {
 		}
 #pragma omp master 
 		{
-			delete[] part_sizes; 
+			delete[] part_sizes;
 		}
 	}
 }

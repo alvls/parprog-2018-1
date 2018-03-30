@@ -10,11 +10,12 @@
 
 using namespace std;
 
-int n_tests[] = { 1, 1000, 1000, 1000, 1000,
-				  10, 50, 100, 500, 500,
-				  1000, 5000, 5000, 5000, 10000,
-				  10000, 10000, 50000, 50000, 50000,
-				  100000, 100000, 100000, 500000, 500000};
+int n_tests[] = { 1000, 2000, 3000, 4000, 5000,
+6000, 7000, 8000, 9000, 10000,
+10000, 20000, 30000, 40000, 50000,
+60000, 70000, 80000, 90000, 100000,
+100000, 200000, 300000, 400000, 500000,
+600000, 700000, 800000, 900000, 1000000 };
 /* special cases:
 already sorted array;
 sorted inversivly array;
@@ -26,10 +27,10 @@ enum specific
 };
 
 specific test_variant[] = { random, sorted, sorted_inv, duplicates, single_value,
-							random, random, random, random, random,
-							random, random, random, random, random,
-							random, random, random, random, random,
-							random, random, random, random, random };
+random, random, random, random, random,
+random, random, random, random, random,
+random, random, random, random, random,
+random, random, random, random, random };
 
 void generate_random(double *arr, int n) {
 	// create random number generator, seed is set to the time since the epoch begin
@@ -58,7 +59,7 @@ void generate_sorted_inv(double *arr, int n) {
 	//principe is the same as in generate_sorted
 	arr[n - 1] = -200;
 	double step = 0.4;
-	for (int i = n - 2; i >	-1; i--) {
+	for (int i = n - 2; i > -1; i--) {
 		arr[i] = arr[i + 1] + step;
 	}
 }
