@@ -9,7 +9,7 @@
 #define MAXSTACK 2048
 using namespace std;
 
-void qSort(vector<double>::iterator begin, vector<double>::iterator end)
+void qSort_NO_recursion(vector<double>::iterator begin, vector<double>::iterator end)
 {
 	long i, j; // указатели, участвующие в разделении
 	long lb, ub; // границы сортируемого в цикле фрагмента
@@ -80,18 +80,48 @@ void qSort(vector<double>::iterator begin, vector<double>::iterator end)
 	} while (stackpos != 0); // пока есть запросы в стеке
 }
 
+//главная функция для дальнейшей работы
+void qSort(vector<double>::iterator begin, vector<double>::iterator end)
+{
+	int first = 0;
+	int length = distance(begin, end);
+	int last = distance(begin, end) - 1;
+	double elem = *(begin + ((first + last) >> 1));
+
+	do {
+		while (*(begin + first) < elem)
+			first++;
+		while (*(begin + last) > elem)
+			last--;
+
+		if (first <= last) {
+			double temp = *(begin + first);
+			*(begin + first) = *(begin + last);
+			*(begin + last) = temp;
+			first++;
+			last--;
+		}
+	} while (first <= last);
+
+
+	if (last > 0)
+		qSort(begin, begin + last + 1);
+	if (first < distance(begin, end))
+		qSort(begin + first, end);
+}
+
+//обертка
 void qSort(vector <double>* vec) {
 	vector<double>::iterator begin = vec->begin();
 	vector<double>::iterator end = vec->end();
 	qSort(begin, end);
 }
 
-
-void qSort(double* arr, int size)
+void qSort_array_recursion(double* arr, int size)
 {
 	int first = 0;
 	int last = size - 1;
-	int elem = arr[size / 2];
+	double elem = arr[size / 2];
 
 	do {
 		while (arr[first] < elem)
@@ -100,7 +130,7 @@ void qSort(double* arr, int size)
 			last--;
 
 		if (first <= last) {
-			int tmp = arr[first];
+			double tmp = arr[first];
 			arr[first] = arr[last];
 			arr[last] = tmp;
 			first++;
@@ -110,46 +140,15 @@ void qSort(double* arr, int size)
 
 
 	if (last > 0)
-		qSort(arr, last + 1);
+		qSort_array_recursion(arr, last + 1);
 	if (first < size)
-		qSort(&arr[first], size - first);
+		qSort_array_recursion(&arr[first], size - first);
 }
 
+//печать массива для чека в мэйне
 void printArray(double* arr, int size) {
 	for (int i = 0; i < size; i++) {
 		cout << arr[i] << " ";
 	}
 	cout << endl;
 }
-
-//void main()
-//{
-//	cout << "  array" << endl;
-//
-//	double* arr = new double[5];
-//	arr[0] = 6;
-//	arr[1] = 4;
-//	arr[2] = 1;
-//	arr[3] = 9;
-//	arr[4] = 3;
-//	printArray(arr, 5);
-//	qSort(arr, 5);
-//	printArray(arr, 5);
-//	delete[] arr;
-//
-//	cout << "  vector" <<endl;
-//
-//	vector <double> vec = { 6,4,1,9,3 };
-//	vector <double>* ptr = &vec;
-//	for (int i = 0; i < vec.size(); i++) {
-//		cout << vec[i] << " ";
-//	}
-//	cout << endl;
-//	qSort(&vec);
-//	for (int i = 0; i < vec.size(); i++) {
-//		cout << vec[i] << " ";
-//	}
-//
-//	//delete[]vec;
-//	system("pause>>void");
-//}
