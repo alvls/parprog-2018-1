@@ -1,6 +1,6 @@
 import subprocess
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, curdir
 import config
 import reader
 import writer
@@ -12,7 +12,7 @@ logging.basicConfig(filename='result.txt', level=logging.DEBUG)
 def pixel_checker(p1, p2):
     # my filter and OpenCV has a 3 difference in each channel
     tmp = [abs(int(x) - int(y)) for x, y in zip(p1, p2)]
-    if tmp[0] > 100 or tmp[1] > 100 or tmp[2] > 100:
+    if tmp[0] > 200 or tmp[1] > 200 or tmp[2] > 200:
         return False
     return True
 
@@ -25,7 +25,7 @@ for i in range(0, len(input_binares)):
         answ = reader.read_binary(config.checker_answers_dir + answer_binares[i])
 
         # exec program with algorithm with current test input
-        subprocess.check_call([config.linear_version_path, "./tests/" + input_binares[i]])
+        subprocess.check_call([config.linear_version_path, join(curdir,"tests", input_binares[i])])
         res = reader.read_binary("bin.out") #read output
 
         h, w, c = res.shape
@@ -33,7 +33,9 @@ for i in range(0, len(input_binares)):
         # check each pixel
         for y in range(0, h):
             for x in range(0, w):
-                if not pixel_checker(res[y,x],answ[y,x]): 
+                if not pixel_checker(res[y,x],answ[y,x]):
+                    a=res[y,x]
+                    b=answ[y,x]
                     cnt += 1
 
         if cnt < 1: 
