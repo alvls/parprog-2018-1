@@ -1,5 +1,3 @@
 ﻿  generator.cpp
-d:\programs\parprog-2018-1\groups\1508\kiselev_is\simple-vers\generator\generator.cpp(15): warning C4244: аргумент: преобразование "std::chrono::system_clock::rep" в "unsigned int", возможна потеря данных
-cl : командная строка warning D9028: сбой минимальной повторной сборки, возврат к обычной сборке
-  Grnerator.vcxproj -> D:\PROGRAMS\parprog-2018-1\groups\1508\kiselev_is\simple-vers\x64\Debug\Grnerator.exe
-  Grnerator.vcxproj -> D:\PROGRAMS\parprog-2018-1\groups\1508\kiselev_is\simple-vers\x64\Debug\Grnerator.pdb (Partial PDB)
+e:\programs\parprog-2018-1\groups\1508\kiselev_is\simple-vers\generator\generator.cpp(15): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+  Grnerator.vcxproj -> E:\PROGRAMS\parprog-2018-1\groups\1508\kiselev_is\simple-vers\x64\Debug\Grnerator.exe

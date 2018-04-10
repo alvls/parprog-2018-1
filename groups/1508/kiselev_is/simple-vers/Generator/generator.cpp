@@ -9,25 +9,15 @@ using namespace std;
 int n_tests[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
 
 int main(int argc, char * argv[]) {
-<<<<<<< HEAD
-	// перенаправл€ем поток stdout в файл
+	// перенаправл€ем поток stdout в файл matr.in 
 	freopen(argv[1], "wb", stdout);
 	// создаЄм генератор случайных чисел с seed равным количеству времени с начала эпохи 
 	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
-	// создаЄм равномерное распределение случайной величины типа double в диапазоне // [-5, 5] 
-	uniform_real_distribution <double> distribution(-20, 20);
-	// задаЄм размер матриц 
-	int size = 15;
-=======
-	// перенаправл€ем поток stdout в файл matr.in 
-	freopen("../tests/39", "wb", stdout);
-	// создаЄм генератор случайных чисел с seed равным количеству времени с начала эпохи 
-	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
-	// создаЄм равномерное распределение случайной величины типа double в диапазоне // [-10, 10] 
-	uniform_real_distribution <double> distribution(0, 15);				// ‘ункци€ которую € использую дл€ возведени€ числа в степень
+	// создаЄм равномерное распределение случайной величины типа double в диапазоне // [0, 25] 
+	uniform_real_distribution <double> distribution(0, 25);				// ‘ункци€ которую € использую дл€ возведени€ числа в степень
 	// задаЄм размер матриц												// ѕринимает только положительные значени€
-	int size = rand()% 12 + 1;
->>>>>>> master
+	int size = rand()%15 + 1;
+	
 	// если передали номер теста в аргументах командной строки, то берЄм размер из 	n_tests 
 	if (argc > 1) size = n_tests[atoi(argv[1])];
 	// записываем в бинарном виде размерность матриц 
@@ -43,13 +33,16 @@ int main(int argc, char * argv[]) {
 	}
 	double confines[2];
 	// задаем границы интегрировани€
-	confines[0] = distribution(generator);		// дл€ X
-	confines[1] = distribution(generator);
+
+	uniform_real_distribution <double> acreage (-10, 10);
+
+	confines[0] = acreage(generator);		// дл€ X
+	confines[1] = acreage(generator);
 	if (confines[0] > confines[1]) swap(confines[0], confines[1]);
 	fwrite(confines, sizeof(*confines), 2, stdout);
 
-	confines[0] = distribution(generator);		// дл€ Y
-	confines[1] = distribution(generator);
+	confines[0] = acreage(generator);		// дл€ Y
+	confines[1] = acreage(generator);
 	if (confines[0] > confines[1]) swap(confines[0], confines[1]);
 	fwrite(confines, sizeof(*confines), 2, stdout);
 

@@ -13,7 +13,8 @@ int main(int argc, char * argv[]) {
 	double integral;
 
 	freopen(argv[2], "rb", stdin);
-	freopen(strcat(argv[2],".ans"), "wb", stdout);
+	freopen(strcat(argv[2], ".ans"), "wb", stdout);
+
 	fread(&size, sizeof(int), 1, stdin);
 
 	double* buf = new double(size);
