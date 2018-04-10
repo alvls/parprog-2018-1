@@ -3,11 +3,15 @@
 #include <string>
 #include <iostream>
 #include <string>
+#include <math.h>
+#include <windows.h>
+#include <sstream>
+
 
 using namespace std;
 
 void StringName_to_CharName(string str, char* ch);
-int Order(int num);
+
 /* 
 // Checker устанавливает два вердикта 
 AC = Accepted(результат корректен)
@@ -37,6 +41,7 @@ public:
 	// Запись типа сообщения
 	void write_type(type t) 
 	{ 
+		//Для корректного отображения в txt
 		//char ch = static_cast<int>(t) + '0';
 		//fwrite(&ch, sizeof(char), 1, res);
 
@@ -47,6 +52,7 @@ public:
 	void write_verdict(verdict v) 
 	{
 		write_type(type::VERDICT);
+		//Для корректного отображения в txt
 		//char ch = static_cast<int>(v) + '0';
 		//fwrite(&ch, sizeof(char), 1, res);
 
@@ -58,27 +64,25 @@ public:
 	{ 
 		write_type(type::MESSAGE); 
 		int l = str.size ();
-		//int order = Order(l);
-		//char* ch = new char[order];
-		//_itoa_s(l, ch, str.size(), 10);
-		//fwrite(ch, sizeof (char), order, res);
+		
+		// Запись длины сообщения для корректного отображения в txt
+		//string length = to_string(l);
+		//fwrite(&length, sizeof (length[0]), length.size(), res);
 
 		fwrite(&l, sizeof(l), 1, res);
 		fwrite (&str[0], sizeof (str[0]), l, res); 
 	}
 
 	// Сообщить тестирующей системе время работы программы участника,  
-	// x имеет размерность 100 нс = 10 ^ (-7) сек 
+	// x имеет размерность 100 нс = 10 ^ (-7) сек ???
 	void write_time(double x)
 	{ 
 		write_type(type::TIME);
 
-		int order = Order(x);
-		char* ch = new char[order];
-		_itoa_s(x, ch, 100, 10);
-		fwrite(ch, sizeof (char), order + 1, res);
+		string str = to_string(x);
 
-		//fwrite(&x, sizeof (x), 1, res); 
+		int l = str.size();
+		fwrite(&str[0], sizeof (str[0]), l, res); 
 	}
 
 } checker_result; 
@@ -114,9 +118,6 @@ int main(int argc, char * argv[])
 	FILE * perfect;
 	fopen_s(&perfect, answer, "rb");
 	
-
-
-
 	int N; 
 	// Считываем размерность матриц 
 	fread(&N, sizeof (N), 1, bui);
@@ -143,7 +144,7 @@ int main(int argc, char * argv[])
 		fread(ans[i], sizeof(double), N, buo);
 	}
 	fread(&ans_time, sizeof(double), 1, buo);
-  
+
 	// Считываем время работы программы и матрицу жюри 
 	for (int i = 0; i < N; i++)
 	{
@@ -151,12 +152,13 @@ int main(int argc, char * argv[])
 	}
 	fread(&res_time, sizeof(double), 1, perfect);
 
+	// Проверка корректности
 	bool flag = true;
 	for (int i = 0; i < N; i++)
 	{
 		for (int j = 0; j < N; j++)
 		{
-			if (res[i][j] != ans[i][j])
+			if (fabs(res[i][j] - ans[i][j]) > 1e-6)
 			{
 				flag = false;
 				break;
@@ -164,7 +166,6 @@ int main(int argc, char * argv[])
 		}
 	}
 
-		   
 	// Если ошибки нет, сообщаем что решение корректно
 	if (flag)
 	{ 
@@ -178,7 +179,7 @@ int main(int argc, char * argv[])
 	}
 		   
 	// Записывем время, сек 
-	checker_result.write_time (res_time);
+	checker_result.write_time (ans_time);
 
 	fclose(buo);
 	fclose(bui);
@@ -191,17 +192,4 @@ void StringName_to_CharName(string str, char* ch)
 {
 	for (int i = 0; i < str.length(); i++)
 		ch[i] = str[i];
-}
-
-int Order(int num)
-{
-	int order = 0;
-
-	while (num) 
-	{
-		num /= 10;
-		order++;
-	}
-
-	return order;
 }
