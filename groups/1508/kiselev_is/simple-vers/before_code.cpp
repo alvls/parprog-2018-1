@@ -1,4 +1,5 @@
 #include <cstdio> 
+#include <cstring>
 #include <omp.h> 
 #include <random>
 #include "Func.h"
@@ -9,10 +10,10 @@ int main(int argc, char * argv[]) {
 	if (argc > 1) num_threads = atoi(argv[1]);
 	int size = 0;
 
-	double integral = 0.0;
+	double integral;
 
-	freopen("tests/40", "rb", stdin);
-	freopen("tests/40.ans", "wb", stdout);
+	freopen(argv[2], "rb", stdin);
+	freopen(strcat(argv[2],".ans"), "wb", stdout);
 	fread(&size, sizeof(int), 1, stdin);
 
 	double* buf = new double(size);
@@ -60,11 +61,11 @@ int main(int argc, char * argv[]) {
 
 	//omp_set_num_threads(num_threads);
 	//double time = omp_get_wtime();
-
 	integral = TIntegral(fun, confines[0], confines[1], confines[2], confines[3], 0.01);
-
 	//time = omp_get_wtime() - time;
 	//fwrite(&time, sizeof(time), 1, stdout);
-	fwrite(&integral, sizeof(integral), 1, stdout);
+	fwrite(&integral, sizeof(double), 1, stdout);
+
+	system ("pause");
 	return 0;
 }

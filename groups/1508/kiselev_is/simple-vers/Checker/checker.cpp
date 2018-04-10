@@ -13,7 +13,7 @@ int main(int argc, char * argv[]) {
 	double Myresult = -10.0;
 	double perfect_res = 0.0;
 
-	FILE * buo = fopen(argv[1], "rb");
+	FILE * buo = fopen(argv[2], "rb");
 
 	fread(&size, sizeof(int), 1, buo);
 
@@ -62,7 +62,7 @@ int main(int argc, char * argv[]) {
 	fclose(buo);
 	Myresult = TIntegral(fun, confines[0], confines[1], confines[2], confines[3], 0.01);
 
-	buo = fopen(argv[2], "rb");
+	buo = fopen(strcat(argv[2],".ans"), "rb");
 
 	fread(&perfect_res, sizeof(perfect_res), 1, buo);
 
