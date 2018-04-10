@@ -15,12 +15,12 @@ int n_tests[] = { 10, 20,50,100, 150, 200, 400,500, 700, 1000 };
 
 int main(int argc, char* argv[])
 {
-	char* inputPath = "matr.in";
+	char* input = "matr.in";
 	int matrixSize = DEFAULT_MATRIX_SIZE;
 	int density = 100 / DEFAULT_DENSITY;
 	if (argc > 1)
 	{
-		inputPath = argv[1];
+		input = argv[1];
 		if (argc > 2)
 		{
 			matrixSize = n_tests[atoi(argv[2])];
@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 	vector<complex<int>> elementsA, elementsB;
 	vector<int> secondIndexA, secondIndexB, positionA, positionB;
 
-	freopen(inputPath, "wb", stdout);
+	freopen(input, "wb", stdout);
 
 	for (int i = 0; i < matrixSize; i++)
 	{
