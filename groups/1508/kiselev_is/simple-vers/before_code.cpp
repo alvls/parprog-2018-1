@@ -1,7 +1,7 @@
 #include <cstdio> 
 #include <cstring>
-#include <omp.h> 
 #include <random>
+#include <omp.h>
 #include "Func.h"
 #include "sol.h"
 
@@ -60,12 +60,11 @@ int main(int argc, char * argv[]) {
 
 	fread(confines, sizeof(*confines), 4, stdin);
 
-	//omp_set_num_threads(num_threads);
-	//double time = omp_get_wtime();
+	double time = omp_get_wtime();
 	integral = TIntegral(fun, confines[0], confines[1], confines[2], confines[3], 0.01);
-	//time = omp_get_wtime() - time;
-	//fwrite(&time, sizeof(time), 1, stdout);
+	time = omp_get_wtime() - time;
 	fwrite(&integral, sizeof(double), 1, stdout);
+	fwrite(&time, sizeof(time), 1, stdout);
 
 	system ("pause");
 	return 0;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <omp.h> 
 #include <math.h>
 #include <cmath>
 #include "Func.h"
@@ -27,7 +28,7 @@ double module(double a) {
 
 // Интеграл трапециями, функция, начало отрезка, конец, точность, начальное количество частей
 
-double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double Yfinish, double accuracy, int parts = 2000) {
+double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double Yfinish, double accuracy, int threads = 1 , int parts = 2000) {
 
 	double result = 0.0;
 
@@ -40,8 +41,9 @@ double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double
 	double Ypoint = Ystart;
 
 	double variable = 0.0;
-	//double LastResult = valueIn(fun, (Xfinish - Xstart) / 2, (Yfinish - Ystart) / 2);
-	//while (module(result - LastResult) > accuracy) {
+	
+	#pragma omp parallel lastprivate(result) num_threads(threads) {
+	#pragma omp for private(XHigh,YHigh,Xpoint,Ypoint,variable)
 
 		for (int i = 0; i < parts; i++) {
 			XHigh = ((valueIn(fun, Xpoint, Ypoint) + valueIn(fun, Xpoint + Xpart, Ypoint)) / 2);
@@ -60,20 +62,8 @@ double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double
 			Ypoint = Ystart;
 			Xpoint = Xpoint + Xpart;
 		}
-		/*if (module(LastResult - result) > (accuracy)) {
-			if (module(LastResult - result) > accuracy * 100) parts += 1000;
-			else if (module(LastResult - result) > accuracy * 10) parts += 200;
-			else if (module(LastResult - result) > accuracy) parts += 50;
-			LastResult = result;
-			result = 0;
-			Xpart = (Xfinish - Xstart) / parts;
-			Ypart = (Yfinish - Ystart) / parts;
-			Xpoint = Xstart;
-			Ypoint = Ystart;
-
-		}*/
-
-	//}
+	}
+	
 	return result;
 }
 
