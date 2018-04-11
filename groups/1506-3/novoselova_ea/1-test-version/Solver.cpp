@@ -1,3 +1,4 @@
+#include <fstream>
 int ADD(int* MatrixA, int* MatrixB, int* MatrixResult, int MatrixSize)
 {
 	for (int i = 0; i < MatrixSize; i++)
@@ -43,8 +44,7 @@ int Strassen(int *MatrixA, int *MatrixB, int *MatrixC, int N)
 
 	int HalfSize = N / 2;
 	
-	//Выбор условия выхода из рекурсии очень влияет на результат
-	if (N <= 16)
+	if (N <= 64)
 	{
 		MUL(MatrixA, MatrixB, MatrixC, N);
 	}
@@ -109,15 +109,15 @@ int Strassen(int *MatrixA, int *MatrixB, int *MatrixC, int N)
 		{
 			for (int j = 0; j < HalfSize; j++)
 			{
-				A11[i * HalfSize + j] = MatrixA[i * HalfSize + j];
-				A12[i * HalfSize + j] = MatrixA[i * HalfSize + (j + HalfSize)];
-				A21[i * HalfSize + j] = MatrixA[(i + HalfSize) * HalfSize + j];
-				A22[i * HalfSize + j] = MatrixA[(i + HalfSize) * HalfSize + (j + HalfSize)];
+				A11[i * HalfSize + j] = MatrixA[i * N + j];
+				A12[i * HalfSize + j] = MatrixA[i * N + (j + HalfSize)];
+				A21[i * HalfSize + j] = MatrixA[(i + HalfSize) * N + j];
+				A22[i * HalfSize + j] = MatrixA[(i + HalfSize) * N + (j + HalfSize)];
 
-				B11[i * HalfSize + j] = MatrixB[i * HalfSize + j];
-				B12[i * HalfSize + j] = MatrixB[i * HalfSize + (j + HalfSize)];
-				B21[i * HalfSize + j] = MatrixB[(i + HalfSize) * HalfSize + j];
-				B22[i * HalfSize + j] = MatrixB[(i + HalfSize) * HalfSize + (j + HalfSize)];
+				B11[i * HalfSize + j] = MatrixB[i * N + j];
+				B12[i * HalfSize + j] = MatrixB[i * N + (j + HalfSize)];
+				B21[i * HalfSize + j] = MatrixB[(i + HalfSize) * N + j];
+				B22[i * HalfSize + j] = MatrixB[(i + HalfSize) * N + (j + HalfSize)];
 
 			}
 		}
@@ -159,27 +159,31 @@ int Strassen(int *MatrixA, int *MatrixB, int *MatrixC, int N)
 		ADD(P1, P4, AResult, HalfSize);
 		SUB(P7, P5, BResult, HalfSize);
 		ADD(AResult, BResult, C11, HalfSize);
+		
 
 		//C12 = P3 + P5;
 		ADD(P3, P5, C12, HalfSize);
+		
 
 		//C21 = P2 + P4;
 		ADD(P2, P4, C21, HalfSize);
+		
 
 		//C22 = P1 + P3 - P2 + P6;
 		ADD(P1, P3, AResult, HalfSize);
 		SUB(P6, P2, BResult, HalfSize);
 		ADD(AResult, BResult, C22, HalfSize);
+		
 
 
 		for (int i = 0; i < HalfSize; i++)
 		{
 			for (int j = 0; j < HalfSize; j++)
 			{
-				MatrixC[i * HalfSize + j] = C11[i * HalfSize + j];
-				MatrixC[i * HalfSize +(j + HalfSize)] = C12[i * HalfSize + j];
-				MatrixC[(i + HalfSize) * HalfSize + j] = C21[i * HalfSize + j];
-				MatrixC[(i + HalfSize) * HalfSize + (j + HalfSize)] = C22[i * HalfSize + j];
+				MatrixC[i * N + j] = C11[i * HalfSize + j];
+				MatrixC[i * N +(j + HalfSize)] = C12[i * HalfSize + j];
+				MatrixC[(i + HalfSize) * N + j] = C21[i * HalfSize + j];
+				MatrixC[(i + HalfSize) * N + (j + HalfSize)] = C22[i * HalfSize + j];
 			}
 		}
 

@@ -4,6 +4,7 @@
 #include <omp.h>
 #include <random>
 #include<iostream>
+#include <fstream>
 #include<conio.h>
 #include<string>
 int NewSize(int N)
@@ -45,7 +46,7 @@ int Strassen(int *MatrixA, int *MatrixB, int *MatrixC, int N);
 
 
 int main(int argc, char * argv[])
-{	
+{
 	int num_threads = 1;
 	int countTest = 1;
 	if (argc > 1)
@@ -60,12 +61,12 @@ int main(int argc, char * argv[])
 	int *A;
 	int *B;
 	int *C;
-	
+
 	for (int i = 1; i <= countTest; i++)
 	{
 		char index[10];
 		freopen(_itoa(i, index, 10), "rb", stdin);
-		freopen(strcat(_itoa(i, index, 10),".ans"), "wb", stdout);
+		freopen(strcat(_itoa(i, index, 10), ".ans"), "wb", stdout);
 		fread(&N, sizeof(N), 1, stdin);
 		A = new int[N * N];
 		B = new int[N * N];

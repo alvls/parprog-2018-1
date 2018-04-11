@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
 	ans = new int[n * n];
 	freopen(fileout, "rb", stdin);
 	fread(&time, sizeof(time), 1, stdin);
+	fread(&n, sizeof(n), 1, stdin);
 	fread(res, sizeof(*res), n * n, stdin);
 	fclose(stdin);
 	MUL(a, b, ans, n);
@@ -41,7 +42,7 @@ int main(int argc, char *argv[])
 		diff += (ans[i] - res[i]) * (ans[i] - res[i]);
 	
 	std::ofstream resultFile("result.txt");
-	if (diff < 1e-6)
+	if (diff < 0.0001)
 	{
 		if (resultFile.is_open())
 		{
