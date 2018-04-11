@@ -1,10 +1,12 @@
+#define _CRT_SECURE_NO_WARNINGS
+#define _SCL_SECURE_NO_WARNINGS
 #include <iostream>
 #include <ccomplex>
 #include <msxml.h>
 #include "Matrix.h"
 using namespace std;
 
-Matrix Calculate(Matrix a1, Matrix a2);
+void Calculate(int size, int notNull1, complex<int> *elements1, int *secondIndex1, int *position1, int notNull2, complex<int> *elements2, int *secondIndex2, int *position2, char *output);
 
 
 int main(int argc, char* argv[])
@@ -37,8 +39,7 @@ int main(int argc, char* argv[])
 	fread(&secondIndex2, sizeof(*secondIndex2), notNull2, stdin);
 	fread(&position2, sizeof(*position2), size + 1, stdin);
 
-	Matrix matr1(size, notNull1, elements1, secondIndex1, position1), matr2(size, notNull2, elements2, secondIndex2, position2);
-	Matrix result = matr1 * matr2;
+	Calculate(size, notNull1, elements1, secondIndex1, position1, notNull2, elements2, secondIndex2, position2, output);
 
 	return 0;
 }
