@@ -22,13 +22,17 @@ enum verdict { NO = 1, AC, WA, CE, ML, TL, RE, IL, PE, DE };
 
 class result {
 private: FILE * bur; 
-public: enum ext_cls { NO = 1, VERDICT, MESSAGE, TIME, MEMORY }; 
-		result(bool read = false) { 
+public: 
+	enum ext_cls { NO = 1, VERDICT, MESSAGE, TIME, MEMORY }; 
+		
+	result(bool read = false) { 
 			if (read) bur = fopen("result.txt", "r");
 			else bur = fopen("result.txt", "w"); } 
+
 		~result() { 
 			fclose(bur); 
 		} 
+
 		void write_type(ext_cls t) { 
 			fwrite(&t, sizeof(t), 1, bur); 
 		}
@@ -56,6 +60,9 @@ public: enum ext_cls { NO = 1, VERDICT, MESSAGE, TIME, MEMORY };
 		 void write_memory(unsigned long long x) { 
 			 write_type(ext_cls::MEMORY);
 			 fwrite(&x, sizeof (x), 1, bur); 
-		 } 
+		 }
+		 void write_message(double* res) {
+			 fwrite(res, sizeof(*res), 1, bur);
+		 }
 } 
 checker_result;

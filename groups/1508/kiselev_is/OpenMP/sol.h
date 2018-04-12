@@ -42,9 +42,12 @@ double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double
 
 	double variable = 0.0;
 	
-	#pragma omp parallel lastprivate(result) num_threads(threads) {
-	#pragma omp for private(XHigh,YHigh,Xpoint,Ypoint,variable)
+	// старт паралельного сектора
+	omp_set_num_threads(threads);
+	#pragma omp parallel shared(result,Xpart,Ypart)
+	{
 
+	#pragma omp for private (Xpoint,Ypoint,variable,XHigh,YHigh)
 		for (int i = 0; i < parts; i++) {
 			XHigh = ((valueIn(fun, Xpoint, Ypoint) + valueIn(fun, Xpoint + Xpart, Ypoint)) / 2);
 

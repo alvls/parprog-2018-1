@@ -1,14 +1,16 @@
 #include "checker.h"
+#include <iostream>
+
 
 int main(int argc, char * argv[]) {
 
-	if (argc != 2) {
-		std::cout << "Please enter 'numb_thread' and 'way to test'" << std::endl;
+	if (argc != 3) {
+		checker_result.write_verdict(NO);
+		checker_result.write_message("No verdict. Bad parameters");
 		return 1;
 	}
 
-	int num_threads = (int)argv[1] - '0';
-
+	int num_threads = atoi(argv[1]);
 	int size;
 
 	double Myresult = -10.0;
@@ -62,24 +64,33 @@ int main(int argc, char * argv[]) {
 
 	fclose(buo);
 
-	omp_set_num_threads(num_threads);
 	double time = omp_get_wtime();
 
-	Myresult = TIntegral(fun, confines[0], confines[1], confines[2], confines[3], 0.01, num_threads);
+	//Myresult = TIntegral(fun, confines[0], confines[1], confines[2], confines[3], 0.01, num_threads);
 
 	time = omp_get_wtime() - time;
-	fwrite(&time, sizeof(time), 1, stdout);
 	buo = fopen(strcat(argv[2],".ans"), "rb");
 
 	fread(&perfect_res, sizeof(perfect_res), 1, buo);
 
-	if (module(Myresult - perfect_res) < 0.1) {
-		checker_result.write_message("AC. Unswer is correct.");
-		checker_result.write_verdict(verdict::AC);
+	checker_result.write_message(&perfect_res);		// 80
+
+	double line_time;
+	fread(&line_time, sizeof(perfect_res), 1, buo);
+
+	if (module(Myresult - perfect_res) < 10) {
+		if (time <= line_time) {
+			checker_result.write_message("AC. Unswer is correct.");
+			checker_result.write_verdict(AC);
+		}
+		else {
+			checker_result.write_message("TL. Execution time exceeded");
+			checker_result.write_verdict(TL);
+		}
 	}
 	else {
 		checker_result.write_message("DE. Incorrect unswer.");
-		checker_result.write_verdict(verdict::DE);
+		checker_result.write_verdict(DE);
 	}
 	fclose(buo);
 	return 0;
