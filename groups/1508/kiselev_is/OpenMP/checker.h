@@ -61,8 +61,5 @@ public:
 			 write_type(ext_cls::MEMORY);
 			 fwrite(&x, sizeof (x), 1, bur); 
 		 }
-		 void write_message(double* res) {
-			 fwrite(res, sizeof(*res), 1, bur);
-		 }
 } 
 checker_result;

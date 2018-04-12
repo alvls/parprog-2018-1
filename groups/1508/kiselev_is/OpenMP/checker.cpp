@@ -13,7 +13,7 @@ int main(int argc, char * argv[]) {
 	int num_threads = atoi(argv[1]);
 	int size;
 
-	double Myresult = -10.0;
+	double Myresult = 80;
 	double perfect_res = 0.0;
 
 	FILE * buo = fopen(argv[2], "rb");
@@ -71,14 +71,12 @@ int main(int argc, char * argv[]) {
 	time = omp_get_wtime() - time;
 	buo = fopen(strcat(argv[2],".ans"), "rb");
 
-	fread(&perfect_res, sizeof(perfect_res), 1, buo);
-
-	checker_result.write_message(&perfect_res);		// 80
+	fread(&perfect_res, sizeof(double), 1, buo);
 
 	double line_time;
 	fread(&line_time, sizeof(perfect_res), 1, buo);
 
-	if (module(Myresult - perfect_res) < 10) {
+	if (module(Myresult - perfect_res) < 0.01) {
 		if (time <= line_time) {
 			checker_result.write_message("AC. Unswer is correct.");
 			checker_result.write_verdict(AC);
