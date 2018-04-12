@@ -15,6 +15,7 @@ void CRSMatrixMult(int matrixSize, int notZeroA, double* valueA, int* colA, int*
 int main(int argc, char * argv[]) {
 	char* PATHin = "matr.in";
 	char* PATHout = "matr.out";
+	int num_threads = 1;
 
 
 	if (argc > 1)
