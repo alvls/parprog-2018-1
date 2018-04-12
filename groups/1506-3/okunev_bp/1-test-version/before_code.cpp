@@ -16,9 +16,10 @@ int main(int argc, char * argv[]) {
 	char* PATHin = "matr.in";
 	char* PATHout = "matr.out";
 
+
 	if (argc > 1)
 	{
-		//argv[1] - num_threads(?)
+		num_threads = atoi(argv[1]);
 		if (argc > 2) 
 		{
 			PATHin = argv[2];
