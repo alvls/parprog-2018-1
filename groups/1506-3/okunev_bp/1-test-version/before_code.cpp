@@ -10,7 +10,7 @@ using std::cout;
 using std::cin;
 
 void CRSMatrixMult(int matrixSize, int notZeroA, double* valueA, int* colA, int* rowA, int notZeroB, double* valueB, int* colB, int* rowB,
-	int& notZeroC, double*& valueC, int*& colC, int*& rowC);
+	int& notZeroC, double*& valueC, int*& colC, int*& rowC, int threads);
 
 int main(int argc, char * argv[]) {
 	char* PATHin = "matr.in";
@@ -76,7 +76,7 @@ int main(int argc, char * argv[]) {
 
 
 	steady_clock::time_point start = steady_clock::now();
-	CRSMatrixMult(sizeA, NotZeroA, valueA, colA, rowA, NotZeroB, valueB, colB, rowB, NotZeroC, valueC, colC, rowC);
+	CRSMatrixMult(sizeA, NotZeroA, valueA, colA, rowA, NotZeroB, valueB, colB, rowB, NotZeroC, valueC, colC, rowC, num_threads);
 	steady_clock::time_point end = steady_clock::now();
 
 	double time = std::chrono::duration_cast<std::chrono::microseconds>
