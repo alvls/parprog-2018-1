@@ -16,7 +16,7 @@ int main(int argc, char * argv[])
 
 	fread(&real_time, sizeof(real_time), 1, stdin);
 	fread(&size, sizeof(size), 1, stdin);
-
+	cout <<real_time << endl;
 	vector<int> check(size);
 	fread(check.data(), sizeof(check), size, stdin);
 	for (int i = 0; i < size; ++i)
