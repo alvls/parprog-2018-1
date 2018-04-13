@@ -15,7 +15,7 @@ int main(int argc, char * argv[]) {
 	// определяем размерность нашего массива
 	int n = n_tests[atoi(argv[1]) - 1];
 	// создаём файл(или перезаписываем если он существует) в который будем записывать результат работы программы
-	freopen(argv[1], "wt", stdout);
+	freopen(argv[1], "wb", stdout);
 	// создаём генератор случайных чисел с seed равным количеству времени с начала эпохи
 	default_random_engine generator(static_cast<unsigned int>(chrono::system_clock::now().time_since_epoch().count()));
 	// создаём равномерное распределение случайной величины типа double в диапазоне [-10000, 10000] 
@@ -48,7 +48,6 @@ int main(int argc, char * argv[]) {
 				// заполнение массива случайными элементами типа double в диапозоне от [-10000, 10000] 
 				for (int i = 0; i < n; i++) {
 					values[i] = distribution(generator);
-					cout << values[i] << endl;
 				}
 	// запись массива в файл
 	fwrite(values, sizeof(*values), n, stdout);

@@ -18,7 +18,7 @@ int main(int argc, char * argv[])
 	fread(&count, sizeof(count), 1, stdin);
 
 	values = new double[count];
-	fread(values, sizeof(*values), 1, stdin);
+	fread(values, sizeof(*values), count, stdin);
 
 	double time = clock();
 	MergeSorting(0, count - 1, values, count);
