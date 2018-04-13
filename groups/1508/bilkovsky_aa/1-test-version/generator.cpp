@@ -1,4 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
+#define _SCL_SECURE_NO_WARNINGS
 
 #include <cstdio>
 #include <random>
@@ -6,16 +7,17 @@
 #include <chrono> 
 #include <ccomplex>
 #include <vector>
+#include <iterator>
 using namespace std;
 
-const int DEFAULT_MATRIX_SIZE = 1000;
+const int DEFAULT_MATRIX_SIZE = 100;
 const int DEFAULT_DENSITY = 10;  // %
 
-int n_tests[] = { 10, 20,50,100, 150, 200, 400,500, 700, 1000 };
+int n_tests[] = { 10, 20,50,100, 150, 200, 400,500, 700, 1000 };
 
 int main(int argc, char* argv[])
 {
-	char* input = "matr.in";
+	char* input = "../matr.in";
 	int matrixSize = DEFAULT_MATRIX_SIZE;
 	int density = 100 / DEFAULT_DENSITY;
 	if (argc > 1)
@@ -25,7 +27,8 @@ int main(int argc, char* argv[])
 		{
 			matrixSize = n_tests[atoi(argv[2])];
 			if (argc > 3)
-				density = 100 / atof(argv[3]);
+				if (density > 0 && density < 100)
+					density = 100 / atof(argv[3]);
 		}
 	}
 	vector<complex<int>> elementsA, elementsB;
@@ -45,7 +48,7 @@ int main(int argc, char* argv[])
 				element.real(rand() % 1000 + 1);
 				element.imag(rand() % 1000 + 1);
 				elementsA.emplace_back(element);
-				secondIndexA.emplace_back(j + 1);
+				secondIndexA.emplace_back(j);
 				if (first)
 				{
 					first = false;
@@ -72,7 +75,7 @@ int main(int argc, char* argv[])
 				element.real(rand() % 1000 + 1);
 				element.imag(rand() % 1000 + 1);
 				elementsB.emplace_back(element);
-				secondIndexB.emplace_back(j + 1);
+				secondIndexB.emplace_back(j);
 				if (first)
 				{
 					first = false;
@@ -87,16 +90,29 @@ int main(int argc, char* argv[])
 	}
 	positionB.emplace_back(elementsB.size());
 
-	int notNull = matrixSize * matrixSize - elementsA.size();
+	int notNullA = elementsA.size();
 	fwrite(&matrixSize, sizeof(matrixSize), 1, stdout);
-	fwrite(&notNull, sizeof(notNull), 1, stdout);
-	fwrite(elementsA.data(), sizeof(elementsA[0]), elementsA.size(), stdout);
-	fwrite(secondIndexA.data(), sizeof(secondIndexA[0]), secondIndexA.size(), stdout);
-	fwrite(positionA.data(), sizeof(positionA[0]), positionA.size(), stdout);
-	notNull = matrixSize * matrixSize - elementsB.size();
-	fwrite(&notNull, sizeof(notNull), 1, stdout);
-	fwrite(elementsA.data(), sizeof(elementsA[0]), elementsA.size(), stdout);
-	fwrite(secondIndexA.data(), sizeof(secondIndexA[0]), secondIndexA.size(), stdout);
-	fwrite(positionA.data(), sizeof(positionA[0]), positionA.size(), stdout);
+	fwrite(&notNullA, sizeof(notNullA), 1, stdout);
+	complex<int> *elements1 = new complex<int>[notNullA];
+	copy(elementsA.begin(), elementsA.end(), elements1);
+	int *secondIndex1 = new int[notNullA];
+	int *position1 = new int[matrixSize + 1];
+	copy(secondIndexA.begin(), secondIndexA.end(), secondIndex1);
+	copy(positionA.begin(), positionA.end(), position1);
+	fwrite(elements1, sizeof(*elements1), notNullA, stdout);
+	fwrite(secondIndex1, sizeof(*secondIndex1), notNullA, stdout);
+	fwrite(position1, sizeof(*position1), matrixSize + 1, stdout);
+
+	int notNullB = elementsB.size();
+	fwrite(&notNullB, sizeof(notNullB), 1, stdout);
+	complex<int> *elements2 = new complex<int>[notNullB];
+	copy(elementsB.begin(), elementsB.end(), elements2);
+	int *secondIndex2= new int[notNullB];
+	int *position2 = new int[matrixSize + 1];
+	copy(secondIndexB.begin(), secondIndexB.end(), secondIndex2);
+	copy(positionB.begin(), positionB.end(), position2);
+	fwrite(elements2, sizeof(*elements2), notNullB, stdout);
+	fwrite(secondIndex2, sizeof(*secondIndex2), notNullB, stdout);
+	fwrite(position2, sizeof(*position2), matrixSize + 1, stdout);
 	return 0;
 }

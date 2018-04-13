@@ -44,8 +44,8 @@ class Matrix
 		{
 			Matrix temp;
 
-			vector<vector<int>> v1(_size);
-			vector<vector<complex<int>>> v2(_size);
+			vector<vector<int>> v1(this ->_size);
+			vector<vector<complex<int>>> v2(this ->_size);
 
 			int pos = 0;
 			for (int i = 0; i < _size; ++i)
@@ -63,7 +63,7 @@ class Matrix
 
 			temp._elements.reserve(_notNull);
 			temp._secondIndex.reserve(_notNull);
-			temp._position.reserve(_size + 1);
+			temp._position.resize(_size + 1);
 
 			temp._position[0] = 0;
 
@@ -107,11 +107,8 @@ class Matrix
 							sum += _elements[col] * temp._elements[k];
 					}
 
-					if (abs(sum) > 0.0000001)
-					{
-						result._elements.push_back(sum);
-						result._secondIndex.push_back(j);
-					}
+					result._elements.push_back(sum);
+					result._secondIndex.push_back(j);
 
 				}
 				result._position[i] = lastSize;
@@ -124,10 +121,11 @@ class Matrix
 
 			return result;
 		}
-		void WriteMatrix(char* path)
+		void WriteMatrix(char* path,double time)
 		{
 			freopen(path, "wb", stdout);
 			fwrite(&_size, sizeof(_size), 1, stdout);
+			fwrite(&time, sizeof(time), 1, stdout);
 			fwrite(&_notNull, sizeof(_notNull), 1, stdout);
 			complex<int> *elements = new complex<int>[_notNull];
 			copy(_elements.begin(), _elements.end(), elements);
