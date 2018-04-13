@@ -9,7 +9,7 @@ double max11(double r, cListl& list){
 	double Max = abs((current.Getz() - prev.Getz()) / (current.Getx() - prev.Getx()));
 	double Max1 = Max;
 
-	for (int i = 0; i < list.get_count() - 1; i++)
+	for (int i = 0; i < list.get_count() - 2; i++)
 	{
 		Max = abs((current.Getz() - prev.Getz()) / (current.Getx() - prev.Getx()));
 		if (Max > Max1)
@@ -37,7 +37,7 @@ int makeListofMins(cListl* l, cListl* l_r, int funcNum, double parameter_r, doub
 	for (int i = 0; i < index_count; i++)
 	{
 		m = max11(parameter_r, *l);
-		for (int i = 0; i < (*l).get_count() - 1; i++)
+		for (int j = 0; j < (*l).get_count() - 1; j++)
 		{
 			prev = (*l)[i];
 			current = (*l)[i + 1];
