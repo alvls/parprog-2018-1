@@ -17,7 +17,6 @@ int main(int argc, char * argv[]) {
 	char* PATHout = "matr.out";
 	int num_threads = 1;
 
-
 	if (argc > 1)
 	{
 		num_threads = atoi(argv[1]);

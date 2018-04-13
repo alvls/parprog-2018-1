@@ -109,14 +109,20 @@ public:
 			{
 				vector<int> tmp_col(Size, -1);
 
-				for (int j = SparseRow[i]; j < SparseRow[i + 1]; ++j)
+				int sR1 = SparseRow[i];
+				int sR2 = SparseRow[i + 1];
+
+				for (int j = sR1; j < sR2; ++j)
 					tmp_col[Col[j]] = j;
 
 				for (int j = 0; j < Size; ++j)
 				{
 					double sum = 0;
 
-					for (int k = tmp.SparseRow[j]; k < tmp.SparseRow[j + 1]; ++k)
+					int spR1 = tmp.SparseRow[j];
+					int spR2 = tmp.SparseRow[j + 1];
+
+					for (int k = spR1; k < spR2; ++k)
 					{
 						int col = tmp_col[tmp.Col[k]];
 						if (col != -1)
