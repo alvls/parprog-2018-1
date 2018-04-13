@@ -39,8 +39,8 @@ int makeListofMins(cListl* l, cListl* l_r, int funcNum, double parameter_r, doub
 		m = max11(parameter_r, *l);
 		for (int j = 0; j < (*l).get_count() - 1; j++)
 		{
-			prev = (*l)[i];
-			current = (*l)[i + 1];
+			prev = (*l)[j];
+			current = (*l)[j + 1];
 			Maxr = m*(current.Getx() - prev.Getx()) + (pow((current.Getz() - prev.Getz()), 2)) / (m*(current.Getx() - prev.Getx()))
 				- 2.0 * (current.Getz() + prev.Getz());
 			l_r->Add(Maxr, prev.Getx());
