@@ -1,4 +1,5 @@
 #include <cmath>
+#include <omp.h>
 
 //1-ln,	2-cos,	3-sin	,4-exp,	5-x^2,	6-x^3,	7-x^4,	8-x^5,	9-x^6,	10-x^1/2,	11-x^1/3,	12-x^1/4
 double func(double* x, int *c, int *z, int k) //c-кол-во переменных, z-знаки между ф-ми от переменных
@@ -366,7 +367,7 @@ double solver(double* a, double *b, int* f, int* z, int n, int kol)
 			}
 			c[kol - 1] += h[kol - 1];
 		}
-		for (int j = kol - 1; j >= 0; j--)
+		for (int j = kol-1; j >= 0; j--)
 		{
 			if (c[j] > b[j])
 			{
@@ -379,6 +380,76 @@ double solver(double* a, double *b, int* f, int* z, int n, int kol)
 	{
 		res *= h[i];
 	}
+	//delete[]h;
+	//delete[]c;
+	return res;
+}
+
+double iter(double* a, double *b, double *h,double *c, int* f, int* z, int n,int kol,int num)
+{
+	double res=0;
+	c[0] = a[0] + h[0] / 2 + num * h[0];
+	if (kol == 1)
+	{
+		double m = func(c, f, z, kol);
+		if (m == 1000000)
+		{
+			res = 1000000;
+			return res;
+		}
+		else
+		{
+			res += m;
+		}
+		return res;
+	}
+	for (int i = 0; i < pow(n, kol - 2); i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			double m = func(c, f, z, kol);
+			if (m == 1000000)
+			{
+				res = 1000000;
+				return res;
+			}
+			else
+			{
+				res += m;
+			}
+			c[kol - 1] += h[kol - 1];
+		}
+		for (int j = kol-1; j > 0; j--)
+		{
+			if (c[j] > b[j])
+			{
+				c[j - 1] += h[j - 1];
+				c[j] = a[j] + h[j] / 2;
+			}
+		}
+	}
+	
+	return res;
+}
+double solver_par(double* a, double *b, int* f, int* z, int n, int kol,int num_threads)
+{
+	double *h = new double[kol];
+	double res = (double)0;//s
+	double* c = new double[kol];
+	for (int i = 0; i < kol; i++)
+	{
+		h[i] = (b[i] - a[i]) / n;
+		c[i] = a[i] + h[i] / 2;
+	}
+
+	#pragma omp parallel for num_threads(num_threads)  schedule(dynamic,3) reduction(+:res)
+	for (int i = 0; i < n; i++)
+		res+=iter(a, b, h, c, f, z, n, kol,i);
+
+	#pragma omp parallel for num_threads(num_threads)  schedule(dynamic,3) reduction(*:res)
+	for (int i = 0; i < kol; i++)
+		res *= h[i];
+
 	//delete[]h;
 	//delete[]c;
 	return res;
