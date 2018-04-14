@@ -251,7 +251,7 @@ public:
                     numElInResCol++;
                 }               
             }
-            int size = res.pointer.size();
+            const int size = res.pointer.size();
             res.pointer.push_back(res.pointer[size - 1] + numElInResCol);
             elCountM += numElementInCol;
         }

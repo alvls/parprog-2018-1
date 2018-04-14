@@ -71,4 +71,5 @@ int main(int argc, char * argv[])
     cout << N << '\n';
     readMatrixBin(A, N);
     writeMatrix(A, N);
+    cout << "\ntime = " << time;
 }
