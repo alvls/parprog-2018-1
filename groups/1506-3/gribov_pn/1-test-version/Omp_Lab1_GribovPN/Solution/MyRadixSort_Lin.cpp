@@ -43,7 +43,7 @@ void radix_sort(vector<int>& vec)
 	vector<queue<int>> vec_of_queue(10);
 	
 	//вычисление макс. кол-ва разрядов
-	size_t max_number = (*std::max_element(vec.begin(),vec.end()));
+	int max_number = (*std::max_element(vec.begin(), vec.end(), [](int x, int y) { return (y < 0 ? y : -y) < (x < 0 ? x : -x); } ));
 	while (max_number /= 10)
 		++max_num_of_dig;
 	
@@ -67,7 +67,7 @@ void radix_sort(vector<int>& vec)
 		}
 		for (size_t j = 0; j < (num_of_numbers - 1) && isSorted; ++j)
 		{
-			if(vec[j] > vec[j+1])
+			if(abs(vec[j]) > abs(vec[j+1]))
 				isSorted = false;
 		}
 	}
