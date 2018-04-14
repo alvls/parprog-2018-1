@@ -6,7 +6,7 @@ void genRandArray(dot* arr, int size)
 {
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dis(-100000, 100000);
+	std::uniform_int_distribution<> dis(-10000, 10000);
 	for (int i = 0; i < size; i++)
 	{
 		arr[i].x = dis(gen);
