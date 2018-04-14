@@ -1,0 +1,7 @@
+linear_version_path = "Gauss.exe"
+test_image_path = "test.png"
+binary_input_default = "bin.in"
+binary_output_default = "bin.out"
+test_imgs_dir = "./test_imgs/"
+checker_binares_dir = "./tests/"
+checker_answers_dir = "./answers/"
