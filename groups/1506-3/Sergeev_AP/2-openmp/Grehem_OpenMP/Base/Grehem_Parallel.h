@@ -75,7 +75,7 @@ void quickSort(dot* arr, int startInd, int endInd)
 
 void sortParallel(dot* arr, int startInd, int endInd, int numThreads)
 {
-	if (endInd - startInd > numThreads * 2) //Если размер массива больше двойного кол-ва потоков выполняется сортировка всего массива в одном потоке
+	if (endInd - startInd < numThreads * 2) //Если размер массива меньше двойного кол-ва потоков выполняется сортировка всего массива в одном потоке
 	{
 		quickSort(arr, startInd, endInd);
 		return;
@@ -100,6 +100,7 @@ void sortParallel(dot* arr, int startInd, int endInd, int numThreads)
 	{
 		int thread_num = omp_get_thread_num();
 		quickSort(arr, ind_array[thread_num].first, ind_array[thread_num].second);
+#pragma omp barrier
 		for (int i = 0; i < steps_amount; i++)
 		{
 			if (thread_num % (int)(pow(2, i + 1)) == 0) //Если поток ведущий - сделать слияние с "соседним" потоком
