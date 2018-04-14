@@ -18,6 +18,10 @@ int main(int argc, char * argv[])
 	else
 		filename = argv[1];
 
+	
+	if (filename.find(".") == -1)
+		filename += ".";
+	
 	binfile.open(filename, std::ios::binary);
 	if (!binfile.is_open())
 		return 0;
@@ -25,7 +29,9 @@ int main(int argc, char * argv[])
 	if (filename.find(".\\") == 0)
 		filename.erase(0, 2);
 
-	textfile.open(filename.substr(0, filename.find('.')) + "_out.txt");
+	filename.replace(filename.find('.'), 1, "_");
+	textfile.open(filename + ".txt");
+	//textfile.open(filename.substr(0, filename.find('.')) + "_out.txt");
 
 	binfile.read((char*)(&time), sizeof(double)); // считывание времени
 	binfile.read((char*)(&N), sizeof(int));
