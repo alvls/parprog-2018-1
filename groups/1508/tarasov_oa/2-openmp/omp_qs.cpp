@@ -121,8 +121,8 @@ int main(int argc, char * argv[])
 			if (tid % (thread_index*2) == 0) {
 				MergeAndSort(tempArray[tid], tempArray[tid + thread_index], arr + shift[tid]);
 				chunk[tid] += chunk[tid + thread_index];
-				tempArray[tid].clear();
-				tempArray[tid + thread_index].clear();
+				tempArray[tid].clear(); tempArray[tid].shrink_to_fit();
+				tempArray[tid + thread_index].clear(); tempArray[tid + thread_index].shrink_to_fit();
 			}
 			#pragma omp single 
 			{
