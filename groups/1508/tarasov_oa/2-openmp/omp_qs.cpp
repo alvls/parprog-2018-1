@@ -49,6 +49,7 @@ void SelectElements(elemType type, const int* arr1, int size1, const int* arr2, 
 	int i, j;
 	if (type == EVEN) i = 0, j = 0;
 	else i = 1, j = 1;
+	result.reserve(size1+size2);
 	while (i < size1 && j < size2) {	
 		if (arr1[i] <= arr2[j])
 		{
@@ -116,13 +117,13 @@ int main(int argc, char * argv[])
 			else if(tid % thread_index == 0) {
 				SelectElements(ODD, arr + shift[tid], chunk[tid], arr + shift[tid - thread_index], chunk[tid - thread_index], tempArray[tid]);
 			}
-
 			#pragma omp barrier
 			if (tid % (thread_index*2) == 0) {
 				MergeAndSort(tempArray[tid], tempArray[tid + thread_index], arr + shift[tid]);
 				chunk[tid] += chunk[tid + thread_index];
+				tempArray[tid].clear();
+				tempArray[tid + thread_index].clear();
 			}
-			tempArray[tid].clear();
 			#pragma omp single 
 			{
 				step *= 2;
