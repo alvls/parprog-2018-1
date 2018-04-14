@@ -107,7 +107,10 @@ protected:
     int N;
 public:
     MatrixCCS() {}
-    MatrixCCS(int n) :N(n) {}
+    MatrixCCS(int n) :N(n) 
+    {
+        pointer.push_back(0);
+    }
     MatrixCCS(Matrix &M) :N(M.gRow())
     {
         pointer = vector<int>(N + 1);
@@ -188,11 +191,24 @@ public:
 
         }
     }
+    void unite(const MatrixCCS &m)
+    {
+        int numCol = pointer.size();
+        int start = pointer[numCol - 1];
+        for (int i = 0; i < m.values.size();i++)
+        {
+            values.push_back(m.values[i]);
+            rows.push_back(m.rows[i]);
+        }
+        for (int i = 0; i < m.pointer.size() - 1; i++)
+        {
+            pointer.push_back(m.pointer[i] + start);
+        }
+    }
     MatrixCCS operator * (const MatrixCCS &m)
     {
         MatrixCCS res(N);
-        res.pointer.push_back(0);
-        transpositionMatrix();
+        res.pointer.push_back(0);        
         vector<int> *cols = &rows;
         int elCountM = 0;
         for (int j = 0; j < m.N; j++)
@@ -254,8 +270,83 @@ public:
             const int size = res.pointer.size();
             res.pointer.push_back(res.pointer[size - 1] + numElInResCol);
             elCountM += numElementInCol;
-        }
-        transpositionMatrix();        
+        }     
         return res;
+    }
+    MatrixCCS parallelMult(const MatrixCCS &m)
+    {
+        //matrix must be transposition          
+        int numThreads = omp_get_num_threads();
+        vector<MatrixCCS> tmp(numThreads, MatrixCCS(N));
+
+        vector<int> *cols = &rows;
+        int elCountM = 0;
+        for (int j = 0; j < m.N; j++)
+        {
+            int indexThread = omp_get_thread_num();
+            int numElInResCol = 0;
+            const int numElementInCol = m.pointer[j + 1] - m.pointer[j];
+            if (numElementInCol == 0)
+            {
+                int size = tmp[indexThread].pointer.size();
+                tmp[indexThread].pointer.push_back(tmp[indexThread].pointer[size - 1]);
+                continue;
+            }
+            int elCountThis = 0;
+            for (int i = 0; i < N; i++)
+            {
+                const int numElementInRow = pointer[i + 1] - pointer[i];
+                if (numElementInRow == 0)
+                {
+                    continue;
+                }
+                int tmpNumElCol = numElementInCol;
+                int tmpNumElRow = numElementInRow;
+
+                Element sum = 0;
+                int tmpElCountM = elCountM;
+                for (int z = 0; z < std::min(tmpNumElCol, tmpNumElRow);)
+                {
+                    int colThis = (*cols)[elCountThis];
+                    int rowM = m.rows[tmpElCountM];
+                    if (colThis == rowM)
+                    {
+                        sum += values[elCountThis] * m.values[tmpElCountM];
+                        tmpNumElCol--;
+                        tmpNumElRow--;
+                        tmpElCountM++;
+                        elCountThis++;
+                    }
+                    else if (colThis < rowM)
+                    {
+                        tmpNumElRow--;
+                        elCountThis++;
+                    }
+                    else
+                    {
+                        tmpNumElCol--;
+                        tmpElCountM++;
+                    }
+                }
+                for (int z = 0; z < tmpNumElRow; z++)
+                    elCountThis++;
+
+                if (sum != 0)
+                {
+                    tmp[indexThread].values.push_back(sum);
+                    tmp[indexThread].rows.push_back(i);
+                    numElInResCol++;
+                }
+            }
+            const int size = tmp[indexThread].pointer.size();
+            tmp[indexThread].pointer.push_back(tmp[indexThread].pointer[size - 1] + numElInResCol);
+            elCountM += numElementInCol;
+        }
+        for (int i = 1; i < numThreads; i++)
+        {
+            tmp[0].unite(tmp[i]);
+        }
+        tmp[0].pointer.push_back(tmp[0].values.size());
+        return tmp[0];
     }
 };
