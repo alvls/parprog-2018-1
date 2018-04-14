@@ -11,7 +11,7 @@ unsigned char GetByte(const double number, const unsigned digit_num) {
 // Sorts an array within [index_start, index_end) interval
 void LsdRadixSortPartial(double* arr,
 	double* arr_temp, const size_t arr_size,
-	const int index_start, const int index_end){
+	const int index_start, const int index_end) {
 	const int kDigitsNumber = 8;
 	const size_t kDigitPossibleValuesNumber = 256;
 
@@ -65,8 +65,6 @@ void LsdRadixSortPartial(double* arr,
 
 // Modified binary search to always return something + searches within [left_bound;right_bound)
 int BinarySearch(const double* arr, const int left_bound, const int right_bound, const double elem) {
-	const int arr_size = right_bound - left_bound;
-
 	int left = left_bound;
 	int right = right_bound - 1;
 	int middle;
@@ -77,8 +75,8 @@ int BinarySearch(const double* arr, const int left_bound, const int right_bound,
 		return right;
 	}
 	
-	while (left < right) {
-		middle = (left + right) / 2;
+	while (left <= right) {
+		middle = left + (right - left) / 2;
 
 		const double middle_elem = arr[middle];
 
@@ -105,9 +103,8 @@ void DacMerge(const double* arr_in, double* arr_out, const int iteration, const 
 	int curr_index_first = 0;
 	int curr_index_second = 0;
 	int curr_index_sorted = merge_first_parts_of_pair
-		? boundaries[iteration * 4]
-		: boundaries[iteration * 2 + 1] - arr_len_first - arr_len_second;
-	const int curr_index_sorted_change = merge_first_parts_of_pair ? 1 : -1;
+		? boundaries[iteration * 2]
+		: boundaries[iteration * 2 + 1] - arr_len_first - arr_len_second;	
 
 	while (curr_index_first < arr_len_first) {
 		while (curr_index_second < arr_len_second
@@ -134,13 +131,21 @@ void LsdRadixSortWithDacMerge(double* arr, const size_t arr_size) {
 		return;
 	}
 
-	int num_threads = omp_get_num_threads();
+	int num_threads;
 
 	// This checks if number of threads is 1, OR greater than arr_size, OR indivisible by 2^n
-	if (num_threads == 1 || num_threads > (int)arr_size || (num_threads & (num_threads - 1))) {
-		num_threads = 2;
-		omp_set_num_threads(num_threads);
+	#pragma omp parallel
+	{
+		if (omp_get_thread_num() == 0) {
+			num_threads = omp_get_num_threads();
+
+			if (num_threads == 1 || num_threads > (int)arr_size || (num_threads & (num_threads - 1))) {
+				num_threads = 2;
+			}
+		}
 	}
+
+	omp_set_num_threads(num_threads);
 
 	const size_t arr_part_size = arr_size / num_threads;
 	int* boundaries = new int[num_threads * 2];
@@ -166,8 +171,8 @@ void LsdRadixSortWithDacMerge(double* arr, const size_t arr_size) {
 	}
 
 	// Step II. Merging
-	int array_pairs_num = num_threads / 2;
 	int* middle_indexes = new int[num_threads];
+	int array_pairs_num = num_threads / 2;
 	
 	while (array_pairs_num != 0) {
 		// Merging preparations
@@ -222,11 +227,12 @@ void LsdRadixSortWithDacMerge(double* arr, const size_t arr_size) {
 		if (array_pairs_num != 0) {
 			for (int i = 0; i < array_pairs_num; i++) {
 				boundaries[i * 4] = boundaries[i * 8];
-				boundaries[i * 4 + 1] = boundaries[i * 8 + 1];
-				boundaries[i * 4 + 2] = boundaries[i * 8 + 2];
-				boundaries[i * 4 + 3] = boundaries[i * 8 + 3];
+				boundaries[i * 4 + 1] = boundaries[i * 8 + 3];
+				boundaries[i * 4 + 2] = boundaries[i * 8 + 4];
+				boundaries[i * 4 + 3] = boundaries[i * 8 + 7];
 			}
 		}
+
 	} // while (array_pairs_num != 0)
 
 	delete[] boundaries;
