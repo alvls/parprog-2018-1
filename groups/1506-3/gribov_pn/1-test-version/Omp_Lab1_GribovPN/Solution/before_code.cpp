@@ -1,11 +1,12 @@
 // Чтение данных и точка входа в программу
 #include <cstdio>
 #include <string>
+#include <vector>
 #include <omp.h>
-#include "MyRadixSort_Lin.h"
 
-//прототип
-//void radix_sort(vector<int>& vec);
+// прототипы функций
+int get_dig(int num, int dig_num);
+void radix_sort(std::vector<int>& vec);
 
 int main(int argc, char * argv[])
 {
