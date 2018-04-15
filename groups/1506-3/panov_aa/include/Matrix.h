@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <list>
+#include <omp.h>
 using std::ostream;
 using std::vector;
 using std::list;
@@ -208,7 +209,7 @@ public:
     MatrixCCS operator * (const MatrixCCS &m)
     {
         MatrixCCS res(N);
-        res.pointer.push_back(0);        
+		transpositionMatrix();
         vector<int> *cols = &rows;
         int elCountM = 0;
         for (int j = 0; j < m.N; j++)
@@ -269,8 +270,9 @@ public:
             }
             const int size = res.pointer.size();
             res.pointer.push_back(res.pointer[size - 1] + numElInResCol);
-            elCountM += numElementInCol;
-        }     
+            elCountM += numElementInCol;		
+        }    
+		transpositionMatrix();
         return res;
     }
     MatrixCCS parallelMult(const MatrixCCS &m)

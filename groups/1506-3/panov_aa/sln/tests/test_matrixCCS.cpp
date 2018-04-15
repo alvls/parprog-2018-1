@@ -11,8 +11,8 @@ pointer 0 1 2 3 4
 Matrix getMatrix1()
 {
     Matrix m(3, 3);
-    for (int j = 0; j < m.gCol(); j++)
-        m[j][0] = j + 1;
+    for (int i = 0; i < m.gRow(); i++)
+        m[0][i] = i + 1;
     return m;
 }
 Matrix getMatrix2()
@@ -149,7 +149,7 @@ TEST(matrixCCS, can_mult1)
     MatrixCCS mccs1(m1);
     MatrixCCS mccs2(m1);
     MatrixCCS res = mccs1*mccs2;
-    Matrix tmp = getMatrix1();
+    Matrix tmp(m1.gCol(), m1.gRow());
     res.convertToMatrix(tmp);
     EXPECT_TRUE(m1 == tmp);
 }
@@ -159,14 +159,18 @@ TEST(matrixCCS, can_mult2)
     Matrix m1 = getMatrix1();
     Matrix m2 = getMatrix3();
 
+	std::cout << m2;
+
     MatrixCCS mccs1(m1);
     MatrixCCS mccs2(m2);
+
     MatrixCCS resCCS = mccs1*mccs2;
+
     Matrix res = m1*m2;
     Matrix tmp(3,3);
     resCCS.convertToMatrix(tmp);
     EXPECT_TRUE(res == tmp);
-    std::cout << res << tmp;
+    //std::cout << res << tmp;
 }
 
 TEST(matrixCCS, can_mult3)
@@ -176,12 +180,14 @@ TEST(matrixCCS, can_mult3)
 
     MatrixCCS mccs1(m1);
     MatrixCCS mccs2(m2);
+
     MatrixCCS resCCS = mccs1*mccs2;
+
     Matrix res = m1*m2;
     Matrix tmp(3, 3);
     resCCS.convertToMatrix(tmp);
     EXPECT_TRUE(res == tmp);
-    std::cout << res << tmp;
+    //std::cout << res << tmp;
 }
 
 TEST(matrixCCS, can_mult4)
@@ -191,12 +197,14 @@ TEST(matrixCCS, can_mult4)
 
     MatrixCCS mccs1(m1);
     MatrixCCS mccs2(m2);
+
     MatrixCCS resCCS = mccs1*mccs2;
+
     Matrix res = m1*m2;
     Matrix tmp(3, 3);
     resCCS.convertToMatrix(tmp);
     EXPECT_TRUE(res == tmp);
-    std::cout << res << tmp;
+    //std::cout << res << tmp;
 }
 
 TEST(matrixCCS, can_mult5)
@@ -206,10 +214,12 @@ TEST(matrixCCS, can_mult5)
 
     MatrixCCS mccs1(m1);
     MatrixCCS mccs2(m2);
+
     MatrixCCS resCCS = mccs1*mccs2;
+
     Matrix res = m1*m2;
     Matrix tmp(3, 3);
     resCCS.convertToMatrix(tmp);
     EXPECT_TRUE(res == tmp);
-    std::cout << res << tmp;
+    //std::cout << res << tmp;
 }
