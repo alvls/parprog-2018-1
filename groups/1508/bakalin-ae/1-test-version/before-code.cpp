@@ -11,14 +11,14 @@ void JarvisAlgorithm(Point* data, Point* result, int in_size, int &out_size);
 int main(int argc, char* argv[]) {
 	if (argc != 3) {
 		std::cout << "JARVIS ALGORITHM PROGRAM\n" << "To use this program, please stick to the following pattern:\n" <<
-			"solver [input] [output]" << std::endl;
+			"solver [input] [output] [num of threads]" << std::endl;
 		return 1;
 	}
 
 	int num_threads = 1;
 	
-	if (argc > 1)
-		num_threads = atoi(argv[1]);
+	if (argc > 3)
+		num_threads = atoi(argv[3]);
 	
 	int size, out_size;
 	Point *in, *out;
