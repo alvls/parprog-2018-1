@@ -97,7 +97,7 @@ int main(int argc, char * argv[]) {
 
     fread(&res_time, sizeof(res_time), 1, userAnswerFile);
 
-    if ((userAnswerErr == 0 && answerErr == 0) || (userAnswerErr != 0 && answerErr != 0)) {
+    if ((userAnswerErr == 1 && answerErr == 1) || (userAnswerErr != 1 && answerErr != 1)) {
         if (answerErr != 0) {
             double diff = (answerX - userAnswerX) * (answerX - userAnswerX) +
                           (answerY - userAnswerY) * (answerY - userAnswerY);
