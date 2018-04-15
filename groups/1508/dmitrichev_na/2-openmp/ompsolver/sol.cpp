@@ -2,285 +2,195 @@
 
 #include <omp.h>
 #include <vector>
-#include <iostream>
 #include <algorithm>
-#include <time.h>
 
 using namespace std;
 
-struct VECTOR{
-  vector<double>* ar;
-  int leftIndex=0;
-  int rightIndex=0;
-};
+// That is serial alg.
+void hoaraSortOMP(double* &arr, int first, int last){
+    int leftIndex = first,
+        rightIndex = last;
+    double tmp,
+        pivot = arr[(first + last) / 2];
 
-bool hoaraSortOMP(VECTOR& vec, int threads)
-{
-  if(vec.rightIndex==vec.leftIndex)
-    return true;
+    do {
+       while (arr[leftIndex] < pivot)
+         leftIndex++;
+       while (arr[rightIndex] > pivot)
+         rightIndex--;
 
-  int leftI = vec.leftIndex,
-      rightI=vec.rightIndex;
-
-  double tmp,
-      x = vec.ar->at((vec.rightIndex + vec.leftIndex) / 2);
-
-  do {
-     while (vec.ar->at(leftI) < x)
-       leftI++;
-
-     while (vec.ar->at(rightI) > x)
-       rightI--;
-
-
-     if (leftI <= rightI)
-     {
-       if (leftI < rightI)
+       if (leftIndex <= rightIndex)
        {
-         swap(vec.ar->at(leftI),vec.ar->at(rightI));
+         if (leftIndex < rightIndex)
+         {
+           tmp = arr[leftIndex];
+           arr[leftIndex] = arr[rightIndex];
+           arr[rightIndex] = tmp;
+         }
+         leftIndex++;
+         rightIndex--;
        }
+    } while (leftIndex <= rightIndex);
 
-       leftI++;
-       rightI--;
-     }
-  } while (leftI <= rightI);
-
-  VECTOR left;
-  VECTOR right;
-
-  left.ar =vec.ar;
-  right.ar=vec.ar;
-
-  left.leftIndex=leftI;
-  left.rightIndex=vec.rightIndex;
-
-  right.leftIndex=vec.leftIndex;
-  right.rightIndex=rightI;
-
-  if (leftI < vec.rightIndex)
-    hoaraSortOMP(left, threads);
-
-  if (vec.leftIndex< rightI)
-    hoaraSortOMP(right, threads);
-
-   return true;
+    if (leftIndex < last)
+       hoaraSortOMP(arr, leftIndex, last);
+    if (first < rightIndex)
+       hoaraSortOMP(arr, first, rightIndex);
 }
 
-int binSearch(double& x, vector<double>& vec){
+int binSearch(double x, double* &vec, int N){
 
-  int size=vec.size()/2;
-  int median=vec.size()/2;
+  int size = N / 2;
+  int median = N / 2;
 
-  while(1){
-      size=(size==0)?1:(size/=2);
+  while (true) {
+      size = (size == 0) ? 1 : (size /= 2);
 
-      if(vec.at(median)<x){
-        if(vec.at(median+1)>=x)
+      if (vec[median] < x) {
+        if (vec[median + 1] >= x)
           return median;
-        else{
-
-          median+=size;
-          }
-        }
-      else if (vec.at(median)>x){
-          if(vec.at(median+1)<=x)
-            return median;
-          else{
-          median-=size;
-            }
-        }
+        else
+          median += size;
+      }
+      else if (vec[median] > x) {
+        if (vec[median + 1] <= x)
+          return median;
+        else
+          median -= size;
+      }
       else {
-          while(median>0 && vec.at(median)==x)
+          while (median > 0 && vec[median] == x)
             median--;
-          break;
-        }
-      if (median==0)
+          return median;
+      }
+
+      if (median == 0)
         return -1;
-      else if (median == vec.size())
-        return vec.size();
-    }
-  return median;
+      else if (median == N)
+        return N;
+  }
 }
 
-vector<double> simpleMerge(vector<double>& left, vector<double>& right){
-  vector<double> result(left.size()+right.size());
-  int i=0,
-      j=0,
-      k=0;
+double* vectorToDouble(vector<double>& vec){
+  double* result = new double[vec.size()];
 
-  while(1){
-      if(i>=left.size()) {
-        #pragma omp parallel for shared(result)
-        for (int z = j; z < right.size(); ++z) {
-          result.at(left.size()+z)=right.at(z);
-        }
-        break;
-      }
-      else if(j>=right.size()){
-        #pragma omp parallel for shared(result)
-        for (int z = i; z < left.size(); ++z){
-          result.at(right.size()+z)=left.at(z);
-        }
-          break;
-        } else {
-          if(left.at(i) < right.at(j)) {
-              result.at(k)=left.at(i);
-              i++;
-              k++;
-            } else {
-              result.at(k)=right.at(j);
-              j++;
-              k++;
-            }
-        }
-    }
+  for(int i = 0; i < vec.size(); ++i)
+    result[i] = vec[i];
+
   return result;
 }
 
-vector<double> mergeDivideConquer(vector<double>& left,vector<double>& right, int threads){
+vector<double> mergeDivideConquer(vector<double>& left,vector<double>& right, int threads) {
   vector<double> result;
-  if (left.size()<=500 || right.size()<=500){
-    result.insert(result.end(),left.begin(),left.end());
-    result.insert(result.end(),right.begin(),right.end());
-    sort(result.begin(),result.end());
+
+  if ((left.size() + right.size()) <= 100) {
+      result.resize(left.size() + right.size());
+      merge(left.begin(), left.end(), right.begin(), right.end(), result.begin());
+
     return result;
-    }
-
-  int elementsThread = left.size()/threads;
-  int otherElements = left.size() - threads*elementsThread;
-
-  vector<vector<double>> lefts(threads);
-  #pragma omp parallel for shared(lefts)
-  for(int i =0; i < threads; ++i){
-      int k= i * elementsThread + ((i<otherElements)?i:otherElements);
-      lefts.at(i).resize(elementsThread+((i<otherElements)?1:0));
-      for(int j = 0; j < lefts.at(i).size(); ++j){
-          lefts.at(i).at(j)=left.at(k);
-          k++;
-        }
-    }
-
-  vector<vector<double>> rights(threads);
-
-  int bso=binSearch(left.at(elementsThread),right);
-  rights.at(0)=*(new vector<double>(right.begin(),right.begin()+bso+1));
-  vector<double> tmp(right.begin()+bso+1,right.end());
-
-  for(int i = 1; i < threads-1; ++i){
-      bso=binSearch(left.at(elementsThread*(i+1)),tmp);
-      rights.at(i)=*(new vector<double>(tmp.begin(),tmp.begin()+bso+1));
-      tmp=*(new vector<double>(tmp.begin()+bso+1,tmp.end()));
-    }
-  rights.at(threads-1)=*(new vector<double>(tmp.begin(),tmp.end()));
-
-  #pragma omp parallel for shared(lefts, rights)
-  for( int i=0; i < threads; ++i){
-      lefts.at(i)=simpleMerge(lefts.at(i),rights.at(i));
   }
 
-  result.resize(left.size()+right.size());
+  int elementsThread = left.size() / threads;
+  int otherElements = left.size() - threads * elementsThread;
 
-  for ( int i = 0; i < lefts.at(0).size(); ++i)
-    result.at(i)=lefts.at(0).at(i);
+  vector<vector<double>> lefts(threads);
+  vector<vector<double>> rights(threads);
 
-  #pragma omp parallel for shared (result)
-  for(int i =1; i < threads; ++i){
-      int k=0;
-      for( int z = 0; z < i; ++z)
+  for(int i =0; i < threads; ++i) {
+      int k = i * elementsThread + ((i < otherElements) ? i : otherElements);
+      lefts.at(i).resize(elementsThread + ((i < otherElements) ? 1 : 0));
+      for(int j = 0; j < lefts.at(i).size(); ++j){
+          lefts.at(i).at(j) = left.at(k);
+          k++;
+      }
+  }
+
+  vector<double> tmp(right.begin(), right.end());
+
+  for(int i = 0; i < threads-1; ++i) {
+      double* doubleAr = vectorToDouble(tmp);
+
+      int bso = binSearch(lefts.at(i).at(lefts.at(i).size()-1), doubleAr, tmp.size());
+      rights.at(i) = *(new vector<double>(tmp.begin(), tmp.begin() + bso + 1));
+      tmp = *(new vector<double>(tmp.begin() + bso + 1, tmp.end()));
+
+      delete[] doubleAr;
+    }
+
+  rights.at(threads - 1) = *(new vector<double>(tmp.begin(), tmp.end()));
+
+  #pragma parallel for shared (lefts, rights)
+  for(int i=0; i < threads; ++i) {
+      vector<double> tmp(lefts.at(i).size() + rights.at(i).size());
+
+      merge(lefts.at(i).begin(), lefts.at(i).end(), rights.at(i).begin(), rights.at(i).end(), tmp.begin());
+      lefts.at(i) = tmp;
+  }
+
+  result.resize(left.size() + right.size());
+
+  for(int i = 0; i < threads; ++i){
+      int k = 0;
+      for(int z = 0; z < i; ++z)
         k += lefts.at(z).size();
-      for ( int j = 0; j < lefts.at(i).size(); ++j,++k)
+      for (int j = 0; j < lefts.at(i).size(); ++j, ++k)
         result.at(k) = lefts.at(i).at(j);
   }
 
   return result;
 }
 
-// MAKE std::vector from VECTOR
-vector<double> makeSTDVector(VECTOR& vec) {
-  vector<double> result(vec.rightIndex - vec.leftIndex+1);
-
-  #pragma omp parallel for shared(result,vec)
-  for (int i = vec.leftIndex; i < vec.rightIndex + 1; ++i){
-    result.at(i-vec.leftIndex) = (vec.ar->at(i));
-  }
-
-  return result;
-}
-
-vector<double>& mainMerge(vector<vector<double>>& vecs, int threads){
-  double iters = log2(threads);
-  int it = (int)iters;
+vector<double>& mainMerge(vector<vector<double>>& vecs, int threads) {
+  double iterations = log2(threads);
   int i = 0;
   int dis = 1;
 
-  while(i < iters) {
-  #pragma omp parallel for firstprivate(dis)
+  while(i < iterations) {
+  #pragma omp parallel for shared(vecs,i,dis)
       for(int j = 0; j < threads; j += (dis * 2)) {
-          if((j+dis) < threads)
+          if((j + dis) < threads) {
             vecs.at(j) = mergeDivideConquer(vecs.at(j), vecs.at(j + dis),threads);
+            }
       }
 
       dis *= 2;
       i++;
-      it = (it != 1) ? ((it + 1) / 2) : 1;
     }
+
   return vecs.at(0);
 }
 
 void IHoaraSortOMP(double* &numbs, int N, int threads) {
   omp_set_num_threads(threads);
 
-  VECTOR vec;
-  vec.leftIndex=0;
-  vec.rightIndex=N-1;
-// NEW vec.ar
-  vec.ar = new vector<double>(N);
-
-  #pragma omp parallel for shared(vec)
-  for(int i = 0; i < N; ++i){
-    vec.ar->at(i)=numbs[i];
-  }
-// NEW vectors
-  VECTOR* vectors=new VECTOR[threads];
-
-  int elementsThread=(vec.rightIndex+1)/threads;
-  int otherElements=(vec.rightIndex+1)-elementsThread*threads;
-
-// Init MASTER thread's struct
-  vectors[0].ar=vec.ar;
-  vectors[0].leftIndex=0;
-  vectors[0].rightIndex=(0<otherElements)?(elementsThread):(elementsThread-1);
-
-// Init other threads' structures
-  #pragma omp parallel for shared(elementsThread,otherElements, vectors)
-  for (int i=1;i<threads;++i){
-      vectors[i].ar=vec.ar;
-      //vectors[i].leftIndex=vectors[i-1].rightIndex+1;
-      vectors[i].leftIndex=elementsThread*i+((i<otherElements)?i:otherElements);
-      vectors[i].rightIndex=vectors[i].leftIndex+((i<otherElements)?elementsThread:(elementsThread-1));
-  }
+  int elementsThread=N/threads;
+  int otherElements=N-elementsThread*threads;
 
   vector<vector<double>> vecs(threads);
-  #pragma omp parallel for shared(vecs, vectors,threads)
-  for(int i=0; i < threads; ++i) {
-// Sort number = %threads VECTORS
-      hoaraSortOMP(vectors[i], threads);
-// Make vector<double> for merging
-      vecs.at(i)=makeSTDVector(vectors[i]);
+
+  #pragma omp parallel for shared(numbs)
+  for (int i = 0; i < threads; ++i) {
+      int leftIndex = elementsThread*i+((i < otherElements) ? i : otherElements);
+      int rightIndex = leftIndex + ((i < otherElements) ? elementsThread : (elementsThread - 1));
+      vector<double> ar(rightIndex - leftIndex + 1);
+
+      hoaraSortOMP(numbs, leftIndex, rightIndex);
+
+      for(int j = (leftIndex); j < (rightIndex + 1); ++j)
+        ar[j - leftIndex] = numbs[j];
+
+      vecs.at(i) = ar;
   }
 
   vector<double> mergeResult;
-  if (threads > 1)
-    mergeResult = mainMerge(vecs, threads);
-  else
-    mergeResult = vecs.at(0);
+   if (threads > 1)
+     {
+      #pragma omp single
+      mergeResult = mainMerge(vecs, threads);
+     }
+   else
+     mergeResult = vecs.at(0);
 
-  #pragma omp parallel for
-  for (int i=0; i < N; ++i)
-    numbs[i]=mergeResult.at(i);
-// DELETE SECTION
-// DELETE vec.ar
-  delete vec.ar;
-// DELETE vectors
-  delete[] vectors;
+   delete[] numbs;
+   numbs = vectorToDouble(mergeResult);
 }

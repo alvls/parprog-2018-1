@@ -5,7 +5,6 @@
 #include <omp.h>
 #include <new>
 #include "sol.cpp"
-#include "../../../lab/src/solver/sol.cpp"
 
 int main(int argc, char* argv[])
 {
@@ -30,43 +29,39 @@ int main(int argc, char* argv[])
    }
 
    int N = 0;
-   double *numbers = NULL;
+   double *numbersPar = NULL;
    double trash=0;
    int threads=atoi(argv[3]);
 
    fread(&trash, sizeof(trash), 1, fIn);
    fread(&N, sizeof(N), 1, fIn);
-   numbers = new double[N];
-   double* seNum=new double[N];
-   fread(numbers, sizeof(*numbers), N, fIn);
+
+   numbersPar = new double[N];
+   double* numbersSeq=new double[N];
+   fread(numbersPar, sizeof(*numbersPar), N, fIn);
 
    for(int i = 0; i < N; ++i){
-       seNum[i]=numbers[i];
+       numbersSeq[i]=numbersPar[i];
      }
 
-   double time2 = omp_get_wtime();
-   IHoaraSort(seNum, N);
-   time2 = omp_get_wtime() - time2;
-   cout<<endl<<static_cast<long long>(time2 * 1e7)<<endl;
+   double seqTime = omp_get_wtime();
+   hoaraSortOMP(numbersSeq,0, N-1);
+   seqTime = omp_get_wtime() - seqTime;
+  // cout<<endl<<static_cast<long long>(time2 * 1e7)<<endl;
 
-   double time = omp_get_wtime();
-   IHoaraSortOMP(numbers, N, threads);
-   time = omp_get_wtime() - time;
+   double parTime = omp_get_wtime();
+   IHoaraSortOMP(numbersPar, N, threads);
+   parTime = omp_get_wtime() - parTime;
 
-   fwrite(&time, sizeof(time), 1, fOut);
+   fwrite(&parTime, sizeof(parTime), 1, fOut);
    fwrite(&N, sizeof(N), 1, fOut);
-   fwrite(numbers, sizeof(*numbers), N, fOut);
+   fwrite(numbersPar, sizeof(*numbersPar), N, fOut);
 
-
-   cout<<endl<<static_cast<long long>(time * 1e7)<<endl;
-
-   cout<<(time2/time)<<endl;
-
-   cout<< argv[0]<<" -> OK\n";
+   cout<<(seqTime/parTime)<<endl;
 
    fclose(fIn);
    fclose(fOut);
-   delete[] numbers;
-   delete[] seNum;
+   delete[] numbersPar;
+   delete[] numbersSeq;
    return 0;
 }
