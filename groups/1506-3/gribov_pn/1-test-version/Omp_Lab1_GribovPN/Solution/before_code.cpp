@@ -19,8 +19,6 @@ int main(int argc, char * argv[])
 	}
 	else
 	{
-		//freopen((".\\tests\\" + std::string(argv[1])).c_str(), "rb", stdin);
-		//freopen((".\\tests\\" + std::string(argv[1]) + ".ans").c_str(), "wb", stdout);
 		freopen((".\\tests\\" + std::string(argv[1])).c_str(), "rb", stdin);
 		freopen((".\\tests\\" + std::string(argv[1]) + ".ans").c_str(), "wb", stdout);
 	}
