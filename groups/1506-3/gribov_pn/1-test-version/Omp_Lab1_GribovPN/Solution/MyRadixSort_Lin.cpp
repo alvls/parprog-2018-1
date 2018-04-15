@@ -5,77 +5,104 @@
 int get_dig(int num, int dig_num)
 {
 	num = abs(num);
-	for (size_t i = 0; i < (dig_num - 1); ++i)
+	for (int i = 0; i < (dig_num - 1); ++i)
 	{
 		num /= 10;
 	}
 	return num % 10;
 }
 
-//поразрядная сортировка
+// Поразрядная сортировка (Алгоритм №1)
+/*void radix_sort(vector<int>& vec)
+{
+//максимальное количество разрядов сортируемых чисел (по верхней границе)
+int max_num_of_dig = 10;
+//количество сортируемых чисел
+int num_of_numbers = static_cast<int>(vec.size());
+//вектор очередей для положительных чисел
+vector<queue<int>> p_vec_of_queue(10);
+//вектор стеков для отрицательных чисел
+vector<queue<int>> n_vec_of_queue(10);
+//isSorted - флаг проверки отсортированности для досрочного завершения
+bool isSorted = false;
+
+int k;
+
+for (int i = 0; i < max_num_of_dig; ++i)
+{
+if (isSorted)
+break;
+isSorted = true;
+for (int j = 0; j < num_of_numbers; ++j)
+{
+if (vec[j] < 0)
+n_vec_of_queue[get_dig(vec[j], i + 1)].push(vec[j]);
+else
+p_vec_of_queue[get_dig(vec[j], i + 1)].push(vec[j]);
+}
+k = 0;
+for (int j = 0; j < 10; ++j)
+{
+while (!n_vec_of_queue[j].empty())
+{
+vec[k++] = n_vec_of_queue[j].front();
+n_vec_of_queue[j].pop();
+}
+}
+for (int j = 0; j < 10; ++j)
+{
+while (!p_vec_of_queue[j].empty())
+{
+vec[k++] = p_vec_of_queue[j].front();
+p_vec_of_queue[j].pop();
+}
+}
+for (int j = 0; j < (num_of_numbers - 1); ++j)
+{
+if (abs(vec[j]) > abs(vec[j + 1]))
+{
+isSorted = false;
+break;
+}
+}
+}
+vector<int>::iterator minpos = std::min_element(vec.begin(), vec.end());
+std::reverse(vec.begin(), minpos + 1);
+} */
+
+// Поразрядная сортировка (Алгоритм №2)
 void radix_sort(vector<int>& vec)
 {
-	//максимальное количество разрядов сортируемых чисел
-	size_t max_num_of_dig = 1;
-	
-	//количество сортируемых чисел
-	size_t num_of_numbers = vec.size();
-	
-	//вектор положительных чисел
-	vector<int> pvec;
-	//вектор отрицательных чисел
-	vector<int> nvec;
-	//количество положительных чисел
-	size_t num_of_p_numbers = 0;
-	//количество отрицательных чисел
-	size_t num_of_n_numbers = 0;
+	int max_dig_count = 10;
+	int max_dig = 10;
+	int num_of_numbers = static_cast<int>(vec.size());
+	int count, tmp;
+	int num_threads = 4;
+	vector<int> buffer(num_of_numbers);
+	vector<int> pos_vec(10);
 
-	for (size_t i = 0; i < num_of_numbers; ++i)
-		if (vec[i] >= 0)
-			++num_of_p_numbers;
-
-	num_of_n_numbers = num_of_numbers - num_of_p_numbers;
-
-	pvec.reserve(num_of_p_numbers);
-	nvec.reserve(num_of_n_numbers);
-
-	//вектор очередей
-	vector<queue<int>> vec_of_queue(10);
-	
-	//вычисление макс. кол-ва разрядов
-	int max_number = (*std::max_element(vec.begin(), vec.end(), [](int x, int y) { return (y < 0 ? y : -y) < (x < 0 ? x : -x); } ));
-	while (max_number /= 10)
-		++max_num_of_dig;
-	
-	//isSorted - флаг проверки отсортированности для досрочного завершения
-	bool isSorted = false;
-	
-	for (size_t i = 0; i < max_num_of_dig && !isSorted; ++i)
+	for (int i = 0; i < max_dig_count; ++i)
 	{
-		isSorted = true;
-		for (size_t j = 0; j < num_of_numbers; ++j)
+		for (int j = 0; j < max_dig; ++j)
+			pos_vec[j] = 0;
+		for (int j = 0; j < num_of_numbers; ++j)
 		{
-			vec_of_queue[get_dig(vec[j],i+1)].push(vec[j]);
+			++pos_vec[get_dig(vec[j], i)];
 		}
-		for (size_t j = 0, k = 0, l = 0; j < 10; ++j)
+		count = 0;
+		for (int j = 0; j < max_dig; ++j)
 		{
-			while (!vec_of_queue[j].empty())
-			{
-				vec[k++] = vec_of_queue[j].front();
-				vec_of_queue[j].pop();
-			}
+			tmp = pos_vec[j];
+			pos_vec[j] = count;
+			count += tmp;
 		}
-		for (size_t j = 0; j < (num_of_numbers - 1) && isSorted; ++j)
+		for (int j = 0; j < num_of_numbers; ++j)
 		{
-			if(abs(vec[j]) > abs(vec[j+1]))
-				isSorted = false;
+			buffer[pos_vec[get_dig(vec[j], i)]++] = vec[j];
 		}
+		vec = buffer;
 	}
-
-	std::copy_if(vec.begin(), vec.end(), std::back_inserter(pvec), [](int i) { return i >= 0; });
-	std::copy_if(vec.begin(), vec.end(), std::back_inserter(nvec), [](int i) { return i < 0; });
-	std::reverse(nvec.begin(), nvec.end());
 	vec.clear();
-	std::copy(nvec.begin(), nvec.end(), std::back_inserter(vec));
-	std::copy(pvec.begin(), pvec.end(), std::back_inserter(vec));
+	std::copy_if(buffer.rbegin(), buffer.rend(), std::back_inserter(vec), [](int i) { return i < 0; });
+	std::copy_if(buffer.begin(), buffer.end(), std::back_inserter(vec), [](int i) { return i >= 0; });
 }
