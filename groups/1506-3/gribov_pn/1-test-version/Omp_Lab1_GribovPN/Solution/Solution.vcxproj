@@ -142,10 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="before_code.cpp" />
-    <ClCompile Include="MyRadixSort_Lin.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="MyRadixSort_Lin.h" />
+    <ClCompile Include="sol.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,5 +1,5 @@
-/* Программа viewer.cpp получает на вход имя файла и
-преобразует его содержимое из бинарного вида в текстовый.*/
+/* РџСЂРѕРіСЂР°РјРјР° viewer.cpp РїРѕР»СѓС‡Р°РµС‚ РЅР° РІС…РѕРґ РёРјСЏ С„Р°Р№Р»Р° Рё
+РїСЂРµРѕР±СЂР°Р·СѓРµС‚ РµРіРѕ СЃРѕРґРµСЂР¶РёРјРѕРµ РёР· Р±РёРЅР°СЂРЅРѕРіРѕ РІРёРґР° РІ С‚РµРєСЃС‚РѕРІС‹Р№.*/
 #include <string>
 #include <fstream>
 
@@ -33,7 +33,7 @@ int main(int argc, char * argv[])
 	textfile.open(filename + ".txt");
 	//textfile.open(filename.substr(0, filename.find('.')) + "_out.txt");
 
-	binfile.read((char*)(&time), sizeof(double)); // считывание времени
+	binfile.read((char*)(&time), sizeof(double)); // СЃС‡РёС‚С‹РІР°РЅРёРµ РІСЂРµРјРµРЅРё
 	binfile.read((char*)(&N), sizeof(int));
 
 	textfile << time << " " << N;

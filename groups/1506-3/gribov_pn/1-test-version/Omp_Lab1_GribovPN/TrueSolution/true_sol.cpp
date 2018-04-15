@@ -1,4 +1,4 @@
-// Программа для правильной сортировки
+// РџСЂРѕРіСЂР°РјРјР° РґР»СЏ РїСЂР°РІРёР»СЊРЅРѕР№ СЃРѕСЂС‚РёСЂРѕРІРєРё
 #include <cstdio>
 #include <string>
 #include <algorithm>
@@ -23,7 +23,7 @@ int main(int argc, char * argv[])
 		freopen((".\\tests\\" + std::string(argv[1]) + "_true.ans").c_str(), "wb", stdout);
 	}
 
-	fseek(stdin, sizeof(double), SEEK_SET); // пропуск фиктивного времени
+	fseek(stdin, sizeof(double), SEEK_SET); // РїСЂРѕРїСѓСЃРє С„РёРєС‚РёРІРЅРѕРіРѕ РІСЂРµРјРµРЅРё
 	fread(&N, sizeof(N), 1, stdin);
 
 	vec.resize(N);
