@@ -57,6 +57,7 @@ int main(int argc, char * argv[]) {
         answerFileName = "tests/" + std::to_string(i)+".ans";
         answerFile = fopen(answerFileName.c_str(), "wb");
         fwrite(&answer, sizeof(answer), 1, answerFile);
+        fwrite(&time, sizeof(time), 1, answerFile);
 
         fclose(testFile);
         fclose(answerFile);
