@@ -24,5 +24,8 @@
     <ClCompile Include="test_complex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_parallel_matrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

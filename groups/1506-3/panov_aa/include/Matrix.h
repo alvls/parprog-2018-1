@@ -137,6 +137,18 @@ public:
         }
         pointer[N] = (int)values.size();
     }
+	void setValues(vector<Element> Valuse)
+	{
+		values = Valuse;
+	}
+	void setRows(vector<int> Rows)
+	{
+		rows = Rows;
+	}
+	void setPointer(vector<int> Pointer)
+	{
+		pointer = Pointer;
+	}
     void convertToMatrix(Matrix &A)
     {
         for (int i = 0; i < N; i++)
@@ -351,4 +363,11 @@ public:
         tmp[0].pointer.push_back(tmp[0].values.size());
         return tmp[0];
     }
+	MatrixCCS testMult(const MatrixCCS &m)
+	{
+		transpositionMatrix();
+		MatrixCCS res = parallelMult(m);
+		transpositionMatrix();
+		return res;
+	}
 };

@@ -8,6 +8,11 @@ MatrixCCS MatrixMult(MatrixCCS &A, MatrixCCS &B)
     return A*B;
 }
 
+MatrixCCS ParallelMult(MatrixCCS &A, MatrixCCS &B)
+{
+	return A.parallelMult(B);
+}
+
 /*void MatrMatrMult(double * A, double * B, double * C, int N)
 {
 	int i, j, k;

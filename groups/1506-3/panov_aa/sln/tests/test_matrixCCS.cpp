@@ -159,8 +159,6 @@ TEST(matrixCCS, can_mult2)
     Matrix m1 = getMatrix1();
     Matrix m2 = getMatrix3();
 
-	std::cout << m2;
-
     MatrixCCS mccs1(m1);
     MatrixCCS mccs2(m2);
 
