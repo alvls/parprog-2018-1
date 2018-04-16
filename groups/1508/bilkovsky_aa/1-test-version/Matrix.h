@@ -26,26 +26,26 @@ class Matrix
 			M._secondIndex.reserve(notNull);
 			M._position.reserve(notNull + 1);
 		}
-		complex<int> operator ()(int i, int j) {
+		complex<int> operator ()(int i, int j) const {
 			complex<int> result = complex<int>(0,0); 
 			int n1 = _position[i]; 
 			int n2 = _position[i + 1];
 			for (int iter = n1; iter < n2; iter++)
 			{
-				if (_secondIndex[iter] == j)
+				if (_secondIndex[iter - 1] == j)
 				{
-					result = _elements[iter];
+					result = _elements[iter - 1];
 					break;
 				}
 			}
 			return result;
 		}
-		Matrix GetTransposed() 
+		Matrix GetTransposed() const
 		{
 			Matrix temp;
 
-			vector<vector<int>> v1(this ->_size);
-			vector<vector<complex<int>>> v2(this ->_size);
+			vector<vector<int>> v1(_size);
+			vector<vector<complex<int>>> v2(_size);
 
 			int pos = 0;
 			for (int i = 0; i < _size; ++i)
@@ -67,13 +67,12 @@ class Matrix
 
 			temp._position[0] = 0;
 
-			for (int i = 1; i <= _size; ++i)
-				temp._position[i] = temp._position[i - 1] + v1[i - 1].size();
 
 			for (int i = 0; i < _size; ++i)
 			{
 				temp._secondIndex.insert(temp._secondIndex.end(), v1[i].begin(), v1[i].end());
 				temp._elements.insert(temp._elements.end(), v2[i].begin(), v2[i].end());
+				temp._position[i + 1] = temp._position[i] + v1[i].size();
 			}
 
 			return temp;
@@ -81,51 +80,52 @@ class Matrix
 
 		Matrix operator*(const Matrix &M )
 		{
-			Matrix temp = GetTransposed();
+			Matrix temp = M.GetTransposed();
 			Matrix result;
 			result._size = _size;
 			result._position.resize(_size + 1);
 
 
-			int lastSize = 0;
+			int pos = 0;
 
 			for (int i = 0; i < _size; ++i)
 			{
-				vector<int> tmp_col(_size, -1);
+				vector<int> secondIndexestmp(_size, -1);
 
 				for (int j = _position[i]; j < _position[i + 1]; ++j)
-					tmp_col[_secondIndex[j]] = j;
+					secondIndexestmp[_secondIndex[j]] = j;
 
 				for (int j = 0; j < _size; ++j)
 				{
-					complex<int> sum = 0;
+					complex<int> value = 0;
 
 					for (int k = temp._position[j]; k < temp._position[j + 1]; ++k)
 					{
-						int col = tmp_col[temp._secondIndex[k]];
-						if (col != -1)
-							sum += _elements[col] * temp._elements[k];
+						int index = secondIndexestmp[temp._secondIndex[k]];
+						if (index != -1)
+							value += _elements[index] * temp._elements[k];
+					}
+					if (value.real() != 0 || value.imag() != 0)
+					{
+						result._elements.push_back(value);
+						result._secondIndex.push_back(j);
 					}
 
-					result._elements.push_back(sum);
-					result._secondIndex.push_back(j);
-
 				}
-				result._position[i] = lastSize;
-				lastSize = result._elements.size();
+				result._position[i] = pos;
+				pos = result._elements.size();
 			}
-
 			result._position[_size] = result._secondIndex.size();
 
 			result._notNull= result._secondIndex.size();
 
 			return result;
 		}
-		void WriteMatrix(char* path,double time)
+		void WriteMatrix(char* path,double time = 0)
 		{
 			freopen(path, "wb", stdout);
-			fwrite(&_size, sizeof(_size), 1, stdout);
 			fwrite(&time, sizeof(time), 1, stdout);
+			fwrite(&_size, sizeof(_size), 1, stdout);
 			fwrite(&_notNull, sizeof(_notNull), 1, stdout);
 			complex<int> *elements = new complex<int>[_notNull];
 			copy(_elements.begin(), _elements.end(), elements);

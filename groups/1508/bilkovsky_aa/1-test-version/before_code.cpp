@@ -3,6 +3,7 @@
 #include <iostream>
 #include <ccomplex>
 #include <msxml.h>
+#include<ctime>
 #include "Matrix.h"
 using namespace std;
 
@@ -41,9 +42,9 @@ int main(int argc, char* argv[])
 	fread(elements2, sizeof(*elements2), notNull2, stdin);
 	fread(secondIndex2, sizeof(*secondIndex2), notNull2, stdin);
 	fread(position2, sizeof(*position2), size + 1, stdin);
-	double timeS = GetCurrentTime();
+	clock_t timeS = clock();
 	Matrix result = Calculate(size, notNull1, elements1, secondIndex1, position1, notNull2, elements2, secondIndex2, position2, output);
-	double timeF = GetCurrentTime();
+	clock_t timeF = clock();
 	result.WriteMatrix(output, timeF - timeS);
 
 	return 0;

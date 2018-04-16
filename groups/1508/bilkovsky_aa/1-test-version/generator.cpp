@@ -2,6 +2,7 @@
 #define _SCL_SECURE_NO_WARNINGS
 
 #include <cstdio>
+#include <string.h>
 #include <random>
 #include <ctime>
 #include <chrono> 
@@ -10,27 +11,35 @@
 #include <iterator>
 using namespace std;
 
-const int DEFAULT_MATRIX_SIZE = 100;
+const int DEFAULT_MATRIX_SIZE = 10;
 const int DEFAULT_DENSITY = 10;  // %
 
-int n_tests[] = { 10, 20,50,100, 150, 200, 400,500, 700, 1000 };
+int n_tests[] = { 10,20,30,40,50,60,70,80,90,100,125,150, 200,300,400,500,700,800,900,1000 };
+
+void WriteAnswer(char* input, char* output);
 
 int main(int argc, char* argv[])
 {
-	char* input = "../matr.in";
+	char* folder = "../tests/";
 	int matrixSize = DEFAULT_MATRIX_SIZE;
 	int density = 100 / DEFAULT_DENSITY;
+	char* number = "0";
 	if (argc > 1)
 	{
-		input = argv[1];
+		number = argv[1];
+		matrixSize = n_tests[atoi(argv[1])];
 		if (argc > 2)
-		{
-			matrixSize = n_tests[atoi(argv[2])];
-			if (argc > 3)
-				if (density > 0 && density < 100)
-					density = 100 / atof(argv[3]);
-		}
+			if (density > 0 && density < 100)
+				density = 100 / atof(argv[2]);
 	}
+	char *input = new char[strlen(folder) + strlen(number) + 1];
+	char *output = new char[strlen(folder) + strlen(number) + 5];
+	strcpy(input, folder);
+	strcat(input, number);
+	strcpy(output, folder);
+	strcat(output, number);
+	strcat(output, ".ans");
+
 	vector<complex<int>> elementsA, elementsB;
 	vector<int> secondIndexA, secondIndexB, positionA, positionB;
 
@@ -58,7 +67,15 @@ int main(int argc, char* argv[])
 		}
 		if (first)
 		{
-			positionA.emplace_back(positionA.at(positionA.size()));
+			if (i != 0)
+			{
+				int val = positionA[i - 1];
+				positionA.emplace_back(val);
+			}
+			else
+			{
+				positionA.emplace_back(0);
+			}
 		}
 	}
 	positionA.emplace_back(elementsA.size());
@@ -85,7 +102,15 @@ int main(int argc, char* argv[])
 		}
 		if (first)
 		{
-			positionB.emplace_back(positionB.at(positionB.size()));
+			if (i != 0)
+			{
+				int val = positionB[i - 1];
+				positionB.emplace_back(val);
+			}
+			else
+			{
+				positionB.emplace_back(0);
+			}
 		}
 	}
 	positionB.emplace_back(elementsB.size());
@@ -114,5 +139,7 @@ int main(int argc, char* argv[])
 	fwrite(elements2, sizeof(*elements2), notNullB, stdout);
 	fwrite(secondIndex2, sizeof(*secondIndex2), notNullB, stdout);
 	fwrite(position2, sizeof(*position2), matrixSize + 1, stdout);
+
+	WriteAnswer(input,output);
 	return 0;
 }

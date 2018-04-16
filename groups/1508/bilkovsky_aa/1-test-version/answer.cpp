@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <ccomplex>
+#include <ctime>
 
 using namespace std;
 
@@ -25,11 +26,8 @@ vector<vector<complex<int>>> ToStandart(complex<int>* elements,int* secondIndex,
 	return standart;
 }
 
-int main()
+void WriteAnswer(char* input,char* output)
 {
-	char* input = "../matr.in";
-	char* output = "../matr.ans";
-
 	int size, notNull1, notNull2;
 	complex<int>* elements1, *elements2;
 	int *secondIndex1, *secondIndex2, *position1, *position2;
@@ -67,19 +65,21 @@ int main()
 		result[i].resize(size);
 	}
 
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < size; ++i)
 	{
-		for (int j = 0; j < size; j++)
+		for (int j = 0; j < size; ++j)
 		{
-			for (int iter = 0; iter < size; iter++)
+			for (int iter = 0; iter < size; ++iter)
 			{
-				result[i][j] = matrix1[i][iter] * matrix2[iter][j];
+				result[i][j] += matrix1[i][iter] * matrix2[iter][j];
 			}
 		}
 	}
+	clock_t time = clock();
 	for (int i = 0; i < result.size(); ++i)
-		 fwrite(result[i].data(), sizeof(result[i][0]), result.size(), stdout);
-    return 0;
+		fwrite(result[i].data(), sizeof(result[i][0]), result.size(), stdout);
+	fwrite(&time - clock(), sizeof(time), 1, stdout);
+	fwrite(&size, sizeof(size), 1, stdout);
 }
 
 
