@@ -213,9 +213,9 @@ public:
             values.push_back(m.values[i]);
             rows.push_back(m.rows[i]);
         }
-        for (int i = 0; i < m.pointer.size() - 1; i++)
+        for (int i = 1; i < m.pointer.size(); i++)
         {
-            pointer.push_back(m.pointer[i] + start);
+            pointer.push_back(m.pointer[i] - m.pointer[i-1] + start);
         }
     }
     MatrixCCS operator * (const MatrixCCS &m)
@@ -370,4 +370,9 @@ public:
 		transpositionMatrix();
 		return res;
 	}
+
+    bool operator == (const MatrixCCS &m)
+    {
+        return (N == m.N & values == m.values & rows == m.rows & pointer == m.pointer);
+    }
 };
