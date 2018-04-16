@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matrix_multiplication", "ma
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "binaryToTxt", "..\binaryToTxt\binaryToTxt.vcxproj", "{D8B6BE00-932B-4CC1-AA2A-E280B0904C1A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "txtTobinary", "..\txtTobinary\txtTobinary.vcxproj", "{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "checker", "..\checker\checker.vcxproj", "{41A9EE7C-95CE-4EAD-B6DD-9BEDE5FB1CE8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "generator", "..\generator\generator.vcxproj", "{DEEB33E8-0CB8-41FB-8958-879242F6E9E6}"
@@ -43,14 +41,6 @@ Global
 		{D8B6BE00-932B-4CC1-AA2A-E280B0904C1A}.Release|x64.Build.0 = Release|x64
 		{D8B6BE00-932B-4CC1-AA2A-E280B0904C1A}.Release|x86.ActiveCfg = Release|Win32
 		{D8B6BE00-932B-4CC1-AA2A-E280B0904C1A}.Release|x86.Build.0 = Release|Win32
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Debug|x64.ActiveCfg = Debug|x64
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Debug|x64.Build.0 = Debug|x64
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Debug|x86.ActiveCfg = Debug|Win32
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Debug|x86.Build.0 = Debug|Win32
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Release|x64.ActiveCfg = Release|x64
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Release|x64.Build.0 = Release|x64
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Release|x86.ActiveCfg = Release|Win32
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Release|x86.Build.0 = Release|Win32
 		{41A9EE7C-95CE-4EAD-B6DD-9BEDE5FB1CE8}.Debug|x64.ActiveCfg = Debug|x64
 		{41A9EE7C-95CE-4EAD-B6DD-9BEDE5FB1CE8}.Debug|x64.Build.0 = Debug|x64
 		{41A9EE7C-95CE-4EAD-B6DD-9BEDE5FB1CE8}.Debug|x86.ActiveCfg = Debug|Win32

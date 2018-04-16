@@ -81,7 +81,7 @@
     <IncludePath>$(IncludePath);</IncludePath>
     <ExecutablePath>$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(FxCopDir);$(PATH);</ExecutablePath>
     <ReferencePath>.$(VC_ReferencesPath_x64);</ReferencePath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\..\..\..\..\bin\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\..\..\..\..\build\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -91,7 +91,7 @@
     <IncludePath>$(IncludePath);</IncludePath>
     <ExecutablePath>$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(FxCopDir);$(PATH);</ExecutablePath>
     <ReferencePath>.$(VC_ReferencesPath_x64);</ReferencePath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\..\..\..\..\bin\</OutDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\..\..\..\..\build\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
