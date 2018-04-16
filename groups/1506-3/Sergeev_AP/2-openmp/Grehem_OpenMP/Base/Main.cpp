@@ -26,15 +26,10 @@ int main()
 	omp_set_num_threads(num_threads);
 
 	std::cout << "—генерированный массив" << std::endl;
-
-	dot* arr2 = new dot[size + 1];//
-
 	for (int i = 0; i < size; i++)
 	{
 		std::cout << arr[i].x << " " << arr[i].y << std::endl;
-		arr2[i] = arr[i];//
 	}
-
 
 	auto start = std::chrono::high_resolution_clock::now();
 	std::pair<dot*, int> answer = grehemMethod_OpenMP(arr, size + 1, num_threads);
