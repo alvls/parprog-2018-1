@@ -54,15 +54,12 @@ int main(int argc, char * argv[])
         if (argc > 2)
         {
             int ind = atoi(argv[2]);
+            number = argv[2];
             n = n_tests[ind];
+            output = "";
             if (argc > 3)
             {
-                number = argv[3];
-                output = "";
-                if (argc > 4)
-                {
-                    output = argv[4];
-                }
+                output = argv[3];
             }
         }
     }

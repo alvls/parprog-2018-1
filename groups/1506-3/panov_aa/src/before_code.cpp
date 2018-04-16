@@ -47,11 +47,11 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
     
     omp_set_num_threads(num_threads);
 	
-    Acol.transpositionMatrix();
+    //Acol.transpositionMatrix();
     double time = omp_get_wtime();	
     ResCol = MatrixMult(Acol, Bcol);
 	time = omp_get_wtime() - time;
-    Acol.transpositionMatrix();
+    //Acol.transpositionMatrix();
 
     ResCol.convertToMatrix(Res);
 
