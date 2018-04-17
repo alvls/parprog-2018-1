@@ -13,7 +13,7 @@ MatrixCCS ParallelMult(MatrixCCS &A, MatrixCCS &B)
 	return A.parallelMult(B);
 }
 
-/*void MatrMatrMult(double * A, double * B, double * C, int N)
+/*void MatrMult(double * A, double * B, double * C, int N)
 {
 	int i, j, k;
 #pragma omp parallel for private(j, k)
