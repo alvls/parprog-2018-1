@@ -8,13 +8,12 @@
 #include "../include/matrix.h"
 using namespace std;
 int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 100, 200, 300, 400, 500,
-600, 700, 800, 900, 1000 };
+600, 700, 800, 900, 1000, 3000};
 Matrix getRandMatrix(int n, default_random_engine &generator, uniform_real_distribution<double> &distribution)
 {
     Matrix m1(n, n);
     for (int i = 0; i < n*n; i++)
     {
-        // заполняем случайными числами из равномерного распределения матрицу
         m1.vv[i] = distribution(generator);
     }
     return m1;
@@ -24,7 +23,7 @@ Matrix getRandSparseMatrix(int n, default_random_engine &generator, uniform_real
     Matrix m1(n, n);
     vector<int> index(n*n);
     iota(index.begin(), index.end(), 0);
-    for (int i = 0; i < n / 2; i++)
+    for (int i = 0; i < 0.1*n*n; i++)
     {
         uniform_int_distribution <int> d(0, index.size() - 1);
         int tmp_ind = d(generator);

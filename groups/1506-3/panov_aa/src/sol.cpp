@@ -8,7 +8,7 @@ MatrixCCS MatrixMult(MatrixCCS &A, MatrixCCS &B)
     return A*B;
 }
 
-MatrixCCS ParallelMult(MatrixCCS &A, MatrixCCS &B)
+MatrixCCS ParallelMatrixMult(MatrixCCS &A, MatrixCCS &B, int numThreads)
 {
-	return A.parallelMult(B);
+	return A.parallelMult(B, numThreads);
 }

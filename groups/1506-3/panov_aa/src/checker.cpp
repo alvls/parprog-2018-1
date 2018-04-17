@@ -97,7 +97,7 @@ int main(int argc, char * argv[])
     /*name = "\\";
     path = "E:\\projects\\labs\\parprog-2018-1\\groups\\1506-3\\panov_aa\\build\\tests\\20tests";
     path_result = "E:\\projects\\labs\\parprog-2018-1\\groups\\1506-3\\panov_aa\\build\\tests\\20tests_result\\";
-    number = "24";*/
+    number = "10";*/
 
     Result checker_result(path_result, number, extensionResult);
 

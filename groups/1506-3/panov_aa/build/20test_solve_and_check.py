@@ -1,12 +1,12 @@
 import sys
 import subprocess	
 
-numThread = ''	
+numThread = 2	
 start = 0
 numTest = 20
 
 if len(sys.argv) > 1:	
-	numThread = sys.argv[1]
+	numThread = int(sys.argv[1])
 	if len(sys.argv) > 2:
 		numTest = int(sys.argv[2])		
 		if len(sys.argv) > 3:
@@ -14,7 +14,10 @@ if len(sys.argv) > 1:
 
 testinput = 'tests\\' + str(20) + 'tests'
 for i in range(start, numTest):
-        subprocess.call(['matrix_multiplication.exe', testinput, str(i), numThread], stdout=subprocess.PIPE, shell = True)
+		if numThread != 1:
+			subprocess.call(['matrix_multiplication.exe', testinput, str(i), str(numThread)], stdout=subprocess.PIPE, shell = True)
+		else:
+			subprocess.call(['matrix_multiplication.exe', testinput, str(i)], stdout=subprocess.PIPE, shell = True)
     
         
 for i in range(start, numTest):

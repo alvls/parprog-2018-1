@@ -1,13 +1,13 @@
-#include <omp.h>
 #include <string>
 #include<iostream>
 #include <vector>
 #include "matrix.h"
 
-using std::vector;
 using std::string;
+using std::vector;
 
 MatrixCCS MatrixMult(MatrixCCS &A, MatrixCCS &B);
+MatrixCCS ParallelMatrixMult(MatrixCCS &A, MatrixCCS &B, int numThreads = 1);
 
 int main(int argc, char * argv[])//читает из бинарного файла, запускает программу, пишет в бинарный файл
 {
@@ -33,11 +33,12 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
             }
         }
 	}
-    /*name = "\\";
+   /* name = "\\";
     pathInput = "E:\\projects\\labs\\parprog-2018-1\\groups\\1506-3\\panov_aa\\build\\tests\\20tests";
     pathOutput = "E:\\projects\\labs\\parprog-2018-1\\groups\\1506-3\\panov_aa\\build\\tests\\20tests_result";
-    number = "24";
-    num_threads = 4;*/
+    number = "9";
+    num_threads = 2;*/
+    
 	int N;
 	freopen((pathInput + name + number + extensionIn).c_str(), "rb", stdin);
 	freopen((pathOutput + name + number + extensionOut).c_str(), "wb", stdout);
@@ -50,12 +51,12 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
     MatrixCCS Acol(A), Bcol(B), ResCol;
     
     omp_set_num_threads(num_threads);
-	
-    //Acol.transpositionMatrix();
+
+    Acol.transpositionMatrix();
     double time = omp_get_wtime();	
-    ResCol = MatrixMult(Acol, Bcol);
+    ResCol = ParallelMatrixMult(Acol, Bcol, num_threads);
 	time = omp_get_wtime() - time;
-    //Acol.transpositionMatrix();
+    Acol.transpositionMatrix();
 
     ResCol.convertToMatrix(Res);
 
