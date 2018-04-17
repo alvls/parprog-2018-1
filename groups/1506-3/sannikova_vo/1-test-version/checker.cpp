@@ -53,42 +53,81 @@ public:
 	}
 } checker_result;
 
+
 int main(int argc, char * argv[])
 {
-	if (argc != 2) {
-		std::cout << "You input incorrect number of arguments. Input 'checker sort.bin'" << std::endl;
+	if (argc != 2 && argc!=3) {
+		std::cout << "You input incorrect number of arguments. Input 'checker sort.bin' or 'sort1.bin sort2.bin' " << std::endl;
 		return 1;
 	}
 
 	FILE * buo = fopen(argv[1], "rb");
+	FILE * bua = nullptr;
 
-	double time; //sort time
-	int n = 0;   //number of elements in vector
-	
-	fread(&time, sizeof(time), 1, buo); //считываем время сортировки
+	double time, time2; //sort time
+	int n = 0, n2 = 0;   //number of elements in vector
+	bool need_compare = false;
+
+	if (argc == 3) {
+		need_compare = true;
+		bua = fopen(argv[2], "rb");
+	}
+
+	fread(&time, sizeof(time), 1, buo); //????????? ????? ??????????
 	fread(&n, sizeof(n), 1, buo);
 
-	bool error = false;
-	double prev = 0, cur = 0;
-	fread(&prev, sizeof(prev), 1, buo);
-	for (int i = 1; i < n; ++i) {
-		fread(&cur, sizeof(cur), 1, buo);
-		if (cur < prev) {
-			error = true;
-			break;
-		}
-		prev = cur;
+	if (need_compare == true) {
+		fread(&time2, sizeof(time2), 1, bua);
+		fread(&n2, sizeof(n2), 1, bua);
 	}
-	if (error == false) {
-		checker_result.write_message("AC. Array is sorted correctly.");
-		checker_result.write_verdict(verdict::AC);
+
+	bool error = false;
+
+	if (need_compare == true && n != n2) {
+		checker_result.write_message("PE. Numbers of elements in the arrays are different.");
+		checker_result.write_verdict(verdict::PE);
 	}
 	else {
-		checker_result.write_message("WA. Array sorting has an error.");
-		checker_result.write_verdict(verdict::WA);
+		double prev = 0, cur = 0, ans_part;
+		fread(&prev, sizeof(prev), 1, buo);
+		if (need_compare == true) {
+			fread(&ans_part, sizeof(ans_part), 1, bua);
+			if (prev != ans_part) {
+				error = true;
+			}
+				
+		}
+		if (error = false) {
+			for (int i = 1; i < n; ++i) {
+				fread(&cur, sizeof(cur), 1, buo);
+				if (need_compare == true) {
+					fread(&ans_part, sizeof(ans_part), 1, bua);
+					if (cur != ans_part) {
+						error = true;
+						break;
+					}
+				}
+				if (cur < prev) {
+					error = true;
+					break;
+				}
+				prev = cur;
+			}
+		}
+		
+		if (error == false) {
+			checker_result.write_message("AC. Array is sorted correctly.");
+			checker_result.write_verdict(verdict::AC);
+		}
+		else {
+			checker_result.write_message("WA. Array sorting has an error.");
+			checker_result.write_verdict(verdict::WA);
+		}
+		checker_result.write_time(static_cast<long long>(time * 1e7));
 	}
-	checker_result.write_time(static_cast<long long>(time * 1e7));
 
 	fclose(buo);
+	if (need_compare == true)
+		fclose(bua);
 	return 0;
 }
