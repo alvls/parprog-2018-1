@@ -25,7 +25,7 @@ int main(int argc, char * argv[])
 
 
 	freopen(argv[1], "rb", stdin);
-	freopen(argv[2], "wb", stdout);
+	//freopen(argv[2], "wb", stdout);
 
 	fread(&_time, sizeof(_time), 1, stdin); //template for the future, isn't use now
 	fread(&size, sizeof(size), 1, stdin);
@@ -38,12 +38,14 @@ int main(int argc, char * argv[])
 		//fread(&vec[i], sizeof(double), 1, stdin);
 	}
 	double time = omp_get_wtime();
-	//qSort_array_recursion(arr, size);
-	QuickSort_OpenMP(arr, size);
+	
+	qSort_array_recursion(arr, size);
+	//QuickSort_OpenMP(arr, size);
 	//qSort(&vec);
 	time = omp_get_wtime() - time;
 	
 	printf("Linear time: %f\n", time);
+	freopen(argv[2], "wb", stdout);
 
 	fwrite(&time, sizeof(time), 1, stdout);
 	fwrite(&size, sizeof(size), 1, stdout);

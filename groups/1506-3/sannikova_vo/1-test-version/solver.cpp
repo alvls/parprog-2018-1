@@ -152,3 +152,82 @@ void printArray(double* arr, int size) {
 	}
 	cout << endl;
 }
+
+int Partition(double items[], int first, int last, double pivot) { //разделение по номеру элемента, слева будут все элементы < pivot
+	int j = first - 1;
+	for (int i = first; i <= last; ++i) {
+		if (items[i] < pivot) {
+			std::swap(items[++j], items[i]);
+		}
+	}
+	return j; //позиция pivot
+}
+
+int PartitionByIndex(double items[], int first, int last, int index) { //разделение по индексу
+	std::swap(items[index], items[last]);
+	int i = 1 + Partition(items, first, last, items[last]);
+	std::swap(items[i], items[last]);
+	return i; //позиция на которой стоит элемент который стоял на позиции index
+}
+
+void Select(double items[], int first, int last, int index) { //выбор участка массива
+	int i = PartitionByIndex(items, first, last, (first + last) / 2); //выбираем новую позицию медианы
+	if (i > index) { //если новая позиция медианы больше индекса
+		Select(items, first, i - 1, index); //то выбираем левую часть до нового индекса
+	}
+	else if (i < index) {
+		Select(items, i + 1, last, index); //выбираем правую часть после нового индекса
+	}
+}
+
+#pragma once
+#include <iostream>
+
+void QuickSort(double items[], int size/*int first, int last*/) { //быстрая рекурсивная сортировка
+	int i = PartitionByIndex(items, 0, size - 1, (size - 1) / 2);
+	if (i - 1 > 0/*first*/) {
+		QuickSort(items, i /*first, i - 1*/);
+	}
+	if (i + 1 < size - 1/*last*/) {
+		QuickSort(&items[i + 1], size - i - 1 /* i + 1, last*/);
+	}
+}
+
+#pragma once
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+#include <omp.h>
+using namespace std;
+
+
+void QuickSort_OpenMP(double items[], int size /*int first, int last*/, int deep, int maxDeep) { //0, 8
+	if (deep >= maxDeep) { //если текушаю глубина больше максимальной
+		QuickSort(items, size /*first, last*/); //просто выполняем сортировку
+	}
+	else {
+		int i = /*(first + last)*/ (size - 1) / 2; //иначе мы выбираем серединный элемент
+		Select(items, 0, size - 1, i);
+		//Select(items, size/*first, last*/, i); //и выполняем выборку
+
+#pragma omp parallel
+		{
+#pragma omp sections nowait
+			{
+#pragma omp section
+				if (i - 1 > 0/*first*/) {
+					QuickSort_OpenMP(items, i/*first, i - 1*/, deep + 1, maxDeep);
+				}
+#pragma omp section
+				if (i + 1 < size - 1/*last*/) {
+					QuickSort_OpenMP(&items[i + 1], size - i - 1/*i + 1, last*/, deep + 1, maxDeep);
+				}
+			}
+		}
+	}
+}
+
+void QuickSort_OpenMP(double items[], int size /*int first, int last*/) {
+	int maxDeep = (int)(ceil(log((double)omp_get_num_procs()) / log(2.0))); //максимальная глубина рекурсиии если 8 потоков то 3
+	QuickSort_OpenMP(items, size /*first, last*/, 0, maxDeep);
+}

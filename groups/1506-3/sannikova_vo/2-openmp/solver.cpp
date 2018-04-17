@@ -153,10 +153,6 @@ void printArray(double* arr, int size) {
 	cout << endl;
 }
 
-
-
-
-
 int Partition(double items[], int first, int last, double pivot) { //разделение по номеру элемента, слева будут все элементы < pivot
 	int j = first - 1;
 	for (int i = first; i <= last; ++i) {
@@ -167,15 +163,12 @@ int Partition(double items[], int first, int last, double pivot) { //разделение 
 	return j; //позиция pivot
 }
 
-
-
 int PartitionByIndex(double items[], int first, int last, int index) { //разделение по индексу
 	std::swap(items[index], items[last]);
 	int i = 1 + Partition(items, first, last, items[last]);
 	std::swap(items[i], items[last]);
 	return i; //позиция на которой стоит элемент который стоял на позиции index
 }
-
 
 void Select(double items[], int first, int last, int index) { //выбор участка массива
 	int i = PartitionByIndex(items, first, last, (first + last) / 2); //выбираем новую позицию медианы
@@ -187,15 +180,8 @@ void Select(double items[], int first, int last, int index) { //выбор участка ма
 	}
 }
 
-/**
-* File: QuickSort.h
-*/
-
 #pragma once
-//#include "SortUtil.h"
 #include <iostream>
-
-
 
 void QuickSort(double items[], int size/*int first, int last*/) { //быстрая рекурсивная сортировка
 	int i = PartitionByIndex(items, 0, size - 1, (size - 1) / 2);
