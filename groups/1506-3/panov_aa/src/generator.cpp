@@ -32,7 +32,8 @@ Matrix getRandSparseMatrix(int n, default_random_engine &generator, uniform_real
         swap(index[tmp_ind], index[index.size()-1]);
         index.pop_back();
         m1.vv[ind] = distribution(generator);
-        if (index.size() == 0) return m1;
+        if (index.size() == 0) 
+            return m1;
     }
     return m1;
 }

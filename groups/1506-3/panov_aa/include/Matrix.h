@@ -295,6 +295,8 @@ public:
 
         vector<int> *cols = &rows;
         int elCountM = 0;
+
+#pragma omp parallel for
         for (int j = 0; j < m.N; j++)
         {
             int indexThread = omp_get_thread_num();
@@ -356,6 +358,7 @@ public:
             tmp[indexThread].pointer.push_back(tmp[indexThread].pointer[size - 1] + numElInResCol);
             elCountM += numElementInCol;
         }
+
         for (int i = 1; i < numThreads; i++)
         {
             tmp[0].unite(tmp[i]);
