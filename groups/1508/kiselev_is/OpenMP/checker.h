@@ -27,7 +27,7 @@ public:
 		
 	result(bool read = false) { 
 			if (read) bur = fopen("result.txt", "r");
-			else bur = fopen("result.txt", "w"); } 
+			else bur = fopen("result.txt", "wb"); } 
 
 		~result() { 
 			fclose(bur); 
@@ -61,5 +61,9 @@ public:
 			 write_type(ext_cls::MEMORY);
 			 fwrite(&x, sizeof (x), 1, bur); 
 		 }
+		 void write_res(double res) {
+			 fwrite(&res, sizeof(double), 1, bur);
+		 }
+
 } 
 checker_result;

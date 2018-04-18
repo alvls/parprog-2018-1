@@ -66,7 +66,7 @@ int main(int argc, char * argv[]) {
 
 	double time = omp_get_wtime();
 
-	//Myresult = TIntegral(fun, confines[0], confines[1], confines[2], confines[3], 0.01, num_threads);
+	Myresult = TIntegral(fun, confines[0], confines[1], confines[2], confines[3], num_threads);
 
 	time = omp_get_wtime() - time;
 	buo = fopen(strcat(argv[2],".ans"), "rb");
@@ -76,7 +76,7 @@ int main(int argc, char * argv[]) {
 	double line_time;
 	fread(&line_time, sizeof(perfect_res), 1, buo);
 
-	if (module(Myresult - perfect_res) < 0.01) {
+	if (module(Myresult - perfect_res) < 1) {
 		if (time <= line_time) {
 			checker_result.write_message("AC. Unswer is correct.");
 			checker_result.write_verdict(AC);

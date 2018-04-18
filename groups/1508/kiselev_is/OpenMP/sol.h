@@ -5,6 +5,8 @@
 #include <cmath>
 #include "Func.h"
 
+#include <iostream>
+
 // Значение функции в точке
 double valueIn(Func* fun, double Xpoint, double Ypoint) {
 	double result = 0.0;
@@ -28,9 +30,9 @@ double module(double a) {
 
 // Интеграл трапециями, функция, начало отрезка, конец, точность, начальное количество частей
 
-double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double Yfinish, double accuracy, int threads = 1 , int parts = 2000) {
-
-	double result = 0.0;
+double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double Yfinish, int threads = 1 , int parts = 2000) {
+	
+	double res = 0.0;
 
 	double XHigh = 0.0;
 	double YHigh = 0.0;
@@ -44,10 +46,14 @@ double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double
 	
 	// старт паралельного сектора
 	omp_set_num_threads(threads);
-	#pragma omp parallel shared(result,Xpart,Ypart)
+	#pragma omp parallel
 	{
 
-	#pragma omp for private (Xpoint,Ypoint,variable,XHigh,YHigh)
+		//double Xpoint = Xstart + ((parts / omp_get_thread_num()) * omp_get_num_threads() * Xpart);
+		//double Ypoint = Ystart;			попробовал это сделать внутри секции ( так оно должно быть по идее )
+											//прога просто перестала что-либо выводить		
+		//double proc_res = 0.0;
+	#pragma omp for 
 		for (int i = 0; i < parts; i++) {
 			XHigh = ((valueIn(fun, Xpoint, Ypoint) + valueIn(fun, Xpoint + Xpart, Ypoint)) / 2);
 
@@ -57,7 +63,7 @@ double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double
 				YHigh = ((valueIn(fun, Xpoint, Ypoint + Ypart) + valueIn(fun, Xpoint, Ypoint + Ypart)) / 2);
 
 				// (F0 + F1) / 2  // определение среднего значения трапеции через шаг по оси Y
-				result = result + ((YHigh + variable) / 2 * Xpart * Ypart); // среднее между этими значениями
+				res = res + ((YHigh + variable) / 2 * Xpart * Ypart); // среднее между этими значениями
 				variable = YHigh;
 				Ypoint = Ypoint + Ypart;
 
@@ -65,8 +71,11 @@ double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double
 			Ypoint = Ystart;
 			Xpoint = Xpoint + Xpart;
 		}
+		/*#pragma omp critical
+		{
+			res = res + proc_res;
+		}*/
 	}
-	
-	return result;
+	return res;
 }
 
