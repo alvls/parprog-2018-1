@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cmath>
 #include <string>
+#include <iostream>
 using namespace std;
 // Используется для взаимодействия с тестирующей системой
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,6 +19,7 @@ IL = Idle Limit Exceeded = Превышено время простоя (бездействия) программы
 DE = Deadly Error = Ошибка тестирующей системы
 */
 enum verdict { NO = 1, AC, WA, CE, ML, TL, RE, IL, PE, DE };
+
 class result
 {
 private:
@@ -26,7 +28,7 @@ public:
 	enum ext_cls { NO = 1, VERDICT, MESSAGE, TIME, MEMORY };
 	result(bool read = false)
 	{
-		if (read) bur = fopen("result.txt", "r"); else bur = fopen("result.txt", "w");
+		if (read) freopen_s(&bur, "result.txt", "rb", stdin); else freopen_s(&bur,"result.txt", "wb",stdout);
 	} ~result() { fclose(bur); }
 	void write_type(ext_cls t) { fwrite(&t, sizeof(t), 1, bur); }
 	// Сообщить тестирующей системе, что решение получило один из вердиктов verdict
@@ -60,9 +62,9 @@ FILE *stream;
 
 int main(int argc, char * argv[]) {
 	// Открываем файл входных данных, файл выходных данных и ответ участника
-	const char* vx = "vxod";
-	const char* ans_ser = "ser";
-	const char* ans_par = "par";
+	const char* vx = "1";
+	const char* ans_ser = "1.ans";
+	const char* ans_par = "1_omp.ans";
 	char er;
 	int n;
 	double *a;
@@ -73,25 +75,25 @@ int main(int argc, char * argv[]) {
 		ans_ser = argv[2];
 	if (argc > 3)
 		ans_par = argv[3];
-	freopen_s(&stream, vx, "wb", stdout);
+	freopen_s(&stream, vx, "rb", stdin);
 	fread(&n, sizeof(n), 1, stdin);
 	a = new double[n];
 	b = new double[n];
-	fread(a, sizeof(*a), n, stdin);
-	fread(b, sizeof(*b), n, stdin);
+	double *dop = new double[n];
+	fread(dop, sizeof(*dop), n, stdin);
 	fread(a, sizeof(*a), n, stdin);
 	fread(b, sizeof(*b), n, stdin);
 	fclose(stream);
 
 	double ans, res, ans_time, res_time; //ans-последовательная res-параллельная
 
-	freopen_s(&stream, ans_ser, "wb", stdout);
+	freopen_s(&stream, ans_ser, "rb", stdin);
 	fread(&ans_time, sizeof(ans_time), 1, stdin);
 	fread(&ans, sizeof(ans), 1, stdin);
 	fread(&er, sizeof(char), 1, stdin);
 	fclose(stream);
 
-	freopen_s(&stream, ans_par, "wb", stdout);
+	freopen_s(&stream, ans_par, "rb", stdin);
 	fread(&res_time, sizeof(res_time), 1, stdin);
 	fread(&res, sizeof(ans), 1, stdin);
 	fclose(stream);
@@ -99,20 +101,10 @@ int main(int argc, char * argv[]) {
 	double eps = 0;
 	for (int i = 0; i < n; i++)
 	{
-		if (b[i] < 5)
-		{
-			eps += (double)pow((b[i] - a[i]), 3)*pow(b[i], 4) / (24 * pow(50, 2));
-		}
-		else if (b[i] < 9)
-		{
-			eps += (double)pow((b[i] - a[i]), 3)*pow(b[i], 3) / (24 * pow(50, 2));
-		}
-		else
-		{
-			eps += (double)pow((b[i] - a[i]), 3)*pow(b[i], 2) / (24 * pow(50, 2));
-		}
+		eps += (double)pow((b[i] - a[i]), 3)*pow(b[i], 4) / (24 * pow(50, 2));
 	}
 	// Проверяем, что ошибка мала, тогда сообщаем, что решение корректно, иначе - некорректно.
+	
 	if (er != 'e')
 	{
 		if (abs(res - ans) <= eps)
@@ -132,6 +124,6 @@ int main(int argc, char * argv[]) {
 		checker_result.write_verdict(verdict::NO);
 	}
 	// Записываем время в правильной размерности (интервалы по 100 нс = 10 ^ (-7) сек).
-	checker_result.write_time(res_time * 1e7);
+	checker_result.write_time((ans_time - res_time) * 1e7);
 	return 0;
 }

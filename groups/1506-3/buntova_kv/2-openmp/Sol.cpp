@@ -385,12 +385,12 @@ double solver(double* a, double *b, int* f, int* z, int n, int kol)
 	return res;
 }
 
-double iter(double* a, double *b, double *h,double *c, int* f, int* z, int n,int kol,int num)
+double iter(double* a, double *b, double *h, double *c, int* f, int* z, int n, int kol, int num)
 {
-	double res=0;
-	c[0] = a[0] + h[0] / 2 + num * h[0];
+	double res = 0;
 	if (kol == 1)
 	{
+		c[0] = a[0] + h[0] / 2 + num * h[0];
 		double m = func(c, f, z, kol);
 		if (m == 1000000)
 		{
@@ -405,6 +405,7 @@ double iter(double* a, double *b, double *h,double *c, int* f, int* z, int n,int
 	}
 	for (int i = 0; i < pow(n, kol - 2); i++)
 	{
+		c[0] = a[0] + h[0] / 2 + num * h[0];
 		for (int j = 0; j < n; j++)
 		{
 			double m = func(c, f, z, kol);
@@ -419,7 +420,7 @@ double iter(double* a, double *b, double *h,double *c, int* f, int* z, int n,int
 			}
 			c[kol - 1] += h[kol - 1];
 		}
-		for (int j = kol-1; j > 0; j--)
+		for (int j = kol - 1; j > 0; j--)
 		{
 			if (c[j] > b[j])
 			{
@@ -428,29 +429,70 @@ double iter(double* a, double *b, double *h,double *c, int* f, int* z, int n,int
 			}
 		}
 	}
-	
 	return res;
 }
-double solver_par(double* a, double *b, int* f, int* z, int n, int kol,int num_threads)
+
+double solver_par(double* a, double *b, int* f, int* z, int n, int kol)
 {
 	double *h = new double[kol];
 	double res = (double)0;//s
 	double* c = new double[kol];
+	double pr = 1;
+
+#pragma omp parallel for reduction(*:pr)
 	for (int i = 0; i < kol; i++)
 	{
 		h[i] = (b[i] - a[i]) / n;
 		c[i] = a[i] + h[i] / 2;
+		pr *= h[i];
 	}
 
-	#pragma omp parallel for num_threads(num_threads)  schedule(dynamic,3) reduction(+:res)
+#pragma omp parallel for reduction(+:res)
 	for (int i = 0; i < n; i++)
-		res+=iter(a, b, h, c, f, z, n, kol,i);
+	{
+		double *c_pr = new double[kol];
+		for (int i = 0; i < kol; i++)
+		{
+			c_pr[i] = c[i];
+		}
+		res += iter(a, b, h, c_pr, f, z, n, kol, i);
+		delete[]c_pr;
+	}
 
-	#pragma omp parallel for num_threads(num_threads)  schedule(dynamic,3) reduction(*:res)
-	for (int i = 0; i < kol; i++)
-		res *= h[i];
+	res *= pr;
 
-	//delete[]h;
-	//delete[]c;
+	delete[]h;
+	delete[]c;
 	return res;
 }
+
+/*
+double solver_par(double* a, double *b, int* f, int* z, int n, int kol)
+{
+	double *h = new double[kol];
+	double res = (double)0;//s
+	double* c = new double[kol];
+	double pr = 1;
+	double c1 = c[kol - 1];
+	#pragma omp parallel for reduction(*:pr)   
+	for (int i = 0; i < kol; i++)
+	{
+		h[i] = (b[i] - a[i]) / n;
+		c[i] = a[i] + h[i] / 2;
+		pr *= h[i];
+	}
+
+	#pragma omp parallel for firstprivate(c) reduction(+:res)  
+	for (int i = 0; i < n; i++)
+	{
+		//c[0] = a[0] + i * h[0];
+		res += iter(a, b, h, c, f, z, n, kol,i);
+	}
+
+	res *= pr;
+
+	delete[]h;
+	delete[]c;
+	return res;
+}
+*/
