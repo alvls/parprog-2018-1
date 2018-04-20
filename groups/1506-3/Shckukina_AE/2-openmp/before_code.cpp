@@ -83,7 +83,7 @@ int main(int argc, char * argv[])
 	fwrite(&time, sizeof(time), 1, stdout);
 	fwrite(&size, sizeof(size), 1, stdout);
 	fwrite(arr, sizeof(*arr), size, stdout);
-	system("pause");
+
 	return 0;
 
 }
