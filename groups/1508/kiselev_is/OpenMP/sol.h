@@ -43,33 +43,33 @@ double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double
 	double Ypoint = Ystart;
 
 	double variable = 0.0;
-	
 	// старт паралельного сектора
 	omp_set_num_threads(threads);
-    #pragma omp parallel shared(Xpart,Ypart,parts,Xstart/*,fun*/) firstprivate(Xpoint,Ypoint) private(variable,XHigh,YHigh)
+    #pragma omp parallel firstprivate(Xpoint,Ypoint,variable,XHigh,YHigh,Xpart,Xstart) 
 	{
 		//Xpoint = Xstart + ((parts / omp_get_thread_num()) * omp_get_num_threads() * Xpart);
 		//double Ypoint = Ystart;				// попробовал это сделать внутри секции ( так оно должно быть по идее )
 												// программа просто перестала что-либо выводить		
 		
-				#pragma omp for reduction(+:res)
+			#pragma omp for reduction(+:res)
 						for (int i = 0; i < parts; i++) {
-							//Xpoint = Xstart + i * Xpart;  проблема где-то тут.
+							Xpoint = Xstart + i * Xpart; // проблема где-то тут.
 							XHigh = ((valueIn(fun, Xpoint, Ypoint) + valueIn(fun, Xpoint + Xpart, Ypoint)) / 2);
 
 							variable = XHigh;
 							// (F0 + F1) / 2  // определение среднего значения трапеции по х
 							for (int j = 0; j < parts; j++) {
+								//Ypoint = Ystart + j * Ypart;
 								YHigh = ((valueIn(fun, Xpoint, Ypoint + Ypart) + valueIn(fun, Xpoint, Ypoint + Ypart)) / 2);
 
 								// (F0 + F1) / 2  // определение среднего значения трапеции через шаг по оси Y
 								res = res + ((YHigh + variable) / 2 * Xpart * Ypart); // среднее между этими значениями
 								variable = YHigh;
-								Ypoint = Ypoint + Ypart;
+							    Ypoint = Ypoint + Ypart;
 
 							}
 							Ypoint = Ystart;
-							Xpoint = Xpoint + Xpart;
+						    //Xpoint = Xpoint + Xpart;
 						}
 
 	}
