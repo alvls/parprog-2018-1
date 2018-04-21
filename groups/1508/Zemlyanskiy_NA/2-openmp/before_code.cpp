@@ -14,12 +14,12 @@ void Shell_Sort(T *Arr, unsigned int length);
 
 //Слияние Бэтчера
 template <typename T>
-void OddEvenMergeSort(vector<int> v1, vector<int> v2, T* out, int thread_id) {
+void OddEvenMergeSort(vector<T> v1, vector<T> v2, T* out, int num_threads) {
   int i, j;
   int size1 = v1.size();
   int size2 = v2.size();
 
-  if(thread_id % 2 == 0) {
+  if(num_threads % 2 == 0) {
     i = 0;
     j = 0;
   }
@@ -79,16 +79,17 @@ int main(int argc, char *argv[]) {
   vector<int> v1(length / num_threads);
   vector<int> v2(length / num_threads);
   fread(Arr_Shell,sizeof(*Arr_Shell), length, in_file);
-  int thread_id;
   int pod_length = length / num_threads;
 
   double time = omp_get_wtime();
-
-  Shell_Sort(Arr_Shell, length, num_threads);
-  thread_id = omp_get_thread_num();
+  omp_set_num_threads(num_threads);
+  #pragma omp parallel
+  {
+    Shell_Sort(Arr_Shell, length, num_threads);
+  }
   while(num_threads > 0) {
-    for(int i = pod_length; i < (pod_length + pod_length / num_threads); i++) {
-      if(thread_id % 2 == 0) {
+    for(int i = 0; i < pod_length; i++) {
+      if(num_threads % 2 == 0) {
         v1[i] = Arr_Shell[i];
     }
     else {
@@ -97,9 +98,9 @@ int main(int argc, char *argv[]) {
   }
     num_threads--;
 }
-  while(thread_id > 0) {
-    OddEvenMergeSort(v1, v2, Arr_Shell, thread_id);
-    thread_id--;
+  while(num_threads > 0) {
+    OddEvenMergeSort(v1, v2, Arr_Shell, num_threads);
+    num_threads--;
   }
 
   time = omp_get_wtime() - time;
@@ -112,6 +113,5 @@ int main(int argc, char *argv[]) {
   delete Arr_Shell;
   fclose(in_file);
   fclose(out_file);
-
   return 0;
 }
