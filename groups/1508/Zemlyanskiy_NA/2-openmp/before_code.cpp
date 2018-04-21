@@ -83,8 +83,7 @@ int main(int argc, char *argv[]) {
   int pod_length = length / num_threads;
 
   double time = omp_get_wtime();
-//#pragma omp parallel
-//{
+
   Shell_Sort(Arr_Shell, length, num_threads);
   thread_id = omp_get_thread_num();
   while(num_threads > 0) {
