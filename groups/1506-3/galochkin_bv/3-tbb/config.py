@@ -1,0 +1,7 @@
+linear_version_path = "GaussianTBB.exe"
+test_image_path = "test.png"
+binary_input_default = "image.in"
+binary_output_default = "image.out"
+test_imgs_dir = "./test_imgs/"
+checker_binares_dir = "./tests/"
+checker_answers_dir = "./tests/"
