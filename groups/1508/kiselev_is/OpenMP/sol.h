@@ -50,7 +50,7 @@ double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double
 		
 			#pragma omp for reduction(+:res)
 						for (int i = 0; i < parts; i++) {
-							Xpoint = Xstart + i * Xpart;
+							//Xpoint = Xstart + i * Xpart;
 							XHigh = ((valueIn(fun, Xpoint, Ypoint) + valueIn(fun, Xpoint + Xpart, Ypoint)) / 2);
 
 							variable = XHigh;
@@ -66,6 +66,7 @@ double TIntegral(Func* fun, double Xstart, double Xfinish, double Ystart, double
 
 							}
 							Ypoint = Ystart;
+							Xpoint += Xpart;
 						 }
 
 	}
