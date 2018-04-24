@@ -82,7 +82,7 @@ int main(int argc, char * argv[])
 {
 	if (argc != 2) 
 	{
-		std::cout << "Error! You should input 'checker file.txt(output file)'" << std::endl;
+		std::cout << "Enter [result.bin] [log.txt]" << std::endl;
 		return 1;
 	}
 
@@ -91,8 +91,8 @@ int main(int argc, char * argv[])
 	int res_size = 0;
 	double res_time;
 
-	fread(&res_time, sizeof(res_time), 1, buo);
-	fread(&res_size, sizeof(res_size), 1, buo);
+	//fread(&res_time, sizeof(res_time), 1, buo);
+	fread(&res_size, sizeof(double), 1, buo);
 
 	bool error = false;
 	double prev = 0, cur = 0;

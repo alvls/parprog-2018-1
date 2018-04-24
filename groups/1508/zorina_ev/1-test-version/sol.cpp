@@ -11,20 +11,17 @@ void HoaraQuickSort(int* arr, int first, int last)
 		while (arr[j] > mid)
 			j--;
 
-		if (i == j)
+		if (i <= j)
 		{
+			if (i < j)
+			{
+				temp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = temp;
+			}
 			i++;
 			j--;
 		}
-
-		if (i < j)
-		{
-			temp = arr[i];
-			arr[i] = arr[j];
-			arr[j] = temp;
-		}
-		i++;
-		j--;
 
 	} while (i <= j);
 

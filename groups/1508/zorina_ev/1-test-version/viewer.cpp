@@ -24,6 +24,8 @@ int main(int argc, char * argv[])
 
 	fread(arr, sizeof(*arr), size, stdin);
 
+	cout << size << endl;
+
 	for (int i = 0; i < size; i++)
 		cout << arr[i] << endl;
 

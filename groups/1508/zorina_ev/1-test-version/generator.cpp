@@ -25,12 +25,12 @@ int main(int argc, char * argv[])
 	freopen(name.c_str(), "wb", stdout);
 
 	default_random_engine generator(static_cast<unsigned int>(chrono::system_clock::now().time_since_epoch().count()));
-	uniform_real_distribution <double> distribution(0, 100000);
+	uniform_int_distribution <int> distribution(0, 100000);
 
-	fwrite(&n, sizeof(double), 1, stdout);
-	fwrite(&n, sizeof(n), 1, stdout);
+	fwrite(0, sizeof(double), 1, stdout);	//фиктивное время
+	fwrite(&n, sizeof(int), 1, stdout);
 
-	double* array = new double[n];
+	int* array = new int[n];
 
 	for (int i = 0; i < n; i++) 
 	{

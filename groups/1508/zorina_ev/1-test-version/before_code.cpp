@@ -6,6 +6,7 @@
 
 
 void HoaraQuickSort(int* arr, int first, int last);
+void QuickSort(int* arr, int size);
 
 int main(int argc, char * argv[])
 {
@@ -17,23 +18,24 @@ int main(int argc, char * argv[])
 
 	int size;
 	int *arr;
+	double time;
 
 	freopen(argv[1], "rb", stdin);
 	freopen(argv[2], "wb", stdout);
-	fread(&size, sizeof(size), 1, stdin);
+	fread(&time, sizeof(double), 1, stdin);
+	fread(&size, sizeof(int), 1, stdin);
 
 	arr = new int[size];
 
 	fread(arr, sizeof(*arr), size, stdin);
 
-	double time = omp_get_wtime();
+	time = omp_get_wtime();
 	HoaraQuickSort(arr, 0, size - 1);
 	time = omp_get_wtime() - time;
 
-	fwrite(&time, sizeof(time), 1, stdout);
-	fwrite(&size, sizeof(size), 1, stdout);
+	fwrite(&time, sizeof(double), 1, stdout);
+	fwrite(&size, sizeof(int), 1, stdout);
 	fwrite(arr, sizeof(*arr), size, stdout);
 
 	return 0;
 }
-
