@@ -18,6 +18,7 @@ int main(int argc, char * argv[])
 	}
 
 	int n = n_tests[atoi(argv[1]) - 1]; 
+	double time = 0;
 
 	string name = argv[1];
 	string type = ".bin";
@@ -25,9 +26,9 @@ int main(int argc, char * argv[])
 	freopen(name.c_str(), "wb", stdout);
 
 	default_random_engine generator(static_cast<unsigned int>(chrono::system_clock::now().time_since_epoch().count()));
-	uniform_int_distribution <int> distribution(0, 100000);
+	uniform_int_distribution <int> distribution(0, 1000000);
 
-	fwrite(0, sizeof(double), 1, stdout);	//фиктивное время
+	fwrite(&time, sizeof(double), 1, stdout);	//фиктивное время
 	fwrite(&n, sizeof(int), 1, stdout);
 
 	int* array = new int[n];

@@ -89,10 +89,10 @@ int main(int argc, char * argv[])
 	FILE * buo = fopen(argv[1], "rb");
 
 	int res_size = 0;
-	double res_time;
+	double res_time = 0;
 
-	//fread(&res_time, sizeof(res_time), 1, buo);
-	fread(&res_size, sizeof(double), 1, buo);
+	fread(&res_time, sizeof(double), 1, buo);
+	fread(&res_size, sizeof(int), 1, buo);
 
 	bool error = false;
 	double prev = 0, cur = 0;

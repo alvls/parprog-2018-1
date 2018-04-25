@@ -18,7 +18,7 @@ int main(int argc, char * argv[])
 
 	int size;
 	int *arr;
-	double time;
+	double time = 0;
 
 	freopen(argv[1], "rb", stdin);
 	freopen(argv[2], "wb", stdout);
