@@ -1,7 +1,7 @@
 import sys
 import subprocess	
 
-numThread = 2	
+numThread = 1	
 start = 0
 numTest = 20
 

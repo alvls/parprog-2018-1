@@ -221,3 +221,27 @@ TEST(matrixCCS, can_mult5)
     EXPECT_TRUE(res == tmp);
     //std::cout << res << tmp;
 }
+
+TEST(matrixCCS, can_mult6)
+{
+    int N = 5;
+    Matrix m1(N,N), m2(N,N), tmp(N,N), res;
+    m1.vv =
+    { 0, 1, 2, 0, 3,
+        0, 0, 0, 0, 0,
+        4, 5, 0, 0, 0,
+        6, 7, 8, 0, 10,
+        0, 0, 11, 0, 12 };
+    m2.vv = m1.vv;
+    m2.transpositionMatrix();
+
+    MatrixCCS mccs1(m1);
+    MatrixCCS mccs2(m2);
+
+    MatrixCCS resCCS = mccs1*mccs2;
+    res = m1*m2;
+
+    resCCS.convertToMatrix(tmp);
+    EXPECT_TRUE(res == tmp);
+    //std::cout << res << tmp;
+}

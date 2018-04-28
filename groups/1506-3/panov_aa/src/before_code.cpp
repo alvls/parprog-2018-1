@@ -18,7 +18,7 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
 	string number = "";
 	string extensionIn = ".in";
 	string extensionOut = ".user.ans";
-	if (argc > 1)
+	/*if (argc > 1)
 	{
         pathInput = argv[1];       
         pathOutput = pathInput + "_result/";
@@ -32,12 +32,12 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
                 num_threads = atoi(argv[3]);
             }
         }
-	}
-   /* name = "\\";
+	}*/
+    name = "\\";
     pathInput = "E:\\projects\\labs\\parprog-2018-1\\groups\\1506-3\\panov_aa\\build\\tests\\20tests";
     pathOutput = "E:\\projects\\labs\\parprog-2018-1\\groups\\1506-3\\panov_aa\\build\\tests\\20tests_result";
     number = "9";
-    num_threads = 2;*/
+    num_threads = 2;
     
 	int N;
 	freopen((pathInput + name + number + extensionIn).c_str(), "rb", stdin);
