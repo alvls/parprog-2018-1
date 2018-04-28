@@ -1,7 +1,12 @@
 #!/bin/bash
 for file in ./Tests/*; do
-  if [[ "$file" != *perfect.ans ]];
+  if [[ "$file" != *perfect.ans ]] &&
+        [[ "$file" != *.seq ]] && 
+           [[ "$file" != *.omp ]] &&
+             [[ "$file" != *.tbb ]];
   then
-    ./OpenMP/b 4 $file seq_$file parr_$file
+    ./Test/b 4 $file $file".seq" $file".omp" $file".tbb"
+    diff $file".seq" $file".omp"
+    diff $file".seq" $file".tbb"
   fi
 done
