@@ -34,7 +34,10 @@ public:
         else 
             bur = fopen((path + name + extension + ".txt").c_str(), "w");
     }
-    ~Result() { fclose(bur); }
+    ~Result() 
+    { 
+        fclose(bur);
+    }
     void write_type(ext_cls t) 
     { 
         fwrite(&t, sizeof(t), 1, bur);
@@ -42,19 +45,24 @@ public:
     // Сообщить тестирующей системе, что решение получило один из вердиктов verdict
     void write_verdict(verdict v)
     {
-        write_type(ext_cls::VERDICT); fwrite(&v, sizeof(v), 1, bur);
+        write_type(ext_cls::VERDICT); 
+        fwrite(&v, sizeof(v), 1, bur);
     }
     void write_message(string str)
     {
-        write_type(ext_cls::MESSAGE); int l = str.size(); fwrite(&l, sizeof(l), 1, bur);
-        fwrite(&str[0], sizeof(str[0]), l, bur);
+        write_type(ext_cls::MESSAGE); 
+        int len = str.size(); 
+        fwrite(&len, sizeof(len), 1, bur);
+        fwrite(&str[0], sizeof(str[0]), len, bur);
     }
     // Сообщить тестирующей системе время работы программы участника,
     // вычисленное с помощью before_code
-    // x имеет размерность 100 нс = 10 ^ (-7) сек
-    void write_time(long long x)
+    void write_time(double x)
     {
-        write_type(ext_cls::TIME); fwrite(&x, sizeof(x), 1, bur);
+        string s = "\n";
+        s += std::to_string(x);
+        s += " sec";
+        fwrite(&s[0], sizeof(s[0]), s.size(), bur);
     }
     // Сообщить тестирующей системе, память затребованную программой участника
     void write_memory(unsigned long long x)
@@ -76,8 +84,8 @@ int main(int argc, char * argv[])
     if (argc > 1)
     {
         path = argv[1];
-        path_result = path + "_result/";
-        path += "/";
+        path_result = path + "_result\\";
+        path += "\\";
         if (argc > 2)
         {
             name = "";
@@ -86,8 +94,13 @@ int main(int argc, char * argv[])
     }
     if (number == "")
         extensionResult = "result";
+    /*name = "\\";
+    path = "E:\\projects\\labs\\parprog-2018-1\\groups\\1506-3\\panov_aa\\build\\tests\\20tests";
+    path_result = "E:\\projects\\labs\\parprog-2018-1\\groups\\1506-3\\panov_aa\\build\\tests\\20tests_result\\";
+    number = "10";*/
 
     Result checker_result(path_result, number, extensionResult);
+
     // Открываем файл входных данных, ответ участника, файл выходных данных c ответом жюри
     FILE * bui = fopen((path + name + number + extensionIn).c_str(), "rb");
     FILE * buo = fopen((path_result + name + number + extensionOutUserAnswer).c_str(), "rb");
@@ -102,8 +115,7 @@ int main(int argc, char * argv[])
     // Считываем время работы программы участника и матрицу участника
     fread(&res_time, sizeof(res_time), 1, buo);
     fread(res.getP(), sizeof(*res.getP()), n * n, buo);
-    // Считываем время работы программы и матрицу жюри
-    //fread(&ans_time, sizeof(ans_time), 1, bua);
+    // Считываем  матрицу жюри
     fread(&n, sizeof(n), 1, bua);
     fread(ans.getP(), sizeof(*ans.getP()), n * n, bua);
     // Вычисляем ошибку, как квадрат нормы разности решений
@@ -113,16 +125,15 @@ int main(int argc, char * argv[])
     // Проверяем, что ошибка мала, тогда сообщаем, что решение корректно, иначе - некорректно.
     if (diff < 1e-6)
     {
-        checker_result.write_message("AC. Numbers are equal.");
+        checker_result.write_message("AC. Numbers are equal.\n");
         checker_result.write_verdict(verdict::AC);
     }
     else
     {
-        checker_result.write_message("WA. Output is not correct.");
+        checker_result.write_message("WA. Output is not correct.\n");
         checker_result.write_verdict(verdict::WA);
     }
-    // Записываем время в правильной размерности (интервалы по 100 нс = 10 ^ (-7) сек).
-    checker_result.write_time(res_time * 1e7);
+    checker_result.write_time(res_time);
     fclose(bua);
     fclose(buo);
     return 0;

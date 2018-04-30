@@ -8,17 +8,7 @@ MatrixCCS MatrixMult(MatrixCCS &A, MatrixCCS &B)
     return A*B;
 }
 
-/*void MatrMatrMult(double * A, double * B, double * C, int N)
+MatrixCCS ParallelMatrixMult(MatrixCCS &A, MatrixCCS &B, int numThreads)
 {
-	int i, j, k;
-#pragma omp parallel for private(j, k)
-	for (i = 0; i < N; i++)
-	{
-		for (j = 0; j < N; j++)
-		{
-			C[i * N + j] = 0.0;
-			for (k = 0; k < N; k++)
-				C[i * N + j] += A[i * N + k] * B[k * N + j];
-		}
-	}
-}*/
+	return A.parallelMult(B, numThreads);
+}
