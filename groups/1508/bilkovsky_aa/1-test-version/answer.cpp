@@ -65,6 +65,7 @@ void WriteAnswer(char* input,char* output)
 		result[i].resize(size);
 	}
 
+	double time = clock();
 	for (int i = 0; i < size; ++i)
 	{
 		for (int j = 0; j < size; ++j)
@@ -75,11 +76,13 @@ void WriteAnswer(char* input,char* output)
 			}
 		}
 	}
-	clock_t time = clock();
+	double timeF = clock() - time;
+	fwrite(&timeF, sizeof(timeF), 1, stdout);
+	fwrite(&size, sizeof(size), 1, stdout);
 	for (int i = 0; i < result.size(); ++i)
 		fwrite(result[i].data(), sizeof(result[i][0]), result.size(), stdout);
-	fwrite(&time - clock(), sizeof(time), 1, stdout);
-	fwrite(&size, sizeof(size), 1, stdout);
+
+	
 }
 
 

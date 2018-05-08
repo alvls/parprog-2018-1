@@ -9,6 +9,7 @@
 #include <ccomplex>
 #include <vector>
 #include <iterator>
+#include <omp.h>
 using namespace std;
 
 const int DEFAULT_MATRIX_SIZE = 10;
@@ -32,10 +33,11 @@ int main(int argc, char* argv[])
 			if (density > 0 && density < 100)
 				density = 100 / atof(argv[2]);
 	}
-	char *input = new char[strlen(folder) + strlen(number) + 1];
+	char *input = new char[strlen(folder) + strlen(number) + 4];
 	char *output = new char[strlen(folder) + strlen(number) + 5];
 	strcpy(input, folder);
 	strcat(input, number);
+	strcat(input, ".in");
 	strcpy(output, folder);
 	strcat(output, number);
 	strcat(output, ".ans");
@@ -139,7 +141,7 @@ int main(int argc, char* argv[])
 	fwrite(elements2, sizeof(*elements2), notNullB, stdout);
 	fwrite(secondIndex2, sizeof(*secondIndex2), notNullB, stdout);
 	fwrite(position2, sizeof(*position2), matrixSize + 1, stdout);
-
+	_fcloseall();
 	WriteAnswer(input,output);
 	return 0;
 }

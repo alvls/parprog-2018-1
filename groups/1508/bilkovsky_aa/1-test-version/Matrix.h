@@ -2,6 +2,7 @@
 #define _SCL_SECURE_NO_WARNINGS
 #include <ccomplex>
 #include <vector>
+#include<ctime>
 using namespace std;
 class Matrix
 {

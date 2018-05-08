@@ -80,38 +80,43 @@ public:
 
 int main(int argc, char* argv[]) {
 
-	char* input = "matr.in";	
-	char* output = "matr.out";	
-	char* answer = "answer.txt";	
-
+	char* output = "../tests/0.out";	
+	char* answer = "../tests/0.ans";	
 
 	if (argc > 1)
 	{
-		input = argv[1];
+		output = argv[1];
 		if (argc > 2)
-		{
-			output = argv[2];
-			if (argc > 3)
-				answer = argv[3];
-		}
+			answer = argv[2];
 	}
 	
 
 	// Открываем файл входных данных, файл выходных данных и ответ участника
-	FILE * bui = fopen(input, "rb"); 
 	FILE * buo = fopen(output, "rb");
 	FILE * bua = fopen(answer, "rb");
 
 	double res_time;
 	double ans_time;
 
-	int n;
+	int sizeO,sizeA;
 						// Считываем время выполнения
 	fread(&res_time, sizeof(res_time), 1, buo);
 	fread(&ans_time, sizeof(ans_time), 1, bua);
 
 	//Считываем размерность матриц
-	fread(&n, sizeof(n), 1, bui);
+	fread(&sizeO, sizeof(sizeO), 1, buo);
+	fread(&sizeA, sizeof(sizeA), 1, bua);
+
+	if (sizeO != sizeA)
+	{
+		checker_result.write_message("WA. Output is not correct.");
+		checker_result.write_verdict(verdict::WA);
+
+		fclose(bua);
+		fclose(buo);
+
+		return 0;
+	}
 
 	int notNull;
 
@@ -120,27 +125,27 @@ int main(int argc, char* argv[]) {
 	// Выделяем память для матрицы ответа жюри и ответа участника
 	vector<complex<int>> elements(notNull);
 	vector<int> secondIndex(notNull);
-	vector<int> position(n + 1);
+	vector<int> position(sizeO + 1);
 
-	vector<vector<complex<int>>> MatrixO(n);
-	vector<vector<complex<int>>> MatrixA(n);
-	for (int i = 0; i < n; ++i)
+	vector<vector<complex<int>>> MatrixO(sizeO);
+	vector<vector<complex<int>>> MatrixA(sizeO);
+	for (int i = 0; i < sizeO; ++i)
 	{
-		MatrixO[i].resize(n);
-		MatrixA[i].resize(n);
+		MatrixO[i].resize(sizeO);
+		MatrixA[i].resize(sizeO);
 	}
 
 	// Считываем матрицу участника
 	fread(elements.data(), sizeof(elements[0]), notNull, buo);
 	fread(secondIndex.data(), sizeof(secondIndex[0]), notNull, buo);
-	fread(position.data(), sizeof(position[0]), n + 1, buo);
+	fread(position.data(), sizeof(position[0]), sizeO + 1, buo);
 
 	// Считываем матрицу жюри
-	for (int i = 0; i < n; ++i)
-		fread(MatrixA[i].data(), sizeof(MatrixA[i][0]), n, bua);
+	for (int i = 0; i < sizeO; ++i)
+		fread(MatrixA[i].data(), sizeof(MatrixA[i][0]), sizeO, bua);
 
 	//Переводим матрицу участника в стандартный вид
-	for (int i = 0; i < n; ++i)
+	for (int i = 0; i < sizeO; ++i)
 	{
 		int pos = position[i];
 		while (pos < position[i + 1])
@@ -149,15 +154,19 @@ int main(int argc, char* argv[]) {
 			pos++;
 		}
 	}
-
-	// Вычисляем ошибку, как квадрат нормы разности решений
-	complex<int> diff;
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; ++j)
-			diff += (MatrixA[i][j] - MatrixO[i][j]) * (MatrixA[i][j] - MatrixO[i][j]);
-	complex<int> value;
+	
+	// Вычисляем ошибку, как процент не совпадающих ненулевых элементов
+	double diff = 0;
+	for (int i = 0; i < sizeO; i++)
+		for (int j = 0; j < sizeO; ++j)
+		{
+			if (MatrixA[i][j] != MatrixO[i][j])
+			{
+				diff++;
+			}
+		}
 	// Проверяем, что ошибка мала, тогда сообщаем, что решение корректно, иначе - некорректно.
-	if ((double)diff.real() < 1e-6)
+	if (diff/notNull < 0.01)
 	{
 		checker_result.write_message("AC. Numbers are equal.");
 		checker_result.write_verdict(verdict::AC);
@@ -171,7 +180,6 @@ int main(int argc, char* argv[]) {
 	// Записываем время в правильной размерности (интервалы по 100 нс = 10 ^ (-7) сек).
 	checker_result.write_time(res_time * 1e7);
 
-	fclose(bui);
 	fclose(bua);
 	fclose(buo);
 
