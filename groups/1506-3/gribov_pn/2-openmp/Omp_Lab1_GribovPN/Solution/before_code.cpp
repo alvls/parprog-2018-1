@@ -40,8 +40,8 @@ int main(int argc, char * argv[])
 	else radix_sort(vec, atoi(argv[2]));*/
 
     if (argc == 2)
-        radix_sort_with_simple_merge(vec, atoi(argv[2]));
-    else radix_sort_with_simple_merge(vec);
+        radix_sort_with_simple_merge(vec);
+    else radix_sort_with_simple_merge(vec, atoi(argv[2]));
 
 	time = omp_get_wtime() - time;
 
