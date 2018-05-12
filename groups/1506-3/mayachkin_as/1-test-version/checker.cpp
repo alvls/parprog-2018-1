@@ -100,7 +100,7 @@ int main(int argc, char * argv[])
 {
 	result checker_result;
 
-	int n = 20;
+	int n = 15;
 	string nameFile;
 	bool result;
 

@@ -14,7 +14,7 @@ int n_tests[] = { 1000, 5000, 10000, 20000, 50000, 100000, 150000, 200000, 25000
 int main(int argc, char * argv[])
 {
 	string nameFile;
-	int size, n = 20;
+	int size, n = 15;
 
 	for (int i = 1; i <= n; i++)
 	{

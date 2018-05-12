@@ -14,7 +14,7 @@ void TBBParallelSort(double *input, int size, int nThreads);
 int main(int argc, char * argv[])
 {
 	string nameFile;
-	int n = 20;
+	int n = 15;
 	int num_threads = 2;
 	int size;
 
