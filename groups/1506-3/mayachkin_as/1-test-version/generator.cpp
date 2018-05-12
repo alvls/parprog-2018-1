@@ -9,33 +9,39 @@
 #include <string>
 
 using namespace std;
-int n_tests[] = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 500, 1000, 5000, 10000, 20000, 50000, 100000, 150000, 200000, 250000, 300000, 400000, 500000 };
+int n_tests[] = { 1000, 5000, 10000, 20000, 50000, 100000, 150000, 200000, 250000, 300000, 400000, 500000, 1000000, 5000000, 10000000, 15000000, 20000000, 30000000, 40000000, 50000000 };
 
 int main(int argc, char * argv[])
 {
-	int n = 1;
-	double* array;
-	freopen("1", "wb", stdout);
+	string nameFile;
+	int size, n = 20;
 
-	// ñîçäà¸ì ãåíåðàòîð ñëó÷àéíûõ ÷èñåë ñ seed ðàâíûì êîëè÷åñòâó âðåìåíè ñ íà÷àëà ýïîõè   
-	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
-	// ñîçäà¸ì ðàâíîìåðíîå ðàñïðåäåëåíèå ñëó÷àéíîé âåëè÷èíû òèïà double â äèàïàçîíå    
-	//   [-10000, 10000]   
-	uniform_real_distribution <double> distribution(-1e4, 1e4);
-	int size = 10;
-	// åñëè ïåðåäàëè íîìåð òåñòà â àðãóìåíòàõ êîìàíäíîé ñòðîêè, òî áåð¸ì ðàçìåð èç n_tests   
-	if (argc > 1)
-		size = n_tests[atoi(argv[1])];
-	// çàïèñûâàåì â áèíàðíîì âèäå ðàçìåðíîñòü ìàòðèö   
-	fwrite(&size, sizeof(size), 1, stdout);
+	for (int i = 1; i <= n; i++)
+	{
+		double* array;
+		nameFile = to_string((long long)i);
+		FILE* fArray = fopen(("./tests/" + nameFile).c_str(), "wb");
 
-	array = new double[size];
+		default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
+		uniform_real_distribution <double> distribution(-1e4, 1e4);
+		size = n_tests[i - 1];
 
-	for (int i = 0; i < size; i++)
-		array[i] = distribution(generator);
+		if (argc > 1)
+			size = n_tests[atoi(argv[1])];
 
-	fwrite(array, sizeof(*array), size, stdout);
+		fwrite(&size, sizeof(size), 1, fArray);
 
-	delete[] array;
+		array = new double[size];
+
+		for (int i = 0; i < size; i++)
+			array[i] = distribution(generator);
+
+		fwrite(array, sizeof(*array), size, fArray);
+
+		fclose(fArray);
+
+		delete[] array;
+	}
+
 	return 0;
 }

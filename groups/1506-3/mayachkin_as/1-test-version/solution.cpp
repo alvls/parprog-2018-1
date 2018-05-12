@@ -1,46 +1,52 @@
 #include <iostream> 
+#include <omp.h>
+#include <random> 
+#include <ctime> 
+#include <chrono>
+using namespace std;
 
-void PlusArrSort(double * data, double * sortedData, int dataLength, int numOfByte) //сортировка положительных чисел по байту
+void PlusArrSort(double * data, double * temp, int dataLength, int numOfByte) //сортировка положительных чисел по байту
 {
-	unsigned char* array = (unsigned char*)data; 
+	unsigned char* array = (unsigned char*)data;
 	int counter[256];
 	int offset;
+
 	memset(counter, 0, sizeof(int) * 256);
 
 	for (int i = 0; i < dataLength; i++)
 		counter[array[8 * i + numOfByte]]++;
 
 	// поиск номера состояния байта
-	int i = 0;
-	for (i; i < 256; i++)
-		if (counter[i] != 0)
+	int j = 0;
+	for (j; j < 256; j++)
+		if (counter[j] != 0)
 			break;
 
-	offset = counter[i]; //число элементов с определенным байтом
-	counter[i] = 0;
-	i++;
+	offset = counter[j]; //число элементов с определенным байтом
+	counter[j] = 0;
+	j++;
 
 	//подсчет смещений в итоговом массиве
-	for (i; i < 256; i++)
+	for (j; j < 256; j++)
 	{
-		int temp = counter[i];
-		counter[i] = offset;
+		int temp = counter[j];
+		counter[j] = offset;
 		offset += temp;
 	}
 
 	for (int i = 0; i < dataLength; i++)
 	{
-		sortedData[counter[array[8 * i + numOfByte]]] = data[i];// counter имеет всю информацию по сортировке элементов
+		temp[counter[array[8 * i + numOfByte]]] = data[i];// counter имеет всю информацию по сортировке элементов
 		counter[array[8 * i + numOfByte]]++;
 	}
-
 }
 
-void MinusArrSort(double * data, double * sortedData, int dataLength, int numOfByte) //сортировка отрицательных чисел по байту
+void MinusArrSort(double * data, double * temp, int dataLength, int numOfByte) //сортировка отрицательных чисел по байту
 {
 	unsigned char* array = (unsigned char*)data;
 	int counter[256];
 	int offset;
+
 	memset(counter, 0, sizeof(int) * 256);
 
 	for (int i = 0; i < dataLength; i++)
@@ -48,89 +54,99 @@ void MinusArrSort(double * data, double * sortedData, int dataLength, int numOfB
 		counter[array[8 * i + numOfByte]]++;
 	}
 
-	int i = 255;
-	for (i; i >= 0; i--)
-		if (counter[i] != 0)
+	int j = 255;
+	for (j; j >= 0; j--)
+		if (counter[j] != 0)
 			break;
 
-	offset = counter[i];
-	counter[i] = 0;
-	i--;
+	offset = counter[j];
+	counter[j] = 0;
+	j--;
 
-	for (i; i >= 0; i--)
+	for (j; j >= 0; j--)
 	{
-		int temp = counter[i];
-		counter[i] = offset;
+		int temp = counter[j];
+		counter[j] = offset;
 		offset += temp;
 	}
 
 	for (int i = 0; i < dataLength; i++)
 	{
-		sortedData[counter[array[8 * i + numOfByte]]] = data[i];
+		temp[counter[array[8 * i + numOfByte]]] = data[i];
 		counter[array[8 * i + numOfByte]]++;
 	}
 }
 
-void RadixSort(double* data, int dataLength) //поразрядная сортировка
+void RadixSort(double* data, int size) //поразрядная сортировка
 {
-	int sizePlus = 0, sizeMinus = 0;
-	for (int i = 0; i < dataLength; i++)
-	{
+	double* arr_inp_plus;
+	double* arr_inp_minus;
+	double* arr_out_plus;
+	double* arr_out_minus;
+	int size_arr_plus = 0,
+		size_arr_minus = 0;
+
+	int counter_arr_plus = 0,
+		counter_arr_minus = 0;
+
+	for (int i = 0; i < size; i++)// Подсчитаем число положительных и отрицательных элементов
 		if (data[i] > 0)
-			sizePlus++;
+			size_arr_plus++;
 		else
-			sizeMinus++;
-	}
+			size_arr_minus++;
 
-	double* firstArrP = new double[sizePlus];
-	double* firstArrM = new double[sizeMinus];
-	double* secondArrP = new double[sizePlus];
-	double* secondArrM = new double[sizeMinus];
-
-	//2 массива - с положительными и отрицательными элементами
-	int j = 0, k = 0;
-	for (int i = 0; i < dataLength; i++)
-	{
+	arr_inp_plus = new double[size_arr_plus];
+	arr_inp_minus = new double[size_arr_minus];
+	arr_out_plus = new double[size_arr_plus];
+	
+	// Раскидаем + и - элементы в соответсвующие массивы
+	for (int i = 0; i < size; i++)
 		if (data[i] > 0)
-			firstArrP[j++] = data[i];
+			arr_inp_plus[counter_arr_plus++] = data[i];
 		else
-			firstArrM[k++] = data[i];
+			arr_inp_minus[counter_arr_minus++] = data[i];
+
+	// Сортируем положительный массив
+	if (size_arr_plus > 0)
+	{
+		PlusArrSort(arr_inp_plus, arr_out_plus, size_arr_plus, 0);
+		PlusArrSort(arr_out_plus, arr_inp_plus, size_arr_plus, 1);
+		PlusArrSort(arr_inp_plus, arr_out_plus, size_arr_plus, 2);
+		PlusArrSort(arr_out_plus, arr_inp_plus, size_arr_plus, 3);
+		PlusArrSort(arr_inp_plus, arr_out_plus, size_arr_plus, 4);
+		PlusArrSort(arr_out_plus, arr_inp_plus, size_arr_plus, 5);
+		PlusArrSort(arr_inp_plus, arr_out_plus, size_arr_plus, 6);
+		PlusArrSort(arr_out_plus, arr_inp_plus, size_arr_plus, 7);
 	}
 
-	//сортировка по каждому байту
-	if (sizePlus > 0)
+	delete[] arr_out_plus;
+	arr_out_minus = new double[size_arr_minus];
+
+
+	// Сортирует отрицательный массив
+	if (size_arr_minus > 0)
 	{
-		PlusArrSort(firstArrP, secondArrP, sizePlus, 0);
-		PlusArrSort(secondArrP, firstArrP, sizePlus, 1);
-		PlusArrSort(firstArrP, secondArrP, sizePlus, 2);
-		PlusArrSort(secondArrP, firstArrP, sizePlus, 3);
-		PlusArrSort(firstArrP, secondArrP, sizePlus, 4);
-		PlusArrSort(secondArrP, firstArrP, sizePlus, 5);
-		PlusArrSort(firstArrP, secondArrP, sizePlus, 6);
-		PlusArrSort(secondArrP, firstArrP, sizePlus, 7);
+		MinusArrSort(arr_inp_minus, arr_out_minus, size_arr_minus, 0);
+		MinusArrSort(arr_out_minus, arr_inp_minus, size_arr_minus, 1);
+		MinusArrSort(arr_inp_minus, arr_out_minus, size_arr_minus, 2);
+		MinusArrSort(arr_out_minus, arr_inp_minus, size_arr_minus, 3);
+		MinusArrSort(arr_inp_minus, arr_out_minus, size_arr_minus, 4);
+		MinusArrSort(arr_out_minus, arr_inp_minus, size_arr_minus, 5);
+		MinusArrSort(arr_inp_minus, arr_out_minus, size_arr_minus, 6);
+		MinusArrSort(arr_out_minus, arr_inp_minus, size_arr_minus, 7);
 	}
 
-	if (sizeMinus > 0)
-	{
-		MinusArrSort(firstArrM, secondArrM, sizeMinus, 0);
-		MinusArrSort(secondArrM, firstArrM, sizeMinus, 1);
-		MinusArrSort(firstArrM, secondArrM, sizeMinus, 2);
-		MinusArrSort(secondArrM, firstArrM, sizeMinus, 3);
-		MinusArrSort(firstArrM, secondArrM, sizeMinus, 4);
-		MinusArrSort(secondArrM, firstArrM, sizeMinus, 5);
-		MinusArrSort(firstArrM, secondArrM, sizeMinus, 6);
-		MinusArrSort(secondArrM, firstArrM, sizeMinus, 7);
-	}
+	delete[] arr_out_minus;
 
-	// объединение в итоговый массив
-	for (int i = 0; i < sizeMinus; i++)
-	{
-		data[i] = firstArrM[i];
-	}
+	// Сливаем
+	for (int i = 0; i < size_arr_minus; i++)
+		data[i] = arr_inp_minus[i];
 
-	for (int i = 0; i < sizePlus; i++)
-	{
-		data[i + sizeMinus] = firstArrP[i];
-	}
+	for (int i = 0; i < size_arr_plus; i++)
+		data[i + size_arr_minus] = arr_inp_plus[i];
+
+	delete[] arr_inp_minus;
+	delete[] arr_inp_plus;
+
 }
 

@@ -1,4 +1,3 @@
-
 #include <cstdio>
 #include <cmath>
 #include <iostream>
@@ -42,7 +41,25 @@ public:
 	}
 	void write_type(ext_cls t)
 	{
-		fwrite(&t, sizeof(t), 1, bur);
+		switch (t)
+		{
+		case NO:
+			fprintf(bur, "%s", "NO ");
+			break;
+		case VERDICT:
+			fprintf(bur, "%s", "VERDICT ");
+			break;
+		case MESSAGE:
+			fprintf(bur, "%s", "MESSAGE ");
+			break;
+		case TIME:
+			fprintf(bur, "%s", "TIME ");
+			break;
+		case MEMORY:
+			fprintf(bur, "%s", "MEMORY ");
+			break;
+		}
+		//fwrite(&t, sizeof(t), 1, bur);
 	}
 	// —ообщить тестирующей системе, что решение получило один из вердиктов verdict
 	void write_verdict(verdict v)
@@ -63,10 +80,12 @@ public:
 	// —ообщить тестирующей системе врем€ работы программы участника,
 	// вычисленное с помощью before_code
 	// x имеет размерность 100 нс = 10 ^ (-7) сек
-	void write_time(long long x)
+	void write_time(double x)
 	{
+		fprintf(bur, " ");
 		write_type(ext_cls::TIME);
-		fwrite(&x, sizeof(x), 1, bur);
+		fprintf(bur, " %f sec ", x);
+		//fwrite(&x, sizeof(x), 1, bur);
 	}
 	// —ообщить тестирующей системе, пам€ть затребованную программой участника
 	void write_memory(unsigned long long x)
@@ -76,66 +95,72 @@ public:
 	}
 } checker_result;
 
-void BubbleSort(double* data, int dataLength) //сортировка пузырьком
-{
-	for (int i = 0; i < dataLength; i++)
-		for (int j = 0; j < dataLength - 1; j++)
-		{
-			if (data[j] > data[j + 1])
-			{
-				double temp = data[j];
-				data[j] = data[j + 1];
-				data[j + 1] = temp;
-			}
-		}
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-int main()
+int main(int argc, char * argv[])
 {
-	bool result = true;
+	result checker_result;
 
-	FILE * in = fopen("1", "rb");
-	FILE * out = fopen("1.ans", "rb");
+	int n = 20;
+	string nameFile;
+	bool result;
 
-	int size;
-	fread(&size, sizeof(size), 1, in);
+	for (int i = 1; i <= n; i++)
+	{
+		result = true;
+		nameFile = to_string((long long)i);
 
-	double radixTime;
-	double* radixResult = new double[size];
-	fread(&radixTime, sizeof(radixTime), 1, out);
-	fread(radixResult, sizeof(*radixResult), size, out);
+		FILE* fRadixResult = fopen(("./tests/" + nameFile + ".ans").c_str(), "rb");
+		FILE* fParallelResult = fopen(("./tests/" + nameFile + "_par.ans").c_str(), "rb");
 
+		int sizeSeq;
+		fread(&sizeSeq, sizeof(sizeSeq), 1, fRadixResult);
 
-	double* bubbleResult = new double[size];
-	fread(bubbleResult, sizeof(*bubbleResult), size, in);
+		double timeSeq;
+		fread(&timeSeq, sizeof(timeSeq), 1, fRadixResult);
 
-	//BubbleSort(bubbleResult, size);
-	sort(bubbleResult, bubbleResult + size);
+		double* RadixResult = new double[sizeSeq];
+		fread(RadixResult, sizeof(*RadixResult), sizeSeq, fRadixResult);
 
-	for (int i = 0; i < size; i++)
-		if (bubbleResult[i] != radixResult[i])
-		{
+		int sizePar;
+		fread(&sizePar, sizeof(sizePar), 1, fParallelResult);
+
+		double timePar;
+		fread(&timePar, sizeof(timePar), 1, fParallelResult);
+
+		double* ParallelResult = new double[sizePar];
+		fread(ParallelResult, sizeof(*ParallelResult), sizePar, fParallelResult);
+
+		if (sizeSeq != sizePar)
 			result = false;
-			break;
+		else
+		{
+			for (int i = 0; i < sizeSeq; i++)
+				if (ParallelResult[i] != RadixResult[i])
+				{
+					result = false;
+					break;
+				}
 		}
 
-	delete[] radixResult;
-	delete[] bubbleResult;
+		delete[] RadixResult;
+		delete[] ParallelResult;
 
-	if (result)
-	{
-		checker_result.write_message("AC. Output is correct. ");
-		checker_result.write_verdict(verdict::AC);
+		if (result)
+		{
+			checker_result.write_message("AC. Output is correct. ");
+			checker_result.write_verdict(verdict::AC);
+		}
+		else
+		{
+			checker_result.write_message("WA. Output is not correct. ");
+			checker_result.write_verdict(verdict::WA);
+		}
+
+		checker_result.write_time(timeSeq);
+		checker_result.write_time(timePar);
+		fclose(fRadixResult);
+		fclose(fParallelResult);
 	}
-	else
-	{
-		checker_result.write_message("WA. Output is not correct. ");
-		checker_result.write_verdict(verdict::WA);
-	}
-
-	checker_result.write_time(radixTime * 1e7);
-
 
 	return 0;
 }
