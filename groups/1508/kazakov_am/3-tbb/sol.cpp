@@ -137,7 +137,7 @@ private:
 	}
 };
 
-void LsdRadixSortWithDacMerge(double* arr, const size_t arr_size, int num_threads) {
+void LsdRadixSort(double* arr, const size_t arr_size, const int num_threads) {
 	if (arr_size == 1) {
 		return;
 	}
@@ -198,7 +198,7 @@ void LsdRadixSortWithDacMerge(double* arr, const size_t arr_size, int num_thread
 			middle_indexes[i * 2 + 1] = middle_index_second;
 		}
 
-#pragma omp parallel for schedule(static,1)
+    #pragma omp parallel for schedule(static,1)
 		for (int i = 0; i < array_pairs_num * 2; i++) {
 			const bool merge_first_parts_of_pair = i % 2 == 0;
 			const int left_bound_first = merge_first_parts_of_pair
