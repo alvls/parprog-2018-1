@@ -83,6 +83,8 @@ void searchMinElement(dot* dotArray, int size, int numThreads)
 
 std::pair<dot*, int> grehemMethod_TBB(dot* dotArray, int size, int numThreads)
 {
+	tbb::task_scheduler_init init(numThreads);
+
 	searchMinElement(dotArray, size - 1, numThreads);
 	dot move = dotArray[0];
 	for (auto i = 0; i < size - 1; i++)
