@@ -1,11 +1,10 @@
 //9. Сортировка Шелла с четно-нечетным слиянием Бэтчера.
-#include "header.h"
+#include "tbb.h"
 #include <iostream>
 #include <omp.h>
 #include <cstdio>
 #include <string>
 
-using namespace tbb;
 using namespace std;
 
 void tbb_Shell_Sort(int *arr, int size, int threads);

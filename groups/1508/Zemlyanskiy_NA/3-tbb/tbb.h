@@ -1,7 +1,6 @@
 #include "tbb/task_scheduler_init.h"
 #include "tbb/parallel_for.h"
 #include "tbb/blocked_range.h"
-//#include "tbb/tbb.h"
 
 using namespace tbb;
 
@@ -47,13 +46,13 @@ public:
                 temp[i] = arr2[b];
                 b += 2;
             }
-            i += 2;
+            i++;
         }
-        if (a == length1)
-            for(int j = b; j < length2; j += 2,i += 2)
+        if (a >= length1)
+            for(int j = b; j < length2; j += 2,i++)
                 temp[i] = arr2[j];
         else
-            for(int j = a; j < length1; j += 2,i += 2)
+            for(int j = a; j < length1; j += 2,i++)
                 temp[i] = arr[j];
 
         for (int j = 0;j < length; ++j)
@@ -81,7 +80,7 @@ public:
 
         int a = 1;
         int b = 1;
-        int i = 1;
+        int i = 0;
         while( (a < length1) && (b < length2)) {
             if(arr[a] <= arr2[b]) {
                 temp[i] = arr[a];
@@ -91,13 +90,13 @@ public:
                 temp[i] = arr2[b];
                 b += 2;
             }
-            i += 2;
+            i++;
         }
-        if (a == length1)
-            for(int j = b; j < length2; j += 2,i += 2)
+        if (a >= length1)
+            for(int j = b; j < length2; j += 2,i++)
                 temp[i] = arr2[j];
         else
-            for(int j=a; j < length1; j+=2,i+=2)
+            for(int j=a; j < length1; j+=2,i++)
                 temp[i] = arr[j];
         for (int j = 0; j < length; ++j)
           arr[j * 2 + 1] = temp[j];
@@ -115,10 +114,10 @@ public:
     void operator()(const blocked_range<int>& r) const {
       int begin = r.begin(), end = r.end();
       for(int i = begin; i < end; i++)
-        if(arr[2 * i] < arr[2 * i - 1]) {
-          double temp = arr[2 * i - 1];
-          arr[2 * i - 1] = arr[2 * i];
-          arr[2 * i] = temp;
+        if(arr[i-1] > arr[i]) {
+          int temp = arr[i - 1];
+          arr[i - 1] = arr[i];
+          arr[i] = temp;
         }
     }
 };
@@ -155,9 +154,9 @@ public:
     }
 };
 
-void tbb_Shell_Sort(int *arr, int size, int threads) {
-	int piece = size / threads + 1;
+void tbb_Shell_Sort(int *arr, int length, int threads) {
+	int piece = length / threads + 1;
 	Sorter& sorter = *new (task::allocate_root())
-		Sorter(arr, size, piece);
+		Sorter(arr, length, piece);
 	task::spawn_root_and_wait(sorter);
 }
