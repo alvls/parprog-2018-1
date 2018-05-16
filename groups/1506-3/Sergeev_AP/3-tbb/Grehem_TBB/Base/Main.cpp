@@ -103,7 +103,7 @@ std::pair<dot*, int> grehemMethod(dot* dotArray, int size)
 int main()
 {
 	setlocale(LC_ALL, "Russian");
-	int size = 100;
+	int size = 1000000;
 	dot* arr = new dot[size + 1];
 	genRandArray(arr, size);
 	///
@@ -111,7 +111,7 @@ int main()
 	for (auto i = 0; i < size; i++)
 		parallelArr[i] = arr[i];
 	///
-	int num_threads = 2;
+	int num_threads = 8;
 
 	auto start_TBB = std::chrono::high_resolution_clock::now();
 	std::pair<dot*, int> answer_TBB = grehemMethod_TBB(arr, size + 1, num_threads);
@@ -130,7 +130,7 @@ int main()
 	{
 		if (answer.first[i] != answer_TBB.first[i])
 		{
-			std::cout << "Параллельный результат неверен: выпуклые оболчки не совпадают" << std::endl;
+			std::cout << "Параллельный результат неверен: выпуклые оболочки не совпадают" << std::endl;
 			return 1;
 		}
 	}
