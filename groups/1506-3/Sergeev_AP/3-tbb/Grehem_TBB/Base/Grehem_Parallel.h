@@ -30,8 +30,11 @@ public:
 				}
 			std::swap(dotArray[startInd], dotArray[middleInd]);
 
+			set_ref_count(3);
 			SortTask& sortUp = *new (allocate_child()) SortTask(dotArray, startInd, middleInd);
 			SortTask& sortDown = *new (allocate_child()) SortTask(dotArray, middleInd + 1, endInd);
+			spawn(sortUp);
+			spawn_and_wait_for_all(sortDown);
 		}
 		else
 			return NULL;
@@ -63,8 +66,11 @@ public:
 				}
 			std::swap(dotArray[startInd], dotArray[middleInd]);
 
+			set_ref_count(3);
 			SortMinTask& sortUp = *new (allocate_child()) SortMinTask(dotArray, startInd, middleInd);
 			SortMinTask& sortDown = *new (allocate_child()) SortMinTask(dotArray, middleInd + 1, endInd);
+			spawn(sortUp);
+			spawn_and_wait_for_all(sortDown);
 		}
 		else
 			return NULL;
@@ -74,11 +80,13 @@ public:
 void sortParallel(dot* arr, int startInd, int endInd, int numThreads)
 {	
 	SortTask& sortT = *new (task::allocate_root()) SortTask(arr, startInd, endInd);
+	task::spawn_root_and_wait(sortT);
 }
 
 void searchMinElement(dot* dotArray, int size, int numThreads)
 {
 	SortMinTask& sortMin = *new (task::allocate_root()) SortMinTask(dotArray, 0, size);
+	task::spawn_root_and_wait(sortMin);
 }
 
 std::pair<dot*, int> grehemMethod_TBB(dot* dotArray, int size, int numThreads)
