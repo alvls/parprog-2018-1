@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <cstring>
-#include "sol.h"
+#include "Body.h"
 
 using namespace std;
 

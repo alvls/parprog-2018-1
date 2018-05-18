@@ -1,8 +1,12 @@
 #include "checker.h"
+
+#include <stdio.h>
 #include <iostream>
 
 
+
 int main(int argc, char * argv[]) {
+	
 
 	if (argc != 3) {
 		checker_result.write_verdict(NO);
@@ -10,19 +14,18 @@ int main(int argc, char * argv[]) {
 		return 1;
 	}
 
-	int num_threads = atoi(argv[1]);
+
+	task_scheduler_init init(atoi(argv[1]));
 	int size;
 
 	double* buf;
 
-	double Myresult = 80;
-	double perfect_res = 0.0;
-
-	double confines[4];
-
+	double perfect_res;
 	double line_time;
 	double time;
 
+	double confines[4];
+	
 	FILE * ons;
 	FILE * buo;
 
@@ -72,19 +75,23 @@ int main(int argc, char * argv[]) {
 		// границы интегрирования
 		fread(confines, sizeof(*confines), 4, buo);
 
+
+		blocked_range<int> range(0, parts, 25);		// parts = 2000
+
+		Body<double>* bod = new Body<double>(fun, range , confines[0], confines[1], confines[2], confines[3]);
+
 		//fclose(buo);
 		time = omp_get_wtime();
-
-		Myresult = TIntegral(fun, confines[0], confines[1], confines[2], confines[3], num_threads);
+		
+		parallel_reduce(range, bod);
 
 		time = omp_get_wtime() - time;
 
 		ons = fopen(strcat(argv[2], ".ans"), "rb");
 		fread(&perfect_res, sizeof(perfect_res), 1, ons);
-
 		fread(&line_time, sizeof(line_time), 1, ons);
 
-		if (module(Myresult - perfect_res) > 0.01) {
+		if (module(bod->Result() - perfect_res) < 1) {
 			if (time <= line_time + 10) {
 				checker_result.write_message("AC. Unswer is correct.");
 				checker_result.write_verdict(AC);
