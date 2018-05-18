@@ -44,12 +44,10 @@ TEST(parallel_matrixCCS, can_test_mult2)
     m2.vv = m1.vv;
     m2.transpositionMatrix();
     Matrix res = m1*m2;
-    std::cout << res;
     MatrixCCS mccs1(m1), mccs2(m2);
     MatrixCCS resCCS = mccs1.testMult(mccs2, 5);
 
     resCCS.convertToMatrix(tmp);
-    std::cout << tmp;
     EXPECT_TRUE(res == tmp);
 }
 
@@ -60,12 +58,10 @@ TEST(parallel_matrixCCS, can_test_mult3)
     m1.vv = vector<Element>(N*N);
     m2.vv = vector<Element>(N*N);
     Matrix res = m1*m2;
-    std::cout << res;
     MatrixCCS mccs1(m1), mccs2(m2);
     MatrixCCS resCCS = mccs1.testMult(mccs2, 5);
 
     resCCS.convertToMatrix(tmp);
-    std::cout << tmp;
     EXPECT_TRUE(res == tmp);
 }
 
@@ -111,12 +107,10 @@ TEST(parallel_matrixCCS, can_mult4)
                0, 7, 2, 0, -2,
                0, 0, 0, 0, 0 };
     Matrix res = m1*m2;
-    std::cout << res;
     MatrixCCS mccs1(m1), mccs2(m2);
     MatrixCCS resCCS = mccs1.testMult(mccs2, 5);
 
     resCCS.convertToMatrix(tmp);
-    std::cout << tmp;
     EXPECT_TRUE(res == tmp);
 }
 
@@ -140,11 +134,9 @@ TEST(parallel_matrixCCS, can_mult5)
         - 2.673, 0, 9.70597, 4.48116, - 7.50321, - 6.6405, 6.80723,
         8.50821, 9.09021, 9.24417, 0, 0, 0, 8.89995 };
     Matrix res = m1*m2;
-    std::cout << res;
     MatrixCCS mccs1(m1), mccs2(m2);
     MatrixCCS resCCS = mccs1.testMult(mccs2, 4);
 
     resCCS.convertToMatrix(tmp);
-    std::cout << tmp;
     EXPECT_TRUE(res == tmp);
 }

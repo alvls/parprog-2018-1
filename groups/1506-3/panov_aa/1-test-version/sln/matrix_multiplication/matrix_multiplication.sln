@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matrix_multiplication", "matrix_multiplication\matrix_multiplication.vcxproj", "{42707BC6-212F-4FBD-8D11-708A8689E5FF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "binaryToTxt", "..\binaryToTxt\binaryToTxt.vcxproj", "{D8B6BE00-932B-4CC1-AA2A-E280B0904C1A}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "txtTobinary", "..\txtTobinary\txtTobinary.vcxproj", "{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "checker", "..\checker\checker.vcxproj", "{41A9EE7C-95CE-4EAD-B6DD-9BEDE5FB1CE8}"
 EndProject
@@ -43,14 +41,6 @@ Global
 		{D8B6BE00-932B-4CC1-AA2A-E280B0904C1A}.Release|x64.Build.0 = Release|x64
 		{D8B6BE00-932B-4CC1-AA2A-E280B0904C1A}.Release|x86.ActiveCfg = Release|Win32
 		{D8B6BE00-932B-4CC1-AA2A-E280B0904C1A}.Release|x86.Build.0 = Release|Win32
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Debug|x64.ActiveCfg = Debug|x64
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Debug|x64.Build.0 = Debug|x64
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Debug|x86.ActiveCfg = Debug|Win32
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Debug|x86.Build.0 = Debug|Win32
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Release|x64.ActiveCfg = Release|x64
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Release|x64.Build.0 = Release|x64
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Release|x86.ActiveCfg = Release|Win32
-		{4CD88BB8-AF80-425C-B807-3B259A9CC4F5}.Release|x86.Build.0 = Release|Win32
 		{41A9EE7C-95CE-4EAD-B6DD-9BEDE5FB1CE8}.Debug|x64.ActiveCfg = Debug|x64
 		{41A9EE7C-95CE-4EAD-B6DD-9BEDE5FB1CE8}.Debug|x64.Build.0 = Debug|x64
 		{41A9EE7C-95CE-4EAD-B6DD-9BEDE5FB1CE8}.Debug|x86.ActiveCfg = Debug|Win32
