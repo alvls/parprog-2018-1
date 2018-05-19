@@ -70,6 +70,7 @@ public:
 
 bool tbbDijkstra(int* GR, int st, int n, int* res,int threads) {
     tbb::task_scheduler_init init(threads);
+    tbb::affinity_partitioner ap;
     bool success = true;
     int* distance = new int[n];
     int count, index, i, u, m = st + 1;
@@ -81,11 +82,11 @@ bool tbbDijkstra(int* GR, int st, int n, int* res,int threads) {
     distance[st] = 0;
     for (count = 0; count < n-1; count++) {
         MinSearcher ms(distance,visited);
-        tbb::parallel_reduce(tbb::blocked_range<int>(0,n,n/threads),ms);
+        tbb::parallel_reduce(tbb::blocked_range<int>(0,n,n/threads),ms,ap);
         u = ms.getIndex();
         visited[u] = true;
 
-        tbb::parallel_for(tbb::blocked_range<int>(0,n,n/threads),
+        tbb::parallel_for(tbb::blocked_range<int>(0,n,n/threads,ap),
           VertexUpdater(distance,visited,GR,u,n));
     }
     for (i = 0; i < n; i++){
