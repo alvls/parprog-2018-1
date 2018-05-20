@@ -13,39 +13,46 @@ struct Cell {
 Cell** serial_alg(int w, int h, int *arr);
 
 int main(int argc, char* argv[]) {
-	if (argc != 3) {
-		std::cout << "ALGORITHM PROGRAM\nTo use this program, please stick to the following pattern:\n" <<
-			"solver [input] [output]" << std::endl;
-		return 1;
-	}
+	//if (argc != 3) {
+	//	std::cout << "ALGORITHM PROGRAM\nTo use this program, please stick to the following pattern:\n" <<
+	//		"solver [input] [output]" << std::endl;
+	//	return 1;
+	//}
 
-	int num_threads = 1;
+	//int num_threads = 1;
 
-	if (argc > 1)
-		num_threads = atoi(argv[1]);
+	//if (argc > 1)
+	//	num_threads = atoi(argv[1]);
 
-	int size;
+	int size = 9000;
 	int *in;
 	Cell **out;
 
-	freopen(argv[1], "rb", stdin);
+//	freopen(argv[1], "rb", stdin);
 
-	fread(&size, sizeof(size), 1, stdin);
+	//fread(&size, sizeof(size), 1, stdin);
 
 	in = new int[size*size];
+	for (int i = 0; i < size*size; i++) {
+		if (rand() % 2&& rand() % 2) {
+			in[i] = 1;
+		}
+		else {
+			in[i] = 0;
+		}
+	}
+	//fread(in, sizeof(*in), size, stdin);
 
-	fread(in, sizeof(*in), size, stdin);
-
-	omp_set_num_threads(num_threads);
+	//omp_set_num_threads(num_threads);
 
 	double time = omp_get_wtime();
 	out = serial_alg(size, size, in);
 	time = omp_get_wtime() - time;
-
-	freopen(argv[2], "wb", stdout);
-	fwrite(&time, sizeof(time), 1, stdout);
-	fwrite(&size, sizeof(size), 1, stdout);
-	
+	std::cout << time << " - time" << std::endl;
+//	freopen(argv[2], "wb", stdout);
+	//fwrite(&time, sizeof(time), 1, stdout);
+	//fwrite(&size, sizeof(size), 1, stdout);
+	getchar();
 	for (int i = 0; i < size; i++) {
 		for (int k = 0; k < size; k++) {
 			in[i*size + k] = out[i][k].tag;
