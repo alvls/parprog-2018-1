@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
   omp_set_num_threads(num_threads);
   #pragma omp parallel
   {
-    Shell_Sort(Arr_Shell, length, num_threads);
+    Shell_Sort(Arr_Shell, length);
   }
   while(num_threads > 0) {
     for(int i = 0; i < pod_length; i++) {
@@ -104,6 +104,7 @@ int main(int argc, char *argv[]) {
   }
 
   time = omp_get_wtime() - time;
+  //cout << time << endl;
   fwrite(&time, sizeof(time), 1, out_file);
   fwrite(&length, sizeof(length), 1, out_file);
   fwrite(Arr_Shell,sizeof(*Arr_Shell),length,out_file);
