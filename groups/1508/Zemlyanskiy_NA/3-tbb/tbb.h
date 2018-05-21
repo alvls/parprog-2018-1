@@ -155,6 +155,7 @@ public:
 };
 
 void tbb_Shell_Sort(int *arr, int length, int threads) {
+  task_scheduler_init init(threads);
 	int piece = length / threads + 1;
 	Sorter& sorter = *new (task::allocate_root())
 		Sorter(arr, length, piece);
