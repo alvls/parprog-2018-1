@@ -36,7 +36,11 @@ int main(int argc, char * argv[])
 	fread(&time, sizeof(time), 1, stdin);
 	fread(&size, sizeof(size), 1, stdin);
 	vector<int> check(size);
-	fread(check.data(), sizeof(check), size, stdin);
+	int *arr = new int[size];
+	fread(arr, sizeof(*arr), size, stdin);
+	
+	for (int i = 0; i < size; i++)
+		check[i] = arr[i];
 
 	if (threads==0) {
 		time = omp_get_wtime();
@@ -45,9 +49,11 @@ int main(int argc, char * argv[])
 	}
 	else { 
 	parallel_sort(check, size, threads, time); }
-
+	
+	for (int i = 0; i < size; i++)
+		arr[i] = check[i];
 	fwrite(&time, sizeof(time), 1, stdout);
 	fwrite(&size, sizeof(size), 1, stdout);
-	fwrite(check.data(), sizeof(int), size, stdout);
+	fwrite(arr, sizeof(*arr), size, stdout);
 	return 0;
 }

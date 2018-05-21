@@ -24,7 +24,7 @@ int main(int argc, char * argv[])
 	// создаём генератор случайных чисел с seed равным количеству времени с начала эпохи
 	default_random_engine generator(static_cast<unsigned int>(chrono::system_clock::now().time_since_epoch().count()));
 	// создаём равномерное распределение случайной величины типа int в диапазоне
-	// [-1000, 1000]
+	// [-999, 999]
 	uniform_int_distribution <int> distribution(-999, 999);
 
 	fwrite(&default_time, sizeof(default_time), 1, stdout); // Резервируем поле для времени в создаваемом файле.
