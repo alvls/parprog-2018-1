@@ -33,12 +33,6 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
             }
         }
 	}
-    /*name = "\\";
-    pathInput = "C:\\All\\programms\\Project\\Labs\\parprog-2018-1\\groups\\1506-3\\panov_aa\\build\\tests\\20tests";
-    pathOutput = "C:\\All\\programms\\Project\\Labs\\parprog-2018-1\\groups\\1506-3\\panov_aa\\build\\tests\\20tests_result";
-    number = "1";
-    num_threads = 2;*/
-    
 	int N;
 	freopen((pathInput + name + number + extensionIn).c_str(), "rb", stdin);
 	freopen((pathOutput + name + number + extensionOut).c_str(), "wb", stdout);

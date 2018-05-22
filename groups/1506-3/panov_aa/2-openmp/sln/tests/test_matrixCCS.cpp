@@ -168,7 +168,6 @@ TEST(matrixCCS, can_mult2)
     Matrix tmp(3,3);
     resCCS.convertToMatrix(tmp);
     EXPECT_TRUE(res == tmp);
-    //std::cout << res << tmp;
 }
 
 TEST(matrixCCS, can_mult3)
@@ -185,7 +184,6 @@ TEST(matrixCCS, can_mult3)
     Matrix tmp(3, 3);
     resCCS.convertToMatrix(tmp);
     EXPECT_TRUE(res == tmp);
-    //std::cout << res << tmp;
 }
 
 TEST(matrixCCS, can_mult4)
@@ -202,7 +200,6 @@ TEST(matrixCCS, can_mult4)
     Matrix tmp(3, 3);
     resCCS.convertToMatrix(tmp);
     EXPECT_TRUE(res == tmp);
-    //std::cout << res << tmp;
 }
 
 TEST(matrixCCS, can_mult5)
@@ -219,7 +216,6 @@ TEST(matrixCCS, can_mult5)
     Matrix tmp(3, 3);
     resCCS.convertToMatrix(tmp);
     EXPECT_TRUE(res == tmp);
-    //std::cout << res << tmp;
 }
 
 TEST(matrixCCS, can_mult6)
@@ -243,5 +239,4 @@ TEST(matrixCCS, can_mult6)
 
     resCCS.convertToMatrix(tmp);
     EXPECT_TRUE(res == tmp);
-    //std::cout << res << tmp;
 }

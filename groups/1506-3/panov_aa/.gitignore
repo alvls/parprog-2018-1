@@ -13,6 +13,8 @@
 *.userprefs
 
 # Build results
+20tests/
+20tests_result/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
