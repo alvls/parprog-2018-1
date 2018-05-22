@@ -1,5 +1,6 @@
 #include "../gtest/gtest/gtest.h"
 #include "../../include/matrix.h"
+#include <omp.h>
 
 Matrix getMatrix6()
 {
@@ -15,7 +16,7 @@ Matrix getMatrix7()
 		m[j][m.gRow() - 1] = j + 1;
 	return m;
 }
-TEST(parallel_matrixCCS, can_test_mult1)
+TEST(pre_parallel_matrixCCS, can_test_mult1)
 {
 	Matrix m1 = getMatrix6();
 	Matrix m2 = getMatrix7();
@@ -31,7 +32,7 @@ TEST(parallel_matrixCCS, can_test_mult1)
 	EXPECT_TRUE(res == tmp);
 }
 
-TEST(parallel_matrixCCS, can_test_mult2)
+TEST(pre_parallel_matrixCCS, can_test_mult2)
 {
     int N = 5;
     Matrix m1 = Matrix(N, N), m2(N, N), tmp(N, N);
@@ -51,13 +52,14 @@ TEST(parallel_matrixCCS, can_test_mult2)
     EXPECT_TRUE(res == tmp);
 }
 
-TEST(parallel_matrixCCS, can_test_mult3)
+TEST(pre_parallel_matrixCCS, can_test_mult3)
 {
     int N = 5;
     Matrix m1 = Matrix(N, N), m2(N, N), tmp(N, N);
     m1.vv = vector<Element>(N*N);
     m2.vv = vector<Element>(N*N);
     Matrix res = m1*m2;
+
     MatrixCCS mccs1(m1), mccs2(m2);
     MatrixCCS resCCS = mccs1.testMult(mccs2, 5);
 
@@ -65,7 +67,7 @@ TEST(parallel_matrixCCS, can_test_mult3)
     EXPECT_TRUE(res == tmp);
 }
 
-TEST(parallel_matrixCCS, can_unite)
+TEST(pre_parallel_matrixCCS, can_unite)
 {
 	int N = 3;
 	MatrixCCS m1(N), m2(N), m3(N), res(N);
@@ -91,7 +93,7 @@ TEST(parallel_matrixCCS, can_unite)
     EXPECT_TRUE(m1 == res);
 }
 
-TEST(parallel_matrixCCS, can_mult4)
+TEST(pre_parallel_matrixCCS, can_mult4)
 {
     int N = 5;
     Matrix m1 = Matrix(N, N), m2(N, N), tmp(N, N);
@@ -114,7 +116,7 @@ TEST(parallel_matrixCCS, can_mult4)
     EXPECT_TRUE(res == tmp);
 }
 
-TEST(parallel_matrixCCS, can_mult5)
+TEST(parallel_matrixCCS, can_parallel_mult1)
 {
     int N = 7;
     Matrix m1 = Matrix(N, N), m2(N, N), tmp(N, N);
@@ -135,7 +137,36 @@ TEST(parallel_matrixCCS, can_mult5)
         8.50821, 9.09021, 9.24417, 0, 0, 0, 8.89995 };
     Matrix res = m1*m2;
     MatrixCCS mccs1(m1), mccs2(m2);
-    MatrixCCS resCCS = mccs1.testMult(mccs2, 4);
+    mccs1.transpositionMatrix();
+    omp_set_num_threads(4);
+
+    MatrixCCS resCCS = mccs1.parallelMult(mccs2, 4);
+
+    resCCS.convertToMatrix(tmp);
+    EXPECT_TRUE(res == tmp);
+}
+
+TEST(parallel_matrixCCS, can_parallel_mult2)
+{
+    int N = 5;
+    Matrix m1 = Matrix(N, N), m2(N, N), tmp(N, N);
+    m1.vv = { -5, 0, 0, 0, 0,
+        0, 0, 0, 5, 0,
+        0, 0, 0, 9, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0 };
+
+    m2.vv = { 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 10,
+        0, 7, 2, 0, -2,
+        0, 0, 0, 0, 0 };
+    Matrix res = m1*m2;
+    MatrixCCS mccs1(m1), mccs2(m2);
+    mccs1.transpositionMatrix();
+    omp_set_num_threads(4);
+
+    MatrixCCS resCCS = mccs1.parallelMult(mccs2, 4);
 
     resCCS.convertToMatrix(tmp);
     EXPECT_TRUE(res == tmp);
