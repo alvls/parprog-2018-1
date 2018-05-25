@@ -21,7 +21,7 @@ int main(int argc, char * argv[])
 	if (argc > 1)
 		num_threads = atoi(argv[1]);
 
-	for (int i = 20; i <= n; i++)
+	for (int i = 1; i <= n; i++)
 	{
 		nameFile = to_string((long long)i);
 		FILE* fArray = fopen(("./tests/" + nameFile).c_str(), "rb");
