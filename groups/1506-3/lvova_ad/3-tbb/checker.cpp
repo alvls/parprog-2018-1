@@ -109,16 +109,17 @@ int main()
 	sort(answer, answer+size);
 
 	//Ñðàâíèâàåì îòâåòû
-    
 	bool flag = false;
 	for (int i = 0; i < size; i++)
 	{
 		if (answer[i] != result[i])
 		{
             double k = result[i];
-            std::cout << std::endl << "Numbers isn't equal -> iteration = " << i << ";  answer = " << answer[i] << ";  result = " << k << std::endl;
+            std::cout << std::endl << "Numbers isn't equal - " << i << ";" << answer[i] << ";" << k << std::endl;
             flag = true;
-            break;
+			checker_result.write_message("WA. Output is not correct.");
+			checker_result.write_verdict(verdict::WA);
+			break;
 		}
 	}
 	if(!flag)
