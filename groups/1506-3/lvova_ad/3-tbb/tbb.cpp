@@ -147,9 +147,8 @@ void print_n_arrays(double** temp, int n_threads, int grain_size, int tail, int 
 //        delete temp;
 //    
 //}
-
-
 //---------------------------------------------------------------------------------------
+
 void shell_sort_with_a_shift(double* array, int iteration, int length);
 
 void shell_parallel_tbb_sort(double* array, int length, int n_threads)
@@ -263,11 +262,7 @@ void shell_parallel_tbb_sort(double* array, int length, int n_threads)
                 i = i / 2 + 1;
         init.terminate();
     }
-
-
-
 }
-
 
 void merge_in_the_same_array(double* array, int m, int n, int it1, int it2)
 {
@@ -304,7 +299,6 @@ void merge_in_the_same_array(double* array, int m, int n, int it1, int it2)
         array[i] = temp[i - it1];
 }
 
-
 void merge_2_arrays(double* A, double* B, int size_A, int size_B)
 {
     int i = 0, j = 0, k = 0;
@@ -340,7 +334,6 @@ void merge_2_arrays(double* A, double* B, int size_A, int size_B)
         A[i] = temp[i];
 }
 
-
 void print_one_array(double* array, int length, int modi, int grain_size)
 {
     for (int i = 0; i < length - modi; i++)
@@ -356,7 +349,6 @@ void print_one_array(double* array, int length, int modi, int grain_size)
         std::cout << array[i] << " ";
     }
 }
-
 
 void print_n_arrays(double** temp, int n_threads, int grain_size, int tail, int k)
 {
