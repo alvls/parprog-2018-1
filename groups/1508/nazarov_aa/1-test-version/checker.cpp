@@ -26,6 +26,7 @@ public:
     }
 
     void write_message(string str) {
+        cout << str << endl;
         write_type(ext_cls::MESSAGE);
         int l = str.size();
         fwrite(&l, sizeof(l), 1, bur);
@@ -33,6 +34,7 @@ public:
     }
 
     void write_time(long long x) {
+        cout << "time: " << x << endl;
         write_type(ext_cls::TIME);
         fwrite(&x, sizeof(x), 1, bur);
     }
