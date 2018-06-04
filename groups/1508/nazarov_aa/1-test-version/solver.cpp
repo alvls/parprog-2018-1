@@ -100,33 +100,12 @@ bool CCSMatrMultCheck(int * IB, int * JB,  int N) {
     else
         return true;
 }
-/*
-bool ArrBinFind(int * arr, int size, int num) {
-    int middle, left, right;
-    left = 0; right = size - 1;
-    while (true)
-    {
-        if (left > right) return false;
-        middle = left + (right - left) / 2;
-        if (arr[middle] < num) left = middle + 1;
-        if (arr[middle] > num) right = middle - 1;
-        if (arr[middle] == num) return true;
-    }
-} */
+
 int ArrIndexFind(int *arr, int size, int start, int num) {
     for (int i = start; i < size; i++)
         if (arr[i] == num) return i;
     return -1;
 }
-/*
-int CCSMatrMultValIC(double * A, int * IA, int * JA, double * B, int * IB, int * JB, int N) {
-    int count = 0;
-    for (int i = 0; i < N; i++)
-        for (int f = JA[i]; f < JA[i + 1]; f++)
-            if (CCSMatrGet(B, IB, JB, N, i, IA[f]) != 0) count++;
-    return count;
-}
-*/
 
 int ColSearch(int * JA, int i) {
     int f;
@@ -146,16 +125,6 @@ void CCSMatrMult(double * A, int * IA, int * JA, double * B, int * IB, int * JB,
         JC = new int[N + 1];
         JC[N] = 0;
         for (int i = 0; i < N; i++) JC[i] = 0;
-        /*    JC[N] = CCSMatrMultValIC(A, IA, JA, B, IB, JB, N);
-            IC = new int[JC[N]];
-            C = new double[JC[N]];
-            for (int i = 0; i < N; i++)
-                JC[i] = 0;
-            for (int i = 0; i < JC[N]; i++) {
-                IC[i] = 0;
-                C[i] = 0;
-            }
-        */
         for (int i = 0; i < JA[N]; i++) {
             int buf, start = 0;
             while ((buf = ArrIndexFind(IB, JB[N], start, ColSearch(JA,i))) != -1) {
