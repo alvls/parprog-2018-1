@@ -1,0 +1,23 @@
+language: cpp
+compiler: 
+- gcc
+os:
+- linux
+before_script:
+  - cd build
+
+script:
+  - cmake ..
+  - make
+  - cd src
+  - cp checker_/checker ./
+  - cp generator_/generator ./
+  - cp solver_/solver ./
+  - cp typerANDviewer/typer ./
+  - cp typerANDviewer/viewer ./
+  - ./generator 8 out
+  - ./solver out nextout
+  - ./viewer nextout watchout
+  - echo | cat watchout
+ 
+  
