@@ -6,5 +6,6 @@ arg_1 = sys.argv[1]
 
 os.system(r'g++ before_code.cpp -o before_code -std=c++11 -fopenmp')
 
-for i in range(11):
+for i in range(13):
 	os.system(r'./before_code'+' '+ str(i) +' ' + str(i) + '.ans'+' '+ arg_1)
+	os.system(r'./viewer'+' '+str(i)+'.ans'+' '+str(i)+'txt')

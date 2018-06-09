@@ -6,7 +6,7 @@ using namespace std;
 // Сортировка Шелла
 template <typename T>
 void Shell_Sort(T *Arr, unsigned int length, unsigned int num_threads) {
-  int distance; // Расстояние между элементами
+  int distance; // Расстояние между элементами 
   int i,j,temp;
   omp_set_num_threads(num_threads);
   for(distance = length/2; distance > 0; distance /= 2) {
