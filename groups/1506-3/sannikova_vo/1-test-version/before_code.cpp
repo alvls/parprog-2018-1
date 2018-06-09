@@ -9,6 +9,8 @@ using namespace std;
 
 void qSort(double* arr, int size);
 void qSort(vector<double>* vec);
+void qSort_array_recursion(double* arr, int size);
+void QuickSort_OpenMP(double items[], int size);
 
 int main(int argc, char * argv[])
 {
@@ -18,28 +20,38 @@ int main(int argc, char * argv[])
 	}
 
 	int size;
-	int* arr;
+	//double* arr;
 	double _time;
 
 
 	freopen(argv[1], "rb", stdin);
-	freopen(argv[2], "wb", stdout);
+	//freopen(argv[2], "wb", stdout);
 
 	fread(&_time, sizeof(_time), 1, stdin); //template for the future, isn't use now
 	fread(&size, sizeof(size), 1, stdin);
-	vector <double> vec(size);
+	
+	double *arr = new double[size];
+
+	//vector <double> vec(size);
 	for (int i = 0; i < size; ++i) {
-		fread(&vec[i], sizeof(double), 1, stdin);
+		fread(&arr[i], sizeof(double), 1, stdin);
+		//fread(&vec[i], sizeof(double), 1, stdin);
 	}
 	double time = omp_get_wtime();
-	qSort(&vec);
+	
+	qSort_array_recursion(arr, size);
+	//QuickSort_OpenMP(arr, size);
+	//qSort(&vec);
 	time = omp_get_wtime() - time;
+	
+	printf("Linear time: %f\n", time);
+	freopen(argv[2], "wb", stdout);
 
 	fwrite(&time, sizeof(time), 1, stdout);
 	fwrite(&size, sizeof(size), 1, stdout);
 
 	for (int i = 0; i < size; ++i) {
-		fwrite(&vec[i], sizeof(double), 1, stdout);
+		fwrite(&arr[i], sizeof(double), 1, stdout);
 	}
 	return 0;
 }
