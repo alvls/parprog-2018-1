@@ -1,16 +1,11 @@
-#include <iostream>
-
-unsigned char GetByte(const double number, const unsigned digit_num) {
-	const long long int_number = static_cast<long long>(number);
-
-	return static_cast<unsigned char>(
-		(int_number >> (8 * digit_num)) & 0xFF
-	);
+unsigned char GetByte(const double* number, const unsigned digit_num) {
+	return (reinterpret_cast<const unsigned char*>(number))[digit_num];
 }
 
 void LsdRadixSort(double* arr, const size_t arr_size) {
 	const int kDigitsNumber = 8;
 	const size_t kDigitPossibleValuesNumber = 256;
+	const size_t kDigitPossibleValuesNumberHalf = kDigitPossibleValuesNumber >> 1;
 
 	int* counters = new int[kDigitPossibleValuesNumber];
 	double* arr_temp = new double[arr_size];
@@ -26,31 +21,49 @@ void LsdRadixSort(double* arr, const size_t arr_size) {
 
 		// Counting sort
 		for (size_t j = 0; j < arr_size; j++) {
-			const unsigned char curr_digit_unsigned = GetByte(arr[j], i);
-			// For MSD, we should interpret the current byte as a singed char
-			const char curr_digit_signed = static_cast<char>(curr_digit_unsigned);
-			const unsigned char counters_index = is_curr_digit_msd
-				? curr_digit_signed + 128
-				: curr_digit_unsigned;
-			counters[counters_index]++;
+			const unsigned char curr_digit_unsigned = GetByte(&arr[j], i);
+			counters[curr_digit_unsigned]++;
 		}
 
 		int count = 0;
 
-		for (size_t j = 0; j < kDigitPossibleValuesNumber; j++) {
-			const int temp = counters[j];
-			counters[j] = count;
-			count += temp;
+		if (is_curr_digit_msd) {
+			// Counting all negative numbers
+			for (size_t j = kDigitPossibleValuesNumberHalf; j < kDigitPossibleValuesNumber; j++) {
+				count += counters[j];
+			}
+
+			// Only for non-negative numbers
+			for (size_t j = 0; j < kDigitPossibleValuesNumberHalf; j++) {
+				const int temp = counters[j];
+				counters[j] = count;
+				count += temp;
+			}
+
+			count = 0;
+
+			// Counters for negative numbers in reverse
+			for (size_t j = kDigitPossibleValuesNumber - 1; j >= kDigitPossibleValuesNumberHalf; j--) {
+				counters[j] += count;
+				count = counters[j];
+			}
+		} else {
+			for (size_t j = 0; j < kDigitPossibleValuesNumber; j++) {
+				const int temp = counters[j];
+				counters[j] = count;
+				count += temp;
+			}
 		}
 
 		for (size_t j = 0; j < arr_size; j++) {
-			const unsigned char curr_digit_unsigned = GetByte(arr[j], i);
-			const char curr_digit_signed = static_cast<char>(curr_digit_unsigned);
-			const unsigned char counters_index = is_curr_digit_msd
-				? curr_digit_signed + 128
-				: curr_digit_unsigned;
-			arr_temp[counters[counters_index]] = arr[j];
-			counters[counters_index]++;
+			const unsigned char curr_digit_unsigned = GetByte(&arr[j], i);
+
+			// "If current number is negative"
+			if (is_curr_digit_msd && curr_digit_unsigned >= kDigitPossibleValuesNumberHalf) {
+				arr_temp[--counters[curr_digit_unsigned]] = arr[j];
+			} else {
+				arr_temp[counters[curr_digit_unsigned]++] = arr[j];
+			}
 		}
 
 		for (size_t j = 0; j < arr_size; j++) {

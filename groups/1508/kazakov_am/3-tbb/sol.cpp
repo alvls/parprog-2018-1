@@ -1,5 +1,80 @@
 #include <tbb/tbb.h>
 
+unsigned char GetByte(const double* number, const unsigned digit_num) {
+	return (reinterpret_cast<const unsigned char*>(number))[digit_num];
+}
+
+void LsdRadixSort(double* arr, double* arr_temp, const size_t arr_size) {
+	const int kDigitsNumber = 8;
+	const size_t kDigitPossibleValuesNumber = 256;
+	const size_t kDigitPossibleValuesNumberHalf = kDigitPossibleValuesNumber >> 1;
+
+	int* counters = new int[kDigitPossibleValuesNumber];
+
+	for (int i = 0; i < kDigitsNumber; i++) {
+		// Basically this checks if this is the last iteration
+		// (or if the current digit is a most significant one)
+		const bool is_curr_digit_msd = i == kDigitsNumber - 1;
+
+		for (size_t j = 0; j < kDigitPossibleValuesNumber; j++) {
+			counters[j] = 0;
+		}
+
+		// Counting sort
+		for (size_t j = 0; j < arr_size; j++) {
+			const unsigned char curr_digit_unsigned = GetByte(&arr[j], i);
+			counters[curr_digit_unsigned]++;
+		}
+
+		int count = 0;
+
+		if (is_curr_digit_msd) {
+			// Counting all negative numbers
+			for (size_t j = kDigitPossibleValuesNumberHalf; j < kDigitPossibleValuesNumber; j++) {
+				count += counters[j];
+			}
+
+			// Only for non-negative numbers
+			for (size_t j = 0; j < kDigitPossibleValuesNumberHalf; j++) {
+				const int temp = counters[j];
+				counters[j] = count;
+				count += temp;
+			}
+
+			count = 0;
+
+			// Counters for negative numbers in reverse
+			for (size_t j = kDigitPossibleValuesNumber - 1; j >= kDigitPossibleValuesNumberHalf; j--) {
+				counters[j] += count;
+				count = counters[j];
+			}
+		} else {
+			for (size_t j = 0; j < kDigitPossibleValuesNumber; j++) {
+				const int temp = counters[j];
+				counters[j] = count;
+				count += temp;
+			}
+		}
+
+		for (size_t j = 0; j < arr_size; j++) {
+			const unsigned char curr_digit_unsigned = GetByte(&arr[j], i);
+
+			// "If current number is negative"
+			if (is_curr_digit_msd && curr_digit_unsigned >= kDigitPossibleValuesNumberHalf) {
+				arr_temp[--counters[curr_digit_unsigned]] = arr[j];
+			} else {
+				arr_temp[counters[curr_digit_unsigned]++] = arr[j];
+			}
+		}
+
+		for (size_t j = 0; j < arr_size; j++) {
+			arr[j] = arr_temp[j];
+		}
+	}
+
+	delete[] counters;
+}
+
 // Modified binary search to always return something + searches within [left_bound;right_bound)
 int BinarySearch(const double* arr, const int left_bound, const int right_bound, const double elem) {
 	int left = left_bound;
@@ -29,125 +104,133 @@ int BinarySearch(const double* arr, const int left_bound, const int right_bound,
 	return left;
 }
 
-// Performs "divide and conquer" "merge" within the array.
-void DacMerge(const double* arr_in, double* arr_out, const int iteration, const int* boundaries,
-	const int left_bound_first, const int right_bound_first,
-	const int left_bound_second, const int right_bound_second) {
-	const int arr_len_first = right_bound_first - left_bound_first;
-	const int arr_len_second = right_bound_second - left_bound_second;
-	const bool merge_first_parts_of_pair = iteration % 2 == 0;
+// Spawned by LsdRadixSortTask
+class DacMergeTask : public tbb::task {
+public:
+	DacMergeTask(const double* arr1, const double* arr2, double* arr_temp, const size_t arr_size_1, const size_t arr_size_2) : arr1_(arr1), arr2_(arr2), arr_temp_(arr_temp), arr_size_1_(arr_size_1), arr_size_2_(arr_size_2) {}
 
-	int curr_index_first = 0;
-	int curr_index_second = 0;
-	int curr_index_sorted = merge_first_parts_of_pair
-		? boundaries[iteration * 2]
-		: boundaries[iteration * 2 + 1] - arr_len_first - arr_len_second;
+	tbb::task* execute() {
+		int curr_index_first = 0;
+		int curr_index_second = 0;
+		int curr_index_sorted = 0;
 
-	while (curr_index_first < arr_len_first) {
-		while (curr_index_second < arr_len_second
-			&& arr_in[left_bound_second + curr_index_second] < arr_in[left_bound_first + curr_index_first]) {
-			arr_out[curr_index_sorted] = arr_in[left_bound_second + curr_index_second];
+		while (curr_index_first < arr_size_1_) {
+			while (curr_index_second < arr_size_2_ && arr2_[curr_index_second] < arr1_[curr_index_first]) {
+				arr_temp_[curr_index_sorted] = arr2_[curr_index_second];
+				curr_index_second++;
+				curr_index_sorted++;
+			}
+
+			arr_temp_[curr_index_sorted] = arr1_[curr_index_first];
+			curr_index_first++;
+			curr_index_sorted++;
+		}
+
+		while (curr_index_second < arr_size_2_) {
+			arr_temp_[curr_index_sorted] = arr2_[curr_index_second];
 			curr_index_second++;
 			curr_index_sorted++;
 		}
 
-		arr_out[curr_index_sorted] = arr_in[left_bound_first + curr_index_first];
-		curr_index_first++;
-		curr_index_sorted++;
+		return nullptr;
 	}
 
-	while (curr_index_second < arr_len_second) {
-		arr_out[curr_index_sorted] = arr_in[left_bound_second + curr_index_second];
-		curr_index_second++;
-		curr_index_sorted++;
-	}
-}
+private:
+	const double* arr1_;
+	const double* arr2_;
+	double* arr_temp_;
+	const size_t arr_size_1_;
+	const size_t arr_size_2_;
+};
 
-class RadixSort {
+class LsdRadixSortTask : public tbb::task {
 public:
-	RadixSort(double* arr, double* arr_temp, const size_t arr_size) :
-		arr_(arr), arr_temp_(arr_temp), arr_size_(arr_size) {}
+	LsdRadixSortTask(double* arr, double* arr_temp, const size_t arr_size, const size_t arr_part_size) :
+		arr_(arr), arr_temp_(arr_temp), arr_size_(arr_size), arr_part_size_(arr_part_size) {}
 
-	void operator()(const tbb::blocked_range<int>& range) const {
-		const int begin = range.begin();
-		const int end = range.end();
-
-		const int kDigitsNumber = 8;
-		const size_t kDigitPossibleValuesNumber = 256;
-
-		int* counters = new int[kDigitPossibleValuesNumber];
-
-		for (int i = 0; i < kDigitsNumber; i++) {
-			// Basically this checks if this is the last iteration
-			// (or if the current digit is a most significant one)
-			const bool is_curr_digit_msd = i == kDigitsNumber - 1;
-
-			for (size_t j = 0; j < kDigitPossibleValuesNumber; j++) {
-				counters[j] = 0;
-			}
-
-			// Counting sort
-			for (size_t j = begin; j < end; j++) {
-				const unsigned char curr_digit_unsigned = GetByte(arr_[j], i);
-				// For MSD, we should interpret the current byte as a singed char
-				const char curr_digit_signed = static_cast<char>(curr_digit_unsigned);
-				const unsigned char counters_index = is_curr_digit_msd
-					? curr_digit_signed + 128
-					: curr_digit_unsigned;
-				counters[counters_index]++;
-			}
-
-			int count = 0;
-
-			for (size_t j = 0; j < kDigitPossibleValuesNumber; j++) {
-				const int temp = counters[j];
-				counters[j] = count;
-				count += temp;
-			}
-
-			for (size_t j = begin; j < end; j++) {
-				const unsigned char curr_digit_unsigned = GetByte(arr_[j], i);
-				const char curr_digit_signed = static_cast<char>(curr_digit_unsigned);
-				const unsigned char counters_index = is_curr_digit_msd
-					? curr_digit_signed + 128
-					: curr_digit_unsigned;
-				arr_temp_[begin + counters[counters_index]] = arr_[j];
-				counters[counters_index]++;
-			}
-
-			for (size_t j = begin; j < end; j++) {
-				arr_[j] = arr_temp_[j];
-			}
+	tbb::task* execute() {
+		if (arr_size_ <= arr_part_size_) {
+			LsdRadixSort(arr_, arr_temp_, arr_size_);
+			return nullptr;
 		}
 
-		delete[] counters;
+		// Need to split the array, create & spawn tasks
+		LsdRadixSortTask& sort_task_1 = *(new(allocate_child()) LsdRadixSortTask(
+			arr_,
+			arr_temp_,
+			arr_size_ / 2,
+			arr_part_size_
+		));
+		LsdRadixSortTask& sort_task_2 = *(new(allocate_child()) LsdRadixSortTask(
+			arr_ + arr_size_ / 2,
+			arr_temp_ + arr_size_ / 2,
+			arr_size_ - arr_size_ / 2,
+			arr_part_size_
+		));
+
+		set_ref_count(2 + 1); // two tasks above + 1
+		spawn(sort_task_1);
+		spawn_and_wait_for_all(sort_task_2);
+
+		// At this point our current part of the initial array consists of two separate sorted parts.
+		// Let's merge it via DAC merge
+		
+		const int middle_first_offset = arr_size_ / 4;
+
+		const double* middle_first = arr_ + middle_first_offset;
+		const double* middle = arr_ + arr_size_ / 2;
+
+		const int middle_second_offset = BinarySearch(
+			middle,
+			0,
+			arr_size_ / 4,
+			*middle_first
+		);
+
+		const double* middle_second = middle + middle_second_offset;
+
+		DacMergeTask& merge_task_1 = *(new(allocate_child()) DacMergeTask(
+			arr_,
+			middle,
+			arr_temp_,
+			middle_first_offset + 1,
+			middle_second_offset + 1
+		));
+		DacMergeTask& merge_task_2 = *(new(allocate_child()) DacMergeTask(
+			middle_first,
+			middle_second,
+			arr_temp_ + (middle_first_offset + 1) + (middle_second_offset + 1),
+			(arr_size_ / 2) - (middle_first_offset + 1),
+			(arr_size_ / 2) - (middle_second_offset + 1)
+		));
+
+		set_ref_count(1 + 2);
+		spawn(merge_task_1);
+		spawn_and_wait_for_all(merge_task_2);
+
+		for (int i = 0; i < arr_size_; i++) {
+			arr_[i] = arr_temp_[i];
+		}
+
+		return nullptr;
 	}
 
 private:
 	double* arr_;
 	double* arr_temp_;
 	const size_t arr_size_;
-
-	unsigned char GetByte(const double number, const unsigned digit_num) const {
-		const long long int_number = static_cast<long long>(number);
-		
-		return static_cast<unsigned char>(
-			(int_number >> (8 * digit_num)) & 0xFF
-		);
-	}
+	const size_t arr_part_size_;
 };
 
-void LsdRadixSort(double* arr, const size_t arr_size, const int num_threads) {
+void LsdRadixSortWithDacMergeTbb(double* arr, const size_t arr_size, int num_threads) {
 	if (arr_size == 1) {
 		return;
 	}
 
-	// This checks if number of threads is 1, OR greater than arr_size, OR indivisible by 2^n
-	if (num_threads == 1 || num_threads > (int)arr_size || (num_threads & (num_threads - 1))) {
+	if (num_threads == 1 || num_threads > (int)arr_size) {
 		num_threads = 2;
 	}
 
-	int* boundaries = new int[num_threads * 2];
 	double* arr_temp = new double[arr_size];
 	size_t arr_part_size = arr_size / num_threads;
 
@@ -157,89 +240,13 @@ void LsdRadixSort(double* arr, const size_t arr_size, const int num_threads) {
 
 	tbb::task_scheduler_init init(num_threads);
 
-	// Step I. Sorting
-	tbb::blocked_range<int> range(0, arr_size, arr_part_size);
-	tbb::parallel_for(range, RadixSort(arr, arr_temp, arr_size));
+	LsdRadixSortTask& sort_task = *(new(tbb::task::allocate_root()) LsdRadixSortTask(
+		arr, arr_temp, arr_size, arr_part_size
+	));
 
-	for (int i = 0; i < num_threads; i++) {
-		const int index_start = i * arr_part_size;
-		const int index_end = (i == num_threads - 1)
-			? arr_size
-			: index_start + arr_part_size;
-
-		boundaries[2 * i] = index_start;
-		boundaries[2 * i + 1] = index_end;
-	}
-
-	return;
-
-	// Step II. Merging
-	int array_pairs_num = num_threads / 2;
-	int* middle_indexes = new int[num_threads];
-
-	while (array_pairs_num != 0) {
-		// Merging preparations
-		for (int i = 0; i < array_pairs_num; i++) {
-			const int left_bound_first = boundaries[i * 4];
-			const int right_bound_first = boundaries[i * 4 + 1];
-			const int left_bound_second = boundaries[i * 4 + 2];
-			const int right_bound_second = boundaries[i * 4 + 3];
-
-			// Find two middle points in the current pair of arrays
-			const int middle_index_first = (left_bound_first + right_bound_first) / 2;
-			const int middle_index_second = BinarySearch(
-				arr,
-				left_bound_second,
-				right_bound_second,
-				arr[middle_index_first]
-			);
-
-			middle_indexes[i * 2] = middle_index_first;
-			middle_indexes[i * 2 + 1] = middle_index_second;
-		}
-
-    #pragma omp parallel for schedule(static,1)
-		for (int i = 0; i < array_pairs_num * 2; i++) {
-			const bool merge_first_parts_of_pair = i % 2 == 0;
-			const int left_bound_first = merge_first_parts_of_pair
-				? boundaries[i * 2]
-				: middle_indexes[i - 1];
-			const int right_bound_first = merge_first_parts_of_pair
-				? middle_indexes[i]
-				: boundaries[i * 2 - 1];
-			const int left_bound_second = merge_first_parts_of_pair
-				? boundaries[(i + 1) * 2]
-				: middle_indexes[i];
-			const int right_bound_second = merge_first_parts_of_pair
-				? middle_indexes[i + 1]
-				: boundaries[i * 2 + 1];
-
-			DacMerge(
-				arr, arr_temp, i, boundaries,
-				left_bound_first, right_bound_first, left_bound_second, right_bound_second
-			);
-		}
-
-		for (int i = 0; i < arr_size; i++) {
-			arr[i] = arr_temp[i];
-		}
-
-		array_pairs_num /= 2;
-
-		// We must fix pairs boundaries
-		if (array_pairs_num != 0) {
-			for (int i = 0; i < array_pairs_num; i++) {
-				boundaries[i * 4] = boundaries[i * 8];
-				boundaries[i * 4 + 1] = boundaries[i * 8 + 3];
-				boundaries[i * 4 + 2] = boundaries[i * 8 + 4];
-				boundaries[i * 4 + 3] = boundaries[i * 8 + 7];
-			}
-		}
-	} // while (array_pairs_num != 0)
+	tbb::task::spawn_root_and_wait(sort_task);
 
 	init.terminate();
 
-	delete[] boundaries;
 	delete[] arr_temp;
-	delete[] middle_indexes;
 }
