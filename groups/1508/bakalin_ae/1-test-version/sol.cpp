@@ -1,34 +1,7 @@
-//OMP 4.0 is required (for omp declare reduction directive)
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <cmath>
 #include "point.h"
-#include <omp.h>
-
-class Compare {
-public:
-    double cos;
-    int index;
-
-    Compare(double cos = 1, int index = 0) {
-        this->cos = cos;
-        this->index = index;
-    }
-
-    Compare& operator < (Compare & other)
-        {
-            if (cos < other.cos)
-                return *this;
-            else {
-                cos = other.cos;
-                index = other.index;
-                return *this;
-            }
-        }
-};
-
-#pragma omp declare reduction(minimum: Compare: \
-    omp_out < omp_in) initializer (omp_priv = Compare(1, 0))
 
 double Cos(double x1, double y1, double x2, double y2) {
 	double scalar_prod = x1 * x2 + y1 * y2;
@@ -48,7 +21,7 @@ void JarvisAlgorithm(Point* data, Point* result, int in_size, int &out_size) {
 	bool* is_used;
 	int *indexes;
 	int k = 0;
-    double max_cos;
+	double max_cos, min_cos;
 
 	if (in_size < 3) {
 		out_size = 0;
@@ -68,7 +41,7 @@ void JarvisAlgorithm(Point* data, Point* result, int in_size, int &out_size) {
 	//Looking for a first point
 	for (int i = 0; i < in_size; i++) {
 		if ((data[i].y < data[first_p].y) ||
-            ((data[i].y == data[first_p].y) && (data[i].x < data[first_p].x)))
+			(data[i].y == data[first_p].y) && (data[i].x < data[first_p].x))
 			first_p = i;
 	}
 
@@ -96,23 +69,19 @@ void JarvisAlgorithm(Point* data, Point* result, int in_size, int &out_size) {
 	prev_p = first_p;
 
 	do {
-        struct Compare min_cos;
-        min_cos.cos = 1;
-        min_cos.index = 0;
+		min_cos = 1;
 
-        #pragma omp parallel for reduction(minimum:min_cos)
-        for (int i = 0; i < in_size; i++) {
+		for (int i = 0; i < in_size; i++) {
 			if (!is_used[i]) {
-                double cur_cos = Cos(data[prev_p].x - data[cur_p].x, data[prev_p].y - data[cur_p].y,
+				double cur_cos = Cos(data[prev_p].x - data[cur_p].x, data[prev_p].y - data[cur_p].y,
 					data[i].x - data[cur_p].x, data[i].y - data[cur_p].y);
 
-                if (cur_cos < min_cos.cos) {
-                    min_cos.cos = cur_cos;
-                    min_cos.index = i;
+				if (cur_cos < min_cos) {
+					next_p = i;
+					min_cos = cur_cos;
 				}
 			}
 		}
-        next_p = min_cos.index;
 
 		if (next_p != first_p) {
 			indexes[k++] = next_p;
@@ -120,7 +89,8 @@ void JarvisAlgorithm(Point* data, Point* result, int in_size, int &out_size) {
 			prev_p = cur_p;
 			cur_p = next_p;
 		}
-	} while (next_p != first_p);
+	}
+	while (next_p != first_p);
 
 	out_size = k;
 

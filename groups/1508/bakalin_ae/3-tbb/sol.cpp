@@ -134,3 +134,4 @@ void JarvisAlgorithm(Point* data, Point* result, int in_size, int &out_size) {
 		result[i] = data[indexes[i]];
 	}
 }
+

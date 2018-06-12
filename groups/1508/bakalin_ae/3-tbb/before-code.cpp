@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 	fread(in, sizeof(*in), size, stdin);
 
 	tick_count start = tick_count::now();
-	tbb::task_scheduler_init init;
+	tbb::task_scheduler_init init(4);
 	JarvisAlgorithm(in, out, size, out_size);
 	tick_count finish = tick_count::now();
 	double time = (finish - start).seconds();
