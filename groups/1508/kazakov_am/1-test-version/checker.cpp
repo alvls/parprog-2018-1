@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
 	if (argc != 2) {
 		std::cout
 			<< "Checker\n"
-			<< "Usage: [.exe name] [input file] [answer file]"
+			<< "Usage: [.exe name] [input file] [answer file]\n"
 			<< "Result will be written in result.txt"
 			<< std::endl;
 

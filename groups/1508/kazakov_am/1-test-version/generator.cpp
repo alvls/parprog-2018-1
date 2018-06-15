@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <fstream>
 #include <random>
@@ -11,8 +13,8 @@ int main(int argc, char** argv) {
 	if (argc < 2) {
 		std::cout
 			<< "Generator\n"
-			<< "Usage: [.exe name] [order] [test set number 1] [test set number 2] ..."
-			<< "Order of elements: 0 - random, any int > 0 - ascending, any int < 0 - descending"
+			<< "Usage: [.exe name] [order] [test set number 1] [test set number 2] ...\n"
+			<< "Order of elements: 0 - random, any int > 0 - ascending, any int < 0 - descending\n"
 			<< "NOTE: set numbers count from 0; you can type as many test set numbers as you want; "
 			<< "if the current set doesn't exists nothing will happen."
 			<< std::endl;
@@ -20,7 +22,7 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	const int max_number_of_tests = 48;
+	const int max_number_of_tests = 46;
 	int number_of_tests[max_number_of_tests];
 
 	for (int i = 0; i < max_number_of_tests / 2; i++) {
@@ -36,7 +38,7 @@ int main(int argc, char** argv) {
 
 	std::set<int> active_tests;
 
-	for (int i = 1; i < argc; i++) {
+	for (int i = 2; i < argc; i++) {
 		const int curr_set_number = atoi(argv[i]);
 
 		if (curr_set_number < 0
@@ -49,7 +51,11 @@ int main(int argc, char** argv) {
 
 
 	for (auto it = active_tests.begin(); it != active_tests.end(); ++it) {
-		std::ofstream result(*it + ".ans", std::ofstream::binary);
+		char name[32];
+		_itoa(*it, name, 10);
+
+		// first arguments means just *it in string form
+		std::ofstream result(name, std::ofstream::binary);
 
 		const int curr_tests_num = number_of_tests[*it];
 
@@ -69,7 +75,9 @@ int main(int argc, char** argv) {
 			);
 		}
 
-		result << temp.data();
+		for (auto it_temp = temp.begin(); it_temp != temp.end(); ++it_temp) {
+			result << *it_temp;
+		}
 	}
 
 	return 0;
