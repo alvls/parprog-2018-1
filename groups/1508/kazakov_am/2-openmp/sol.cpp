@@ -139,7 +139,7 @@ void DacMerge(const double* arr_in, double* arr_out, const int iteration, const 
 	}
 }
 
-void LsdRadixSortWithDacMergeOmp(double* arr, const size_t arr_size) {
+void LsdRadixSort(double* arr, const size_t arr_size) {
 	if (arr_size == 1) {
 		return;
 	}

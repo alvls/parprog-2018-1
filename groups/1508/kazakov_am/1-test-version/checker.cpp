@@ -6,9 +6,10 @@
 #include <vector>
 #include <algorithm>
 
+enum verdict { NO = 1, AC, WA, CE, ML, TL, RE, IL, PE, DE };
+
 class Result {
 public:
-	enum verdict { NO = 1, AC, WA, CE, ML, TL, RE, IL, PE, DE };
 	enum ext_cls { NO = 1, VERDICT, MESSAGE, TIME, MEMORY };
 
 	Result() {
@@ -95,9 +96,9 @@ int main(int argc, char** argv) {
 
 	if (correct) {
 		checker_result.write_message("AC: arrays are equal");
-		checker_result.write_verdict(Result::verdict::AC);
+		checker_result.write_verdict(verdict::AC);
 	} else {
-		checker_result.write_verdict(Result::verdict::WA);
+		checker_result.write_verdict(verdict::WA);
 	}
 
 	return 0;

@@ -4,7 +4,7 @@ unsigned char GetByte(const double* number, const unsigned digit_num) {
 	return (reinterpret_cast<const unsigned char*>(number))[digit_num];
 }
 
-void LsdRadixSort(double* arr, double* arr_temp, const size_t arr_size) {
+void LsdRadixSortPartial(double* arr, double* arr_temp, const size_t arr_size) {
 	const int kDigitsNumber = 8;
 	const size_t kDigitPossibleValuesNumber = 256;
 	const size_t kDigitPossibleValuesNumberHalf = kDigitPossibleValuesNumber >> 1;
@@ -150,7 +150,7 @@ public:
 
 	tbb::task* execute() {
 		if (arr_size_ <= arr_part_size_) {
-			LsdRadixSort(arr_, arr_temp_, arr_size_);
+			LsdRadixSortPartial(arr_, arr_temp_, arr_size_);
 			return nullptr;
 		}
 
@@ -222,7 +222,7 @@ private:
 	const size_t arr_part_size_;
 };
 
-void LsdRadixSortWithDacMergeTbb(double* arr, const size_t arr_size, int num_threads) {
+void LsdRadixSort(double* arr, const size_t arr_size, int num_threads) {
 	if (arr_size == 1) {
 		return;
 	}

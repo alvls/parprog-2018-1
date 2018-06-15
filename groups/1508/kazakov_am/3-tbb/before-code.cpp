@@ -3,7 +3,7 @@
 #include <iostream>
 #include <tbb/tbb.h>
 
-void LsdRadixSort(double* arr, const size_t arr_size, const int num_threads);
+void LsdRadixSort(double* arr, const size_t arr_size, int num_threads);
 
 int main(int argc, char** argv) {
 	if (argc != 3) {
@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
 
 	tbb::tick_count time_start = tbb::tick_count::now();
 
-	LsdRadixSort(arr, arr_size, num_threads);
+	LsdRadixSort(arr, arr_size, number_of_threads);
 
 	tbb::tick_count time_end = tbb::tick_count::now();
 	const double elapsed_time = (time_end - time_start).seconds();
