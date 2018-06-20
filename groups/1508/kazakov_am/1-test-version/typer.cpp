@@ -1,8 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <fstream>
 
 int main(int argc, char** argv) {
-	if (argc != 2) {
+	if (argc != 3) {
 		std::cout
 			<< "Typer\n"
 			<< "Usage: [.exe name] [input file] [output file]"
@@ -12,46 +14,27 @@ int main(int argc, char** argv) {
 	}
 
 	std::ifstream input(argv[1]);
-	std::ofstream output(argv[2], std::ofstream::binary);
+	FILE* output = fopen(argv[2], "wb");
 
+	double time;
 	int arr_size;
 	double* arr;
 
-	input >> arr_size;
+	input >> time >> arr_size;
 
 	arr = new double[arr_size];
 
-	input >> *arr;
-
-	/*for (int i = 0; i < arr_size; i++) {
+	for (int i = 0; i < arr_size; i++) {
 		input >> arr[i];
-	}*/
+	}
 
-	output << arr_size;
+	fwrite(&time, sizeof(time), 1, output);
+	fwrite(&arr_size, sizeof(arr_size), 1, output);
+	fwrite(arr, sizeof(arr), arr_size, output);
 
-	output << *arr;
-
-	/*for (int i = 0; i < arr_size; i++) {
-		output << arr[i];
-	}*/
-
+	fclose(output);
+	input.close();
 	delete[] arr;
-
-	//FILE* input = fopen(argv[1], "rt");
-	//FILE* output = fopen(argv[2], "wb");
-
-	//size_t arr_size;
-	//double* arr;
-	//double curr_number[1];
-
-	//fgets(&arr_size, 1, input);
-
-	//arr 
-
-	//while (fscanf(input, "%lf ", curr_number) > 0) {
-	//	arr_size++;
-
-	//}
 
 	return 0;
 }

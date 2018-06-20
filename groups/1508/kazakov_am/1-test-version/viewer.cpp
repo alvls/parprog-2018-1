@@ -1,8 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <fstream>
 
 int main(int argc, char** argv) {
-	if (argc != 2) {
+	if (argc != 3) {
 		std::cout
 			<< "Viewer\n"
 			<< "Usage: [.exe name] [input file] [output file]"
@@ -11,34 +13,29 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	std::ifstream input(argv[1], std::ifstream::binary);
+	FILE* input = fopen(argv[1], "rb");
 	std::ofstream output(argv[2]);
 
+	double time; 
 	int arr_size;
 	double* arr;
 
-	input >> arr_size;
+	fread(&time, sizeof(time), 1, input);
+	fread(&arr_size, sizeof(arr_size), 1, input);
 
 	arr = new double[arr_size];
 
-	for (int i = 0; i < arr_size; i++) {
-		input >> arr[i];
-	}
+	fread(arr, sizeof(arr), arr_size, input);
 
-	output << arr_size;
+	output << time << "\n" << arr_size << "\n";
+	std::cout << time << "\n" << arr_size;
 
-	for (int i = 0; i < arr_size; i++) {
-		output << arr[i];
-		
-		std::cout << arr[i];
+	/*for (int i = 0; i < arr_size; i++) {
+		output << " " << arr[i];
+	}*/
 
-		if (i != arr_size - 1) {
-			std::cout << " ";
-		}
-	}
-
-	std::cout << std::endl;
-
+	output.close();
+	fclose(input);
 	delete[] arr;
 
 	return 0;

@@ -6,7 +6,7 @@
 void LsdRadixSort(double* arr, const size_t arr_size);
 
 int main(int argc, char** argv) {
-	if (argc != 3) {
+	if (argc != 4) {
 		std::cout
 			<< "Solver\n"
 			<< "Usage: [.exe name] [input file] [output file] [number of threads]\n"
@@ -16,19 +16,21 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	int number_of_threads = atoi(argv[3]) || 1;
+	int number_of_threads = atoi(argv[3]);
 
 	freopen(argv[1], "rb", stdin);
 	freopen(argv[2], "wb", stdout);
 
-	size_t arr_size;
+	double time;
+	int arr_size;
 	double* arr;
 
+	fread(&time, sizeof(time), 1, stdin);
 	fread(&arr_size, sizeof(arr_size), 1, stdin);
 
 	arr = new double[arr_size];
 
-	fread(arr, sizeof(arr), arr_size, stdin);
+	fread(arr, sizeof(arr), arr_size, stdin);	
 
 	omp_set_num_threads(number_of_threads);
 
@@ -37,6 +39,7 @@ int main(int argc, char** argv) {
 	elapsed_time = omp_get_wtime() - elapsed_time;
 
 	fwrite(&elapsed_time, sizeof(elapsed_time), 1, stdout);
+	fwrite(&arr_size, sizeof(arr_size), 1, stdout);
 	fwrite(arr, sizeof(arr), arr_size, stdout);
 
 	delete[] arr;

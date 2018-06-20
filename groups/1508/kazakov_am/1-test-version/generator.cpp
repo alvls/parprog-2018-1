@@ -1,7 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
-#include <fstream>
 #include <random>
 #include <chrono>
 #include <string>
@@ -10,25 +9,27 @@
 #include <set>
 
 int main(int argc, char** argv) {
-	if (argc < 2) {
+	const int max_number_of_tests = 46;
+
+	if (argc < 3) {
 		std::cout
 			<< "Generator\n"
 			<< "Usage: [.exe name] [order] [test set number 1] [test set number 2] ...\n"
 			<< "Order of elements: 0 - random, any int > 0 - ascending, any int < 0 - descending\n"
-			<< "NOTE: set numbers count from 0; you can type as many test set numbers as you want; "
+			<< "NOTE: set numbers count from 0 to " << max_number_of_tests - 1
+			<< "; you can type as many test set numbers as you want; "
 			<< "if the current set doesn't exists nothing will happen."
 			<< std::endl;
 
 		return 1;
 	}
 
-	const int max_number_of_tests = 46;
 	int number_of_tests[max_number_of_tests];
 
 	for (int i = 0; i < max_number_of_tests / 2; i++) {
 		// gonna be 1, 1, 2, 3, 4, 5, 8, 9, 16, 17, 32, 33, 64, 65, 128, 129,...
 		number_of_tests[2 * i] = 1 << i;
-		number_of_tests[2 * i + 1] = 1 << i + 1;
+		number_of_tests[2 * i + 1] = (1 << i) + 1;
 	}
 
 	const int order = atoi(argv[1]);
@@ -55,11 +56,13 @@ int main(int argc, char** argv) {
 		_itoa(*it, name, 10);
 
 		// first arguments means just *it in string form
-		std::ofstream result(name, std::ofstream::binary);
+		FILE* f = fopen(name, "wb");
 
 		const int curr_tests_num = number_of_tests[*it];
 
-		result << curr_tests_num;
+		// double is for the execution time, nothing here now
+		fwrite(&curr_tests_num, sizeof(double), 1, f);
+		fwrite(&curr_tests_num, sizeof(curr_tests_num), 1, f);
 
 		std::vector<double> temp(curr_tests_num);
 
@@ -75,9 +78,9 @@ int main(int argc, char** argv) {
 			);
 		}
 
-		for (auto it_temp = temp.begin(); it_temp != temp.end(); ++it_temp) {
-			result << *it_temp;
-		}
+		fwrite(temp.data(), sizeof(temp.data()), curr_tests_num, f);
+
+		fclose(f);
 	}
 
 	return 0;

@@ -183,7 +183,7 @@ public:
 		const int middle_second_offset = BinarySearch(
 			middle,
 			0,
-			arr_size_ / 4,
+			arr_size_ - arr_size_ / 2,
 			*middle_first
 		);
 
@@ -193,15 +193,15 @@ public:
 			arr_,
 			middle,
 			arr_temp_,
-			middle_first_offset + 1,
-			middle_second_offset + 1
+			middle_first_offset,
+			middle_second_offset
 		));
 		DacMergeTask& merge_task_2 = *(new(allocate_child()) DacMergeTask(
 			middle_first,
 			middle_second,
-			arr_temp_ + (middle_first_offset + 1) + (middle_second_offset + 1),
-			(arr_size_ / 2) - (middle_first_offset + 1),
-			(arr_size_ / 2) - (middle_second_offset + 1)
+			arr_temp_ + (middle_first_offset) + (middle_second_offset),
+			(arr_size_ / 2) - (middle_first_offset),
+			(arr_size_ - arr_size_ / 2) - (middle_second_offset)
 		));
 
 		set_ref_count(1 + 2);
