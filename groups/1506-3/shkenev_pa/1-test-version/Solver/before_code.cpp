@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
 	delete[] res;
 
 	std::cout << "Решение записано в " << argv[2] << '.' << std::endl;
+    std::cout << "Время: " << time << std::endl;
 
 	return 0;
 }
