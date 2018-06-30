@@ -106,6 +106,21 @@ public:
         return os;
     }
 };
+struct Task
+{
+    int pointerStart;
+    int pointerEnd;
+    int taskIndex;
+    Task() :pointerStart(0), pointerEnd(0), taskIndex(0) {}
+    Task(int a, int b, int c) :pointerStart(a), pointerEnd(b), taskIndex(c) {}
+};
+struct prepareData
+{
+    int numTask;
+    vector<Task> task;
+    vector<int> elCountM;
+
+};
 class MatrixCCS
 {
 protected:
@@ -113,6 +128,30 @@ protected:
     vector<int> rows;
     vector<int> pointer;
     int N;
+private:
+    void prepareTask(prepareData &data, vector<MatrixCCS> &tmp, const MatrixCCS &m)
+    {
+        tmp = vector<MatrixCCS>(data.numTask, MatrixCCS(N));
+        data.elCountM = vector<int>(data.numTask);
+        vector<int> *cols = &rows;
+
+        vector<Task> task(data.numTask);
+            //prepare task
+            int sizeTask = m.N / data.numTask + (bool)(m.N % data.numTask);
+            for (int i = 0; i < data.numTask; i++)
+                task[i] = Task(i*sizeTask, std::min((i + 1)*sizeTask, m.N), i % data.numTask);
+            int lastPointerM = 0;
+            for (int i = 0; i < data.numTask; i++)
+            {
+                data.elCountM[i] = lastPointerM;
+                int jstart = task[i].pointerStart;
+                const int jend = task[i].pointerEnd;
+                for (jstart; jstart < jend; jstart++)
+                {
+                    lastPointerM += m.pointer[jstart + 1] - m.pointer[jstart];
+                }
+            }        
+    }
 public:
     MatrixCCS() {}
     MatrixCCS(int n) :N(n) 
@@ -293,6 +332,83 @@ public:
         }    
 		transpositionMatrix();
         return res;
+    }
+    //need prepareTask(data, tmp, m);
+    void quickParallelMult(const MatrixCCS &m, prepareData &data, vector<MatrixCCS> &tmp)
+    {
+		vector<int> *cols = &rows;              
+		
+        #pragma omp parallel for
+        for (int itask = 0; itask < data.task.size(); itask++)
+        {
+            for (int j = data.task[itask].pointerStart; j < data.task[itask].pointerEnd; j++)
+            {
+                int indexTask = data.task[itask].taskIndex;
+                int numElInResCol = 0;
+                const int numElementInCol = m.pointer[j + 1] - m.pointer[j];
+                if (numElementInCol == 0)
+                {
+                    int size = tmp[indexTask].pointer.size();
+                    tmp[indexTask].pointer.push_back(tmp[indexTask].pointer[size - 1]);
+                    continue;
+                }
+                int elCountThis = 0;
+                for (int i = 0; i < N; i++)
+                {
+                    const int numElementInRow = pointer[i + 1] - pointer[i];
+                    if (numElementInRow == 0)
+                    {
+                        continue;
+                    }
+                    int tmpNumElCol = numElementInCol;
+                    int tmpNumElRow = numElementInRow;
+
+                    Element sum = 0;
+                    int tmpElCountM = data.elCountM[indexTask];
+                    for (int z = 0; z < std::min(tmpNumElCol, tmpNumElRow);)
+                    {
+                        int colThis = (*cols)[elCountThis];
+                        int rowM = m.rows[tmpElCountM];
+                        if (colThis == rowM)
+                        {
+                            sum += values[elCountThis] * m.values[tmpElCountM];
+                            tmpNumElCol--;
+                            tmpNumElRow--;
+                            tmpElCountM++;
+                            elCountThis++;
+                        }
+                        else if (colThis < rowM)
+                        {
+                            tmpNumElRow--;
+                            elCountThis++;
+                        }
+                        else
+                        {
+                            tmpNumElCol--;
+                            tmpElCountM++;
+                        }
+                    }
+                    for (int z = 0; z < tmpNumElRow; z++)
+                        elCountThis++;
+
+                    if (sum != 0)
+                    {
+                        tmp[indexTask].values.push_back(sum);
+                        tmp[indexTask].rows.push_back(i);
+                        numElInResCol++;
+                    }
+                }
+                const int size = tmp[indexTask].pointer.size();
+                tmp[indexTask].pointer.push_back(tmp[indexTask].pointer[size - 1] + numElInResCol);
+                data.elCountM[indexTask] += numElementInCol;
+            }
+        }
+		for (int i = 1; i < tmp.size(); i++)
+		{
+			tmp[0].unite(tmp[i]);
+		}
+		if (tmp[0].pointer.size() < N + 1)
+			tmp[0].pointer.push_back(tmp[0].values.size());
     }
     MatrixCCS parallelMult(const MatrixCCS &m, const int numThreads)
     {
