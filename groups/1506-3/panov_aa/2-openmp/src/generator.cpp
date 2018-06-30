@@ -5,7 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include <numeric>
-#include "../include/matrix.h"
+#include "../include/mymatrix.h"
 using namespace std;
 int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 40, 80, 100, 200, 300, 400, 500,
 600, 700, 800, 900, 1000, 3000};
@@ -23,7 +23,7 @@ Matrix getRandSparseMatrix(int n, default_random_engine &generator, uniform_real
     Matrix m1(n, n);
     vector<int> index(n*n);
     iota(index.begin(), index.end(), 0);
-    for (int i = 0; i < 0.8*n*n; i++)
+    for (int i = 0; i < 0.5*n*n; i++)
     {
         uniform_int_distribution <int> d(0, index.size() - 1);
         int tmp_ind = d(generator);
@@ -31,41 +31,36 @@ Matrix getRandSparseMatrix(int n, default_random_engine &generator, uniform_real
         swap(index[tmp_ind], index[index.size()-1]);
         index.pop_back();
         m1.vv[ind] = distribution(generator);
-        if (index.size() == 0) 
+        if (index.size() == 0)
             return m1;
     }
     return m1;
 }
 int main(int argc, char * argv[])
 {
-    string path = "./";
-    string output = "matr";
-    string number = "";
-    string extensionIn = ".in";
-    string extensionOutAnswer = ".ans";
-
+	string outputFileMatrix;
+	string outputFileAnswer;
+    
     // задаём размер матриц
     // если передали номер теста в аргументах командной строки, то берём размер из n_tests
     int n = 10;
     if (argc > 1)
     {
-        path = argv[1];
-        path += "/";
+		outputFileMatrix = argv[1];
         if (argc > 2)
         {
-            int ind = atoi(argv[2]);
-            number = argv[2];
-            n = n_tests[ind];
-            output = "";
-            if (argc > 3)
-            {
-                output = argv[3];
-            }
+			outputFileAnswer = argv[2];
+			if (argc > 3)
+			{
+				n = atoi(argv[3]);
+				if (n < 26)
+					n = n_tests[n];
+			}
         }
     }
 
-    freopen((path + output + number + extensionIn).c_str(), "wb", stdout);
-    // создаём генератор случайных чисел с seed равным количеству времени с начала эпохи
+    freopen((outputFileMatrix).c_str(), "wb", stdout);
+    // создаём генератор случайных чисел
     default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
     // создаём равномерное распределение случайной величины типа double в диапазоне
     // [-10, 10]
@@ -82,7 +77,7 @@ int main(int argc, char * argv[])
 
     // генерируем ответ
     Matrix ans = m1*m2;
-    freopen((path + output + number + extensionOutAnswer).c_str(), "wb", stdout);
+    freopen((outputFileAnswer).c_str(), "wb", stdout);
     fwrite(&n, sizeof(n), 1, stdout);
     fwrite(ans.getP(), sizeof(Element), n*n, stdout);
     return 0;

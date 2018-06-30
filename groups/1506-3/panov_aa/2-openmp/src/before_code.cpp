@@ -1,7 +1,7 @@
 #include <string>
 #include<iostream>
 #include <vector>
-#include "matrix.h"
+#include "mymatrix.h"
 
 using std::string;
 using std::vector;
@@ -11,32 +11,26 @@ MatrixCCS ParallelMatrixMult(MatrixCCS &A, MatrixCCS &B, int numThreads = 1);
 
 int main(int argc, char * argv[])//читает из бинарного файла, запускает программу, пишет в бинарный файл
 {
-	int num_threads = 1;
     string pathInput = "";
     string pathOutput = "";
-	string name = "matr";
-	string number = "";
-	string extensionIn = ".in";
-	string extensionOut = ".user.ans";
+	int numThreads = 1;
+
 	if (argc > 1)
 	{
         pathInput = argv[1];       
-        pathOutput = pathInput + "_result/";
-        pathInput += "/";
         if (argc > 2)
         {           
-            number = argv[2];    
-            name = "";
+			pathOutput = argv[2];
             if (argc > 3)
             {
-                num_threads = atoi(argv[3]);
+				numThreads = atoi(argv[3]);
             }
         }
 	}
-
+    
 	int N;
-	freopen((pathInput + name + number + extensionIn).c_str(), "rb", stdin);
-	freopen((pathOutput + name + number + extensionOut).c_str(), "wb", stdout);
+	freopen(pathInput.c_str(), "rb", stdin);
+	freopen(pathOutput.c_str(), "wb", stdout);
 	fread(&N, sizeof(N), 1, stdin);
     Matrix A(N, N), B(N, N), Res(N,N);
    
@@ -44,12 +38,12 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
     fread(B.getP(), sizeof(Element), N * N, stdin);
 
     MatrixCCS Acol(A), Bcol(B), ResCol;
-    
-    omp_set_num_threads(num_threads);
+	omp_set_num_threads(numThreads);
 
     Acol.transpositionMatrix();
-    double time = omp_get_wtime();	
-    ResCol = ParallelMatrixMult(Acol, Bcol, num_threads);
+    double time = omp_get_wtime();
+
+    ResCol = ParallelMatrixMult(Acol, Bcol, numThreads);
 	time = omp_get_wtime() - time;
     Acol.transpositionMatrix();
 

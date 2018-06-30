@@ -1,5 +1,5 @@
 #include "../gtest/gtest/gtest.h"
-#include "../../include/matrix.h"
+#include "../../include/mymatrix.h"
 /*
 1 2 3
 0 0 0

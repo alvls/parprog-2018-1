@@ -27,6 +27,9 @@
       <Project>{d917c366-5cde-4af4-89ad-0969887c9fa3}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\mymatrix.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{42707BC6-212F-4FBD-8D11-708A8689E5FF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
