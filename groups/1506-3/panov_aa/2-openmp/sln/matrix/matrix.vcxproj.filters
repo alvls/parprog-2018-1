@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\matrix.h">
+    <ClInclude Include="..\..\include\complex_numbers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\complex_numbers.h">
+    <ClInclude Include="..\..\include\my_matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

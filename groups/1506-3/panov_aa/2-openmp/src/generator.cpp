@@ -5,7 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include <numeric>
-#include "../include/mymatrix.h"
+#include "../include/my_matrix.h"
 using namespace std;
 int n_tests[] = { 1, 2, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 40, 80, 100, 200, 300, 400, 500,
 600, 700, 800, 900, 1000, 3000};

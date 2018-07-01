@@ -1,7 +1,8 @@
 #include <string>
 #include<iostream>
 #include <vector>
-#include "mymatrix.h"
+#include <omp.h>
+#include "my_matrix.h"
 
 using std::string;
 using std::vector;
@@ -13,7 +14,7 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
 {
     string pathInput = "";
     string pathOutput = "";
-	int numThreads = 1;
+	int numThreads = 2;
 
 	if (argc > 1)
 	{
@@ -37,17 +38,34 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
     fread(A.getP(), sizeof(Element), N * N, stdin);
     fread(B.getP(), sizeof(Element), N * N, stdin);
 
-    MatrixCCS Acol(A), Bcol(B), ResCol;
+	/*MatrixCCS Acol(A), Bcol(B), ResCol;
 	omp_set_num_threads(numThreads);
 
-    Acol.transpositionMatrix();
-    double time = omp_get_wtime();
+	Acol.transpositionMatrix();
+	double time = omp_get_wtime();
 
-    ResCol = ParallelMatrixMult(Acol, Bcol, numThreads);
+	ResCol = ParallelMatrixMult(Acol, Bcol, numThreads);
 	time = omp_get_wtime() - time;
-    Acol.transpositionMatrix();
+	Acol.transpositionMatrix();
 
-    ResCol.convertToMatrix(Res);
+	ResCol.convertToMatrix(Res);*/
+
+    MatrixCCS Acol(A), Bcol(B);
+	vector <MatrixCCS> ResCol;
+	
+	Acol.transpositionMatrix();
+	prepareData data(numThreads, N);
+	MatrixCCS::prepareTask(data, ResCol, Bcol, N);
+	
+	omp_set_num_threads(numThreads);
+
+    double time = omp_get_wtime();
+	Acol.quickParallelMult(Bcol, data, ResCol);
+	time = omp_get_wtime() - time;
+    
+	Acol.transpositionMatrix();
+	MatrixCCS::uniteMatrixs(ResCol);
+    ResCol[0].convertToMatrix(Res);
 
 	fwrite(&time, sizeof(time), 1, stdout);
 	fwrite(Res.getP(), sizeof(Element), N * N, stdout);

@@ -1,6 +1,6 @@
 #include <omp.h>
 #include <vector>
-#include "mymatrix.h"
+#include "my_matrix.h"
 
 MatrixCCS MatrixMult(MatrixCCS &A, MatrixCCS &B)
 {

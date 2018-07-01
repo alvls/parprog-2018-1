@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <cmath>
 #include <string>
-#include "../include/mymatrix.h"
+#include "../include/my_matrix.h"
 using namespace std;
 // Используется для взаимодействия с тестирующей системой
 ////////////////////////////////////////////////////////////////////////////////////////////
