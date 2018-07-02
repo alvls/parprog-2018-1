@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "mymatrix.h"
+#include "my_matrix.h"
 using std::string;
 using std::cout;
 using std::cin;

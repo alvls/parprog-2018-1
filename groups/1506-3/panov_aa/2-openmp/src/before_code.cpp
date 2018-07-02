@@ -54,7 +54,7 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
 	vector <MatrixCCS> ResCol;
 	
 	Acol.transpositionMatrix();
-	prepareData data(numThreads, N);
+	PrepareData data(numThreads, N);
 	MatrixCCS::prepareTask(data, ResCol, Bcol, N);
 	
 	omp_set_num_threads(numThreads);

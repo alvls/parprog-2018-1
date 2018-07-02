@@ -12,6 +12,6 @@ testinput = 'tests\\big_tests\\'
 if os.path.exists(testinput):
     number = str(size)
     thread = str(numThread)
-    subprocess.call(['matrix_multiplication.exe', testinput+number+'.in', testinput+number+' '+thread+'.user.ans'], stdout=subprocess.PIPE, shell = True)
+    subprocess.call(['matrix_multiplication.exe', testinput+number+'.in', testinput+number+' '+thread+'.user.ans', thread], stdout=subprocess.PIPE, shell = True)
     print('test solved')
-    subprocess.call(['checker.exe', testinput+number+'.res.txt', testinput+number+' '+thread+'.user.ans', testinput+'\\'+number+'.ans'], stdout=subprocess.PIPE, shell = True)
+    subprocess.call(['checker.exe', testinput+number+' '+thread+'.res.txt', testinput+number+' '+thread+'.user.ans', testinput+'\\'+number+'.ans'], stdout=subprocess.PIPE, shell = True)

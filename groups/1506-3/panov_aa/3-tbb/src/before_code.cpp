@@ -1,7 +1,7 @@
 #include <string>
 #include<iostream>
 #include <vector>
-#include "mymatrix.h"
+#include "my_matrix.h"
 
 using std::string;
 using std::vector;
@@ -37,7 +37,7 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
     fread(A.getP(), sizeof(Element), N * N, stdin);
     fread(B.getP(), sizeof(Element), N * N, stdin);
 
-    MatrixCCS Acol(A), Bcol(B), ResCol;
+   /* MatrixCCS Acol(A), Bcol(B), ResCol;
 
     Acol.transpositionMatrix();
     double time = omp_get_wtime();
@@ -46,7 +46,24 @@ int main(int argc, char * argv[])//читает из бинарного файла, запускает программ
 	time = omp_get_wtime() - time;
     Acol.transpositionMatrix();
 
-    ResCol.convertToMatrix(Res);
+    ResCol.convertToMatrix(Res);*/
+
+    MatrixCCS Acol(A), Bcol(B);
+    vector <MatrixCCS> ResCol;
+
+    Acol.transpositionMatrix();
+    PrepareData data(numThreads, N);
+    MatrixCCS::prepareTask(data, ResCol, Bcol, N);
+
+    tbb::task_scheduler_init init(numThreads);
+
+    double time = omp_get_wtime();
+    Acol.quickParallelMult(Bcol, data, ResCol);
+    time = omp_get_wtime() - time;
+
+    Acol.transpositionMatrix();
+    MatrixCCS::uniteMatrixs(ResCol);
+    ResCol[0].convertToMatrix(Res);
 
 	fwrite(&time, sizeof(time), 1, stdout);
 	fwrite(Res.getP(), sizeof(Element), N * N, stdout);

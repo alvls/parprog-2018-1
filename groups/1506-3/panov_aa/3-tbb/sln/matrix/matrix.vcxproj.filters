@@ -18,7 +18,7 @@
     <ClInclude Include="..\..\include\complex_numbers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\mymatrix.h">
+    <ClInclude Include="..\..\include\my_matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

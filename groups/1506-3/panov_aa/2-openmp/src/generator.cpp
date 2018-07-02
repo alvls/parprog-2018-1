@@ -20,10 +20,11 @@ Matrix getRandMatrix(int n, default_random_engine &generator, uniform_real_distr
 }
 Matrix getRandSparseMatrix(int n, default_random_engine &generator, uniform_real_distribution<double> &distribution)
 {
+    double sparsePersent = 0.25;//std::min(15.0/n, 1.0);
     Matrix m1(n, n);
     vector<int> index(n*n);
     iota(index.begin(), index.end(), 0);
-    for (int i = 0; i < 0.5*n*n; i++)
+    for (int i = 0; i < sparsePersent*n*n; i++)
     {
         uniform_int_distribution <int> d(0, index.size() - 1);
         int tmp_ind = d(generator);

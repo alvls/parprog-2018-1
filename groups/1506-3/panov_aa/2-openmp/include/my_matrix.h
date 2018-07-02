@@ -4,6 +4,10 @@
 #include <iostream>
 #include <list>
 #include <omp.h>
+
+#include <string>
+#include <fstream>
+
 using std::ostream;
 using std::vector;
 using std::list;
@@ -114,11 +118,11 @@ struct Task
     Task():pointerStart(0), pointerEnd(0), taskIndex(0) {}
     Task(int a, int b, int c) :pointerStart(a), pointerEnd(b), taskIndex(c) {}
 };
-struct prepareData
+struct PrepareData
 {
-	prepareData(int numThread, int N)
+	PrepareData(int numThread, int N)
 	{
-		numTask = 2 * numThread;
+		numTask = 4 * numThread;
 		if (numTask > N)
 			numTask = N;
 	}
@@ -317,7 +321,7 @@ public:
         return res;
     }
 	
-	static void prepareTask(prepareData &data, vector<MatrixCCS> &tmp, const MatrixCCS &m, int N)
+	static void prepareTask(PrepareData &data, vector<MatrixCCS> &tmp, const MatrixCCS &m, int N)
 	{
 		tmp = vector<MatrixCCS>(data.numTask, MatrixCCS(N));
 		data.elCountM = vector<int>(data.numTask);
@@ -340,11 +344,10 @@ public:
 		}
 	}
 	//need prepareTask(data, tmp, m);
-    void quickParallelMult(const MatrixCCS &m, prepareData &data, vector<MatrixCCS> &tmp)
+    void quickParallelMult(const MatrixCCS &m, PrepareData &data, vector<MatrixCCS> &tmp)
     {
-		vector<int> *cols = &rows;              
-		
-        #pragma omp parallel for
+		vector<int> *cols = &rows;
+#pragma omp parallel for schedule(static)
         for (int itask = 0; itask < data.task.size(); itask++)
         {
             for (int j = data.task[itask].pointerStart; j < data.task[itask].pointerEnd; j++)
@@ -408,7 +411,7 @@ public:
                 tmp[indexTask].pointer.push_back(tmp[indexTask].pointer[size - 1] + numElInResCol);
                 data.elCountM[indexTask] += numElementInCol;
             }
-        }		
+        }
     }
 	static void uniteMatrixs(vector<MatrixCCS> &tmp)
 	{
