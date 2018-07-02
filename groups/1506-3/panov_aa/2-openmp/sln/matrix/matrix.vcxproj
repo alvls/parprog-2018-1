@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\complex_numbers.h" />
-    <ClInclude Include="..\..\include\matrix.h" />
+    <ClInclude Include="..\..\include\my_matrix.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Source.cpp" />
